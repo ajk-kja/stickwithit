@@ -12,7 +12,7 @@
       --text: #ffffff;
       --text-dim: #888888;
       --accent: #ff0000;
-      --staff-line: #444444;
+      --staff-line: #555555;
     }
 
     * {
@@ -54,6 +54,25 @@
       text-transform: uppercase;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .share-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .share-btn:active {
+      color: var(--accent);
+    }
+
     .bpm-display {
       font-size: 18px;
       font-weight: 600;
@@ -82,29 +101,31 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 200px;
+      min-height: 180px;
     }
 
     .staff {
       position: relative;
-      height: 120px;
+      height: 100px;
       background: var(--surface);
       border-radius: 8px;
       border: 1px solid var(--border);
-      overflow: hidden;
+      padding: 10px 0;
     }
 
     .staff-lines {
       position: absolute;
-      inset: 0;
+      left: 40px;
+      right: 0;
+      top: 10px;
+      bottom: 10px;
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
-      padding: 15px 0;
+      justify-content: space-between;
     }
 
     .staff-line {
-      height: 1px;
+      height: 2px;
       background: var(--staff-line);
       position: relative;
     }
@@ -112,21 +133,25 @@
     .staff-line::before {
       content: attr(data-label);
       position: absolute;
-      left: 8px;
+      right: calc(100% + 8px);
       top: 50%;
       transform: translateY(-50%);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text-dim);
-      font-weight: 500;
+      font-weight: 600;
+      width: 24px;
+      text-align: right;
     }
 
     /* Notes container */
     .notes-container {
       position: absolute;
-      inset: 0;
+      left: 50px;
+      right: 10px;
+      top: 10px;
+      bottom: 10px;
       display: flex;
       align-items: stretch;
-      padding: 0 50px;
     }
 
     .note-slot {
@@ -144,19 +169,19 @@
     }
 
     .note {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: white;
       position: absolute;
-      transition: top 0.15s ease;
-      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+      transition: top 0.1s ease;
+      box-shadow: 0 2px 6px rgba(255, 0, 0, 0.4);
     }
 
     .note.ghost {
@@ -164,6 +189,7 @@
       border: 2px solid var(--accent);
       color: var(--accent);
       box-shadow: none;
+      opacity: 0.7;
     }
 
     .note.rim {
@@ -172,26 +198,26 @@
     }
 
     .note.playing {
-      transform: scale(1.2);
-      box-shadow: 0 0 20px var(--accent);
+      transform: translateY(-50%) scale(1.3);
+      box-shadow: 0 0 16px var(--accent);
     }
 
     /* Sticking row */
     .sticking-row {
       display: flex;
       justify-content: center;
-      padding: 0 50px;
+      padding: 0 50px 0 50px;
       margin-top: 8px;
     }
 
     .sticking-slot {
       flex: 1;
       text-align: center;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-dim);
       cursor: pointer;
-      padding: 8px 0;
+      padding: 6px 0;
     }
 
     .sticking-slot:active {
@@ -200,15 +226,15 @@
 
     .sticking-slot.kick {
       color: var(--text-dim);
-      opacity: 0.5;
+      opacity: 0.4;
     }
 
     /* Note count display */
     .note-count {
       text-align: center;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-dim);
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
     .note-count span {
@@ -236,13 +262,13 @@
       color: var(--text);
       font-size: 14px;
       font-weight: 500;
-      padding: 12px 20px;
+      padding: 12px 16px;
       cursor: pointer;
       transition: all 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn:active {
@@ -251,7 +277,7 @@
     }
 
     .btn-icon {
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .btn-accent {
@@ -275,7 +301,8 @@
       border: none;
       border-radius: 0;
       flex: 1;
-      min-width: 50px;
+      min-width: 44px;
+      padding: 12px 8px;
     }
 
     .btn-group .btn:not(:last-child) {
@@ -283,7 +310,7 @@
     }
 
     .btn-group .btn-value {
-      min-width: 60px;
+      min-width: 56px;
       font-variant-numeric: tabular-nums;
       pointer-events: none;
       font-weight: 600;
@@ -293,20 +320,42 @@
     .play-section {
       display: flex;
       justify-content: center;
-      padding: 8px 0;
+      padding: 4px 0;
     }
 
     .btn-play {
-      width: 64px;
-      height: 64px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      font-size: 24px;
+      font-size: 22px;
       padding: 0;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
     }
 
     /* Footer */
     footer {
-      padding: 12px 16px;
+      padding: 10px 16px;
       text-align: center;
       border-top: 1px solid var(--border);
     }
@@ -338,13 +387,13 @@
       }
 
       .staff {
-        height: 100px;
+        height: 80px;
       }
 
       .note {
-        width: 24px;
-        height: 24px;
-        font-size: 10px;
+        width: 20px;
+        height: 20px;
+        font-size: 9px;
       }
     }
   </style>
@@ -352,16 +401,19 @@
 <body>
   <header>
     <span class="app-title">Lickmeister</span>
-    <div>
-      <span class="bpm-display" id="bpmDisplay">120</span>
-      <span class="bpm-label">BPM</span>
+    <div class="header-right">
+      <button class="share-btn" id="shareBtn" title="Copy link">🔗</button>
+      <div>
+        <span class="bpm-display" id="bpmDisplay">120</span>
+        <span class="bpm-label">BPM</span>
+      </div>
     </div>
   </header>
 
   <main>
     <div class="staff-container">
-      <div class="staff">
-        <div class="staff-lines">
+      <div class="staff" id="staff">
+        <div class="staff-lines" id="staffLines">
           <div class="staff-line" data-label="HH"></div>
           <div class="staff-line" data-label="T"></div>
           <div class="staff-line" data-label="S"></div>
@@ -402,23 +454,29 @@
     </div>
   </main>
 
+  <div class="toast" id="toast">Link copied!</div>
+
   <footer>
     <a href="https://www.stickwithit.xyz">stickwithit.xyz</a>
   </footer>
 
   <script>
-    // Drum types and their positions (top to bottom: HH, Tom, Snare, Kick)
+    // Drum definitions with staff line index (0=top HH, 3=bottom K)
     const DRUMS = {
-      HIHAT: { name: 'HH', position: 0, sticking: true },
-      TOM: { name: 'T', position: 1, sticking: true },
-      SNARE: { name: 'S', position: 2, sticking: true },
-      SNARE_GHOST: { name: '(S)', position: 2, sticking: true, ghost: true },
-      SNARE_RIM: { name: 'X', position: 2, sticking: true, rim: true },
-      KICK: { name: 'K', position: 3, sticking: false }
+      HIHAT:       { name: 'HH', line: 0, sticking: true },
+      TOM:         { name: 'T',  line: 1, sticking: true },
+      SNARE:       { name: 'S',  line: 2, sticking: true },
+      SNARE_GHOST: { name: 'g',  line: 2, sticking: true, ghost: true },
+      SNARE_RIM:   { name: 'X',  line: 2, sticking: true, rim: true },
+      KICK:        { name: 'K',  line: 3, sticking: false }
     };
 
-    // Cycle order for tapping notes
+    // Cycle order for tapping
     const CYCLE_ORDER = ['SNARE', 'HIHAT', 'KICK', 'TOM', 'SNARE_GHOST', 'SNARE_RIM'];
+
+    // URL encoding map (single char per drum type)
+    const DRUM_CHARS = { HIHAT: 'H', TOM: 'T', SNARE: 'S', SNARE_GHOST: 'g', SNARE_RIM: 'X', KICK: 'K' };
+    const CHAR_TO_DRUM = Object.fromEntries(Object.entries(DRUM_CHARS).map(([k,v]) => [v, k]));
 
     // State
     let noteCount = 8;
@@ -427,17 +485,288 @@
     let playInterval = null;
     let currentNoteIndex = -1;
     let audioContext = null;
-
-    // Notes array: each note has { drum: 'SNARE', sticking: 'R' or 'L' }
     let notes = [];
 
-    // Initialize
-    function init() {
-      generateRandomPattern();
-      bindEvents();
+    // Staff line Y positions (calculated on render)
+    let lineYPositions = [];
+
+    // ==================== URL STATE ====================
+    function encodeState() {
+      // Format: bpm-notedata where notedata is pairs like SR (Snare Right), HL (HiHat Left), KK (Kick)
+      const noteStr = notes.map(n => DRUM_CHARS[n.drum] + n.sticking).join('');
+      return `${bpm}-${noteStr}`;
     }
 
-    // Generate random pattern
+    function decodeState(hash) {
+      try {
+        const parts = hash.split('-');
+        if (parts.length !== 2) return false;
+        
+        const newBpm = parseInt(parts[0], 10);
+        if (isNaN(newBpm) || newBpm < 40 || newBpm > 300) return false;
+        
+        const noteStr = parts[1];
+        if (noteStr.length < 2 || noteStr.length % 2 !== 0) return false;
+        
+        const newNotes = [];
+        for (let i = 0; i < noteStr.length; i += 2) {
+          const drumChar = noteStr[i];
+          const sticking = noteStr[i + 1];
+          const drumKey = CHAR_TO_DRUM[drumChar];
+          if (!drumKey || !['R', 'L', 'K'].includes(sticking)) return false;
+          newNotes.push({ drum: drumKey, sticking });
+        }
+        
+        if (newNotes.length < 1 || newNotes.length > 16) return false;
+        
+        bpm = newBpm;
+        notes = newNotes;
+        noteCount = newNotes.length;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function updateURL() {
+      const state = encodeState();
+      history.replaceState(null, '', '#' + state);
+    }
+
+    function loadFromURL() {
+      const hash = window.location.hash.slice(1);
+      if (hash && decodeState(hash)) {
+        return true;
+      }
+      return false;
+    }
+
+    function copyLink() {
+      updateURL();
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Link copied!');
+      }).catch(() => {
+        showToast('Copy failed');
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // ==================== AUDIO SYNTHESIS ====================
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }
+
+    // Create filtered noise
+    function createNoiseBuffer(duration) {
+      const samples = audioContext.sampleRate * duration;
+      const buffer = audioContext.createBuffer(1, samples, audioContext.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < samples; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      return buffer;
+    }
+
+    function playKick() {
+      const now = audioContext.currentTime;
+      
+      // Sub oscillator (the thump)
+      const osc = audioContext.createOscillator();
+      const oscGain = audioContext.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(30, now + 0.08);
+      oscGain.gain.setValueAtTime(1, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      
+      // Click transient
+      const click = audioContext.createOscillator();
+      const clickGain = audioContext.createGain();
+      click.type = 'sine';
+      click.frequency.setValueAtTime(800, now);
+      click.frequency.exponentialRampToValueAtTime(100, now + 0.02);
+      clickGain.gain.setValueAtTime(0.5, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+      
+      // Low-pass filter for warmth
+      const filter = audioContext.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(200, now);
+      filter.Q.value = 1;
+      
+      osc.connect(filter);
+      filter.connect(oscGain);
+      oscGain.connect(audioContext.destination);
+      
+      click.connect(clickGain);
+      clickGain.connect(audioContext.destination);
+      
+      osc.start(now);
+      osc.stop(now + 0.5);
+      click.start(now);
+      click.stop(now + 0.05);
+    }
+
+    function playSnare(velocity = 1) {
+      const now = audioContext.currentTime;
+      const vol = velocity;
+      
+      // Tone (body of snare)
+      const osc = audioContext.createOscillator();
+      const oscGain = audioContext.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
+      oscGain.gain.setValueAtTime(0.4 * vol, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      
+      // Snare noise (wires)
+      const noise = audioContext.createBufferSource();
+      noise.buffer = createNoiseBuffer(0.2);
+      const noiseFilter = audioContext.createBiquadFilter();
+      noiseFilter.type = 'highpass';
+      noiseFilter.frequency.value = 1000;
+      const noiseGain = audioContext.createGain();
+      noiseGain.gain.setValueAtTime(0.35 * vol, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      
+      osc.connect(oscGain);
+      oscGain.connect(audioContext.destination);
+      
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(audioContext.destination);
+      
+      osc.start(now);
+      osc.stop(now + 0.2);
+      noise.start(now);
+    }
+
+    function playSnareGhost() {
+      playSnare(0.25); // Quiet ghost note
+    }
+
+    function playSnareRim() {
+      const now = audioContext.currentTime;
+      
+      // High click (rim)
+      const osc = audioContext.createOscillator();
+      const oscGain = audioContext.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(400, now + 0.01);
+      oscGain.gain.setValueAtTime(0.3, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      
+      // Brief noise
+      const noise = audioContext.createBufferSource();
+      noise.buffer = createNoiseBuffer(0.05);
+      const noiseFilter = audioContext.createBiquadFilter();
+      noiseFilter.type = 'bandpass';
+      noiseFilter.frequency.value = 2000;
+      noiseFilter.Q.value = 2;
+      const noiseGain = audioContext.createGain();
+      noiseGain.gain.setValueAtTime(0.4, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      
+      osc.connect(oscGain);
+      oscGain.connect(audioContext.destination);
+      
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(audioContext.destination);
+      
+      osc.start(now);
+      osc.stop(now + 0.1);
+      noise.start(now);
+    }
+
+    function playTom() {
+      const now = audioContext.currentTime;
+      
+      // Tom body
+      const osc = audioContext.createOscillator();
+      const oscGain = audioContext.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(90, now + 0.15);
+      oscGain.gain.setValueAtTime(0.6, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      
+      // Add some overtone
+      const osc2 = audioContext.createOscillator();
+      const osc2Gain = audioContext.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(300, now);
+      osc2.frequency.exponentialRampToValueAtTime(180, now + 0.1);
+      osc2Gain.gain.setValueAtTime(0.15, now);
+      osc2Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      
+      osc.connect(oscGain);
+      oscGain.connect(audioContext.destination);
+      osc2.connect(osc2Gain);
+      osc2Gain.connect(audioContext.destination);
+      
+      osc.start(now);
+      osc.stop(now + 0.4);
+      osc2.start(now);
+      osc2.stop(now + 0.2);
+    }
+
+    function playHihat() {
+      const now = audioContext.currentTime;
+      
+      // Filtered noise for metallic sound
+      const noise = audioContext.createBufferSource();
+      noise.buffer = createNoiseBuffer(0.1);
+      
+      const highpass = audioContext.createBiquadFilter();
+      highpass.type = 'highpass';
+      highpass.frequency.value = 7000;
+      
+      const bandpass = audioContext.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.value = 10000;
+      bandpass.Q.value = 1;
+      
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      
+      noise.connect(highpass);
+      highpass.connect(bandpass);
+      bandpass.connect(gain);
+      gain.connect(audioContext.destination);
+      
+      noise.start(now);
+    }
+
+    function playSound(drum) {
+      if (!audioContext) return;
+      
+      switch (drum) {
+        case 'KICK': playKick(); break;
+        case 'SNARE': playSnare(); break;
+        case 'SNARE_GHOST': playSnareGhost(); break;
+        case 'SNARE_RIM': playSnareRim(); break;
+        case 'TOM': playTom(); break;
+        case 'HIHAT': playHihat(); break;
+      }
+    }
+
+    // ==================== PATTERN LOGIC ====================
     function generateRandomPattern() {
       notes = [];
       for (let i = 0; i < noteCount; i++) {
@@ -449,10 +778,10 @@
           sticking: drum.sticking ? (Math.random() > 0.5 ? 'R' : 'L') : 'K'
         });
       }
+      updateURL();
       render();
     }
 
-    // Randomize orchestration only (keep rhythm/sticking)
     function randomizeOrchestration() {
       notes.forEach(note => {
         const drumKeys = Object.keys(DRUMS);
@@ -461,10 +790,10 @@
         note.drum = randomDrum;
         note.sticking = drum.sticking ? (Math.random() > 0.5 ? 'R' : 'L') : 'K';
       });
+      updateURL();
       render();
     }
 
-    // Cycle drum on tap
     function cycleDrum(index) {
       const currentDrum = notes[index].drum;
       const currentCycleIndex = CYCLE_ORDER.indexOf(currentDrum);
@@ -478,29 +807,42 @@
       } else if (notes[index].sticking === 'K') {
         notes[index].sticking = 'R';
       }
+      updateURL();
       render();
     }
 
-    // Cycle sticking on tap
     function cycleSticking(index) {
       const drum = DRUMS[notes[index].drum];
-      if (!drum.sticking) return; // Can't change kick sticking
-      
+      if (!drum.sticking) return;
       notes[index].sticking = notes[index].sticking === 'R' ? 'L' : 'R';
+      updateURL();
       render();
     }
 
-    // Render staff and notes
+    // ==================== RENDERING ====================
+    function calculateLinePositions() {
+      const staffLines = document.getElementById('staffLines');
+      const lines = staffLines.querySelectorAll('.staff-line');
+      const containerRect = document.getElementById('notesContainer').getBoundingClientRect();
+      const staffRect = staffLines.getBoundingClientRect();
+      
+      lineYPositions = [];
+      lines.forEach(line => {
+        const lineRect = line.getBoundingClientRect();
+        // Position relative to notes container
+        const y = lineRect.top - containerRect.top + 1; // +1 for line center
+        lineYPositions.push(y);
+      });
+    }
+
     function render() {
+      calculateLinePositions();
+      
       const container = document.getElementById('notesContainer');
       const stickingRow = document.getElementById('stickingRow');
       
-      // Clear
       container.innerHTML = '';
       stickingRow.innerHTML = '';
-
-      // Line positions (percentage from top)
-      const linePositions = [15, 38, 61, 84]; // HH, Tom, Snare, Kick
 
       notes.forEach((note, index) => {
         const drum = DRUMS[note.drum];
@@ -517,11 +859,16 @@
         if (drum.rim) noteEl.classList.add('rim');
         if (index === currentNoteIndex) noteEl.classList.add('playing');
         
-        noteEl.style.top = `${linePositions[drum.position]}%`;
+        // Position on the correct line
+        const yPos = lineYPositions[drum.line];
+        noteEl.style.top = yPos + 'px';
         noteEl.style.transform = 'translateY(-50%)';
-        noteEl.textContent = drum.name.replace('(', '').replace(')', '');
-        if (drum.ghost) noteEl.textContent = 'S';
-        if (drum.rim) noteEl.textContent = 'X';
+        
+        // Display text
+        let display = drum.name;
+        if (drum.ghost) display = 'S';
+        if (drum.rim) display = 'X';
+        noteEl.textContent = display;
 
         slot.appendChild(noteEl);
         container.appendChild(slot);
@@ -545,13 +892,11 @@
       document.getElementById('bpmValue').textContent = bpm;
     }
 
-    // Change note count
     function changeNoteCount(delta) {
       const newCount = noteCount + delta;
       if (newCount < 1 || newCount > 16) return;
       
       if (delta > 0) {
-        // Add note
         const drumKeys = Object.keys(DRUMS);
         const randomDrum = drumKeys[Math.floor(Math.random() * drumKeys.length)];
         const drum = DRUMS[randomDrum];
@@ -560,111 +905,35 @@
           sticking: drum.sticking ? (Math.random() > 0.5 ? 'R' : 'L') : 'K'
         });
       } else {
-        // Remove note
         notes.pop();
       }
       
       noteCount = newCount;
+      updateURL();
       render();
     }
 
-    // Change BPM
     function changeBpm(delta) {
       const newBpm = bpm + delta;
       if (newBpm < 40 || newBpm > 300) return;
       bpm = newBpm;
+      updateURL();
       render();
       
-      // Update playback speed if playing
       if (isPlaying) {
         stopPlayback();
         startPlayback();
       }
     }
 
-    // Audio
-    function initAudio() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-    }
-
-    function playSound(drum) {
-      if (!audioContext) return;
-
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      const now = audioContext.currentTime;
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      // Different sounds for different drums
-      switch (drum) {
-        case 'KICK':
-          oscillator.type = 'sine';
-          oscillator.frequency.setValueAtTime(150, now);
-          oscillator.frequency.exponentialRampToValueAtTime(40, now + 0.1);
-          gainNode.gain.setValueAtTime(1, now);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-          break;
-        case 'SNARE':
-        case 'SNARE_RIM':
-          oscillator.type = 'triangle';
-          oscillator.frequency.setValueAtTime(200, now);
-          gainNode.gain.setValueAtTime(drum === 'SNARE_RIM' ? 0.8 : 0.6, now);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-          // Add noise for snare
-          const noise = audioContext.createBufferSource();
-          const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.1, audioContext.sampleRate);
-          const noiseData = noiseBuffer.getChannelData(0);
-          for (let i = 0; i < noiseData.length; i++) {
-            noiseData[i] = Math.random() * 2 - 1;
-          }
-          noise.buffer = noiseBuffer;
-          const noiseGain = audioContext.createGain();
-          noiseGain.gain.setValueAtTime(drum === 'SNARE_RIM' ? 0.4 : 0.3, now);
-          noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-          noise.connect(noiseGain);
-          noiseGain.connect(audioContext.destination);
-          noise.start(now);
-          break;
-        case 'SNARE_GHOST':
-          oscillator.type = 'triangle';
-          oscillator.frequency.setValueAtTime(180, now);
-          gainNode.gain.setValueAtTime(0.15, now);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-          break;
-        case 'TOM':
-          oscillator.type = 'sine';
-          oscillator.frequency.setValueAtTime(120, now);
-          oscillator.frequency.exponentialRampToValueAtTime(80, now + 0.15);
-          gainNode.gain.setValueAtTime(0.7, now);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-          break;
-        case 'HIHAT':
-          oscillator.type = 'square';
-          oscillator.frequency.setValueAtTime(800, now);
-          gainNode.gain.setValueAtTime(0.15, now);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-          break;
-      }
-
-      oscillator.start(now);
-      oscillator.stop(now + 0.5);
-    }
-
-    // Playback
+    // ==================== PLAYBACK ====================
     function startPlayback() {
       initAudio();
       isPlaying = true;
       document.getElementById('playBtn').textContent = '⏹';
       currentNoteIndex = -1;
       
-      const intervalMs = (60 / bpm) * 1000; // Quarter note timing
+      const intervalMs = (60 / bpm) * 1000;
       
       function playNext() {
         currentNoteIndex = (currentNoteIndex + 1) % notes.length;
@@ -695,7 +964,7 @@
       }
     }
 
-    // Event bindings
+    // ==================== INIT ====================
     function bindEvents() {
       document.getElementById('randomPattern').onclick = generateRandomPattern;
       document.getElementById('randomOrchestration').onclick = randomizeOrchestration;
@@ -704,17 +973,31 @@
       document.getElementById('bpmMinus').onclick = () => changeBpm(-5);
       document.getElementById('bpmPlus').onclick = () => changeBpm(5);
       document.getElementById('playBtn').onclick = togglePlayback;
+      document.getElementById('shareBtn').onclick = copyLink;
 
-      // Keyboard shortcuts
       document.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
           e.preventDefault();
           togglePlayback();
         }
       });
+      
+      // Rerender on resize for line positions
+      window.addEventListener('resize', () => {
+        render();
+      });
     }
 
-    // Start
+    function init() {
+      // Try to load from URL first
+      if (!loadFromURL()) {
+        generateRandomPattern();
+      } else {
+        render();
+      }
+      bindEvents();
+    }
+
     init();
   </script>
 </body>
