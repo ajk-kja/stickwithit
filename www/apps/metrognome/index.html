@@ -99,11 +99,48 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.1s, border-color 0.15s, box-shadow 0.15s;
+            border: 2px solid transparent;
         }
 
         .beat-block:active {
             transform: scale(0.95);
+        }
+
+        /* Accent state: red border + subtle glow */
+        .beat-block.accented {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--accent-dim), inset 0 0 20px rgba(230, 57, 70, 0.1);
+        }
+
+        /* Normal state: subtle white border */
+        .beat-block.normal {
+            border-color: var(--border);
+        }
+
+        /* Muted state: dimmed with diagonal line */
+        .beat-block.muted {
+            opacity: 0.5;
+            border-color: transparent;
+        }
+
+        .beat-block.muted::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                transparent 45%,
+                var(--text-muted) 45%,
+                var(--text-muted) 55%,
+                transparent 55%
+            );
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 2;
         }
 
         .beat-fill {
@@ -114,11 +151,15 @@
             height: 0%;
             background: var(--accent);
             transition: height 0.05s linear;
-            border-radius: 0 0 8px 8px;
+            border-radius: 0 0 6px 6px;
         }
 
         .beat-block.filling .beat-fill {
-            border-radius: 8px;
+            border-radius: 6px;
+        }
+
+        .beat-block.muted .beat-fill {
+            background: var(--text-muted);
         }
 
         .beat-number {
@@ -133,30 +174,31 @@
             transition: color 0.1s;
         }
 
+        .beat-block.accented .beat-number {
+            color: var(--accent);
+        }
+
         .beat-block.active .beat-number {
             color: var(--text);
         }
 
-        .beat-block.muted {
-            opacity: 0.4;
-        }
-
-        .beat-block.muted .beat-fill {
-            background: var(--text-muted);
-        }
-
-        .accent-indicator {
+        /* State label - shows at bottom */
+        .beat-state {
             position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
+            bottom: 3px;
+            left: 0;
+            right: 0;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            color: var(--text-muted);
+            opacity: 0.7;
+            z-index: 1;
         }
 
-        .beat-block:not(.accented) .accent-indicator {
-            display: none;
+        .beat-block.accented .beat-state {
+            color: var(--accent);
         }
 
         /* BPM Display */
@@ -628,13 +670,18 @@
                 block.className = 'beat-block';
                 block.dataset.beat = i;
                 
-                if (state.beatAccents[i] === 0) block.classList.add('muted');
-                if (state.beatAccents[i] === 4) block.classList.add('accented');
+                // Set initial state class
+                const accent = state.beatAccents[i];
+                if (accent === 0) block.classList.add('muted');
+                else if (accent === 4) block.classList.add('accented');
+                else block.classList.add('normal');
+
+                const stateLabel = accent === 4 ? 'accent' : accent === 0 ? 'mute' : '';
 
                 block.innerHTML = `
                     <div class="beat-fill"></div>
                     <span class="beat-number">${i + 1}</span>
-                    <span class="accent-indicator"></span>
+                    <span class="beat-state">${stateLabel}</span>
                 `;
 
                 // Click to cycle accent
@@ -648,9 +695,18 @@
             const current = state.beatAccents[beatIndex];
             state.beatAccents[beatIndex] = current === 2 ? 4 : current === 4 ? 0 : 2;
             
+            const newVal = state.beatAccents[beatIndex];
             const block = els.beatGrid.children[beatIndex];
-            block.classList.toggle('muted', state.beatAccents[beatIndex] === 0);
-            block.classList.toggle('accented', state.beatAccents[beatIndex] === 4);
+            const stateEl = block.querySelector('.beat-state');
+            
+            // Update classes
+            block.classList.remove('muted', 'accented', 'normal');
+            if (newVal === 0) block.classList.add('muted');
+            else if (newVal === 4) block.classList.add('accented');
+            else block.classList.add('normal');
+            
+            // Update label
+            stateEl.textContent = newVal === 4 ? 'accent' : newVal === 0 ? 'mute' : '';
         }
 
         function updateBeatDisplay(beatIndex, fillPercent) {
