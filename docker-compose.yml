@@ -1,0 +1,39 @@
+services:
+  stickwithit-web:
+    image: nginx:alpine
+    container_name: stickwithit-web
+    restart: unless-stopped
+    
+    # Security: no privilege escalation
+    security_opt:
+      - no-new-privileges:true
+    
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./www:/usr/share/nginx/html:ro
+    
+    expose:
+      - "80"
+    
+    networks:
+      - localai_default
+    
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+networks:
+  localai_default:
+    external: true
