@@ -3,11 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stick With It</title>
+    <title>Stick With It | Drummers Unite!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #e94560, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tagline {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+        .welcome {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 2rem 0 1rem;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .links a {
+            display: block;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(233, 69, 96, 0.5);
+            transform: translateY(-2px);
+        }
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            padding: 0.75rem 1.5rem;
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 25px;
+            color: #e94560;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .social-links a:hover {
+            background: rgba(233, 69, 96, 0.3);
+            transform: scale(1.05);
+        }
+        .apps {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .apps a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .apps a:hover {
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    Stick With It
-    <br><br>
-    <a href="/apps/metrognome/">MetroGnome</a>
+    <div class="container">
+        <h1>Stick With It</h1>
+        <p class="tagline">Drummers Unite!</p>
+        
+        <p class="welcome">Thanks for being here.</p>
+        <p class="welcome">Links to the latest stuff below</p>
+
+        <p class="section-title">Connect</p>
+        <div class="social-links">
+            <a href="https://www.youtube.com/stickwithit" target="_blank">YouTube</a>
+            <a href="https://discord.com/invite/yCbGA8X" target="_blank">Discord</a>
+            <a href="https://forms.gle/ewFvNa8CexqMWuAN6" target="_blank">Submit Video</a>
+        </div>
+
+        <div class="apps">
+            <a href="/apps/metrognome/">🥁 MetroGnome</a>
+        </div>
+    </div>
 </body>
 </html>
