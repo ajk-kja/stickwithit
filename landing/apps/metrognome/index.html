@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Metronome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.15s ease, background-color 0.3s ease;
+        }
+
+        body.flash {
+            background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%);
+        }
+
+        /* Cyberpunk Theme */
+        body.cyberpunk {
+            background: linear-gradient(135deg, #0a0e0a 0%, #000000 100%);
+        }
+
+        body.cyberpunk.flash {
+            background: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+        }
+
+        body.cyberpunk .container {
+            background: #0d0d0d;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3), inset 0 0 20px rgba(0, 255, 65, 0.05);
+        }
+
+        body.cyberpunk h1 {
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        body.cyberpunk .bpm-display {
+            color: #00ff41;
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.6);
+        }
+
+        body.cyberpunk .beat-counter {
+            color: #00ff41;
+        }
+
+        body.cyberpunk .beat-counter .current {
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+        }
+
+        body.cyberpunk .control-group label {
+            color: #00ff41;
+        }
+
+        body.cyberpunk .slider-labels,
+        body.cyberpunk .beat-number,
+        body.cyberpunk .accent-label {
+            color: #00ff41;
+        }
+
+        body.cyberpunk input[type="range"]::-webkit-slider-thumb {
+            background: #00ff41;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        body.cyberpunk input[type="range"]::-moz-range-thumb {
+            background: #00ff41;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        body.cyberpunk select {
+            background: #0d0d0d;
+            color: #00ff41;
+            border-color: #00ff41;
+        }
+
+        body.cyberpunk .toggle-container {
+            background: #1a1a1a;
+            border: 1px solid #00ff41;
+        }
+
+        body.cyberpunk .toggle-container label {
+            color: #00ff41;
+        }
+
+        body.cyberpunk input:checked + .toggle-slider {
+            background-color: #00ff41;
+        }
+
+        body.cyberpunk #startStopBtn {
+            background: #00ff41;
+            color: #000;
+            text-shadow: none;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+        }
+
+        body.cyberpunk #startStopBtn:hover {
+            background: #00cc33;
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.6);
+        }
+
+        body.cyberpunk #startStopBtn.playing {
+            background: #ff0055;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+        }
+
+        body.cyberpunk #startStopBtn.playing:hover {
+            background: #cc0044;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.6);
+        }
+
+        body.cyberpunk .bar-slider {
+            background: #00ff41;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.8);
+        }
+
+        body.cyberpunk .accent-grid {
+            background: #1a1a1a;
+            border: 1px solid #00ff41;
+        }
+
+        body.cyberpunk .accent-bar-container {
+            background: #0a0a0a;
+            border-color: #00ff41;
+        }
+
+        body.cyberpunk .accent-bar.level-1 {
+            background: linear-gradient(to top, #003311, #004411);
+        }
+
+        body.cyberpunk .accent-bar.level-2 {
+            background: linear-gradient(to top, #005522, #007722);
+        }
+
+        body.cyberpunk .accent-bar.level-3 {
+            background: linear-gradient(to top, #008833, #00aa33);
+        }
+
+        body.cyberpunk .accent-bar.level-4 {
+            background: linear-gradient(to top, #00ff41, #00cc33);
+        }
+
+        body.cyberpunk .beat.active {
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        /* Bar Slider */
+        .bar-slider-container {
+            position: relative;
+            height: 60px;
+            margin-bottom: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .bar-slider-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .bar-segment {
+            flex: 1;
+            border-right: 1px solid #ddd;
+        }
+
+        .bar-segment:last-child {
+            border-right: none;
+        }
+
+        .bar-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.6);
+            transition: left 0.05s linear;
+        }
+
+        /* BPM Display */
+        .bpm-display {
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        /* Beat Counter */
+        .beat-counter {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .beat-counter .current {
+            color: #e74c3c;
+            font-size: 1.3em;
+        }
+
+        /* Beat Indicator */
+        .beat-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .beat {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.1s;
+        }
+
+        .beat.active {
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Accent Grid */
+        .accent-grid-container {
+            margin-bottom: 25px;
+        }
+
+        .accent-grid-container label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .accent-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .accent-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accent-bar-container {
+            height: 120px;
+            width: 45px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid #ccc;
+            transition: border-color 0.2s;
+        }
+
+        .accent-bar-container:hover {
+            border-color: #667eea;
+        }
+
+        .accent-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transition: height 0.2s, background 0.2s;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .accent-bar.level-0 {
+            height: 0%;
+            background: transparent;
+        }
+
+        .accent-bar.level-1 {
+            height: 25%;
+            background: linear-gradient(to top, #b8c5f0, #d4daef);
+        }
+
+        .accent-bar.level-2 {
+            height: 50%;
+            background: linear-gradient(to top, #8fa3e8, #a7b7f2);
+        }
+
+        .accent-bar.level-3 {
+            height: 75%;
+            background: linear-gradient(to top, #667eea, #7d8ff5);
+        }
+
+        .accent-bar.level-4 {
+            height: 100%;
+            background: linear-gradient(to top, #e74c3c, #ff6b5b);
+        }
+
+        .accent-label {
+            font-size: 0.75em;
+            color: #666;
+            font-weight: 600;
+            text-align: center;
+            min-height: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .accent-label.level-0 { color: #999; }
+        .accent-label.level-1 { color: #8fa3e8; }
+        .accent-label.level-2 { color: #667eea; }
+        .accent-label.level-3 { color: #5568d3; }
+        .accent-label.level-4 { color: #e74c3c; }
+
+        .beat-number {
+            font-size: 0.9em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Controls */
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .slider-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:hover, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .toggle-container label {
+            color: #555;
+            font-weight: 600;
+            font-size: 1em;
+            margin: 0;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(28px);
+        }
+
+        /* Button */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        #startStopBtn {
+            background: #667eea;
+        }
+
+        #startStopBtn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #startStopBtn.playing {
+            background: #e74c3c;
+        }
+
+        #startStopBtn.playing:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Metronome</h1>
+
+        <!-- Bar Slider -->
+        <div class="bar-slider-container">
+            <div class="bar-slider-track" id="barTrack"></div>
+            <div class="bar-slider" id="barSlider"></div>
+        </div>
+
+        <!-- BPM Display -->
+        <div class="bpm-display" id="bpmDisplay">120</div>
+
+        <!-- Beat Counter -->
+        <div class="beat-counter" id="beatCounter">Beat <span class="current">-</span> of <span id="totalBeats">4</span></div>
+
+        <!-- Beat Indicator -->
+        <div class="beat-indicator" id="beatIndicator"></div>
+
+        <!-- Accent Grid -->
+        <div class="accent-grid-container">
+            <label>Beat Accents (Click to Change)</label>
+            <div class="accent-grid" id="accentGrid"></div>
+        </div>
+
+        <!-- BPM Slider -->
+        <div class="control-group">
+            <label for="bpmSlider">BPM</label>
+            <div class="slider-container">
+                <input type="range" id="bpmSlider" min="30" max="300" value="120">
+                <div class="slider-labels">
+                    <span>30</span>
+                    <span>300</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volume Slider -->
+        <div class="control-group">
+            <label for="volumeSlider">Volume</label>
+            <div class="slider-container">
+                <input type="range" id="volumeSlider" min="0" max="100" value="80">
+                <div class="slider-labels">
+                    <span>0%</span>
+                    <span>100%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Flash Toggle -->
+        <div class="toggle-container">
+            <label for="flashToggle">Background Flash</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="flashToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
+        <!-- Time Signature -->
+        <div class="control-group">
+            <label for="timeSignature">Time Signature</label>
+            <select id="timeSignature">
+                <option value="2">2/4</option>
+                <option value="3">3/4</option>
+                <option value="4" selected>4/4</option>
+                <option value="5">5/4</option>
+                <option value="6">6/8</option>
+                <option value="7">7/8</option>
+                <option value="12">12/8</option>
+            </select>
+        </div>
+
+        <!-- Subdivision -->
+        <div class="control-group">
+            <label for="subdivision">Subdivision</label>
+            <select id="subdivision">
+                <option value="1" selected>Quarter Notes</option>
+                <option value="2">Eighth Notes</option>
+                <option value="3">Eighth Note Triplets</option>
+                <option value="4">Sixteenth Notes</option>
+            </select>
+        </div>
+
+        <!-- Start/Stop Button -->
+        <div class="button-container">
+            <button id="startStopBtn">Start</button>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context Setup
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Metronome State
+        let isPlaying = false;
+        let bpm = 120;
+        let beatsPerMeasure = 4;
+        let subdivision = 1;
+        let currentBeat = 0;
+        let currentSubBeat = 0;
+        let nextNoteTime = 0;
+        let scheduleAheadTime = 0.1;
+        let lookahead = 25.0;
+        let timerID = null;
+        let masterVolume = 0.8;
+        let flashEnabled = false;
+
+        // Accent levels for each beat (0=muted, 1=piano, 2=mezzo forte, 3=forte, 4=fortissimo)
+        let beatAccents = [4, 2, 2, 2]; // Default: accent on beat 1
+
+        // Dynamic levels mapping - increased volume differences for more pronounced dynamics
+        const dynamicLevels = {
+            0: { volume: 0, name: 'Muted', short: '' },
+            1: { volume: 0.2, name: 'Piano', short: 'p' },
+            2: { volume: 0.4, name: 'Mezzo Forte', short: 'mf' },
+            3: { volume: 0.7, name: 'Forte', short: 'f' },
+            4: { volume: 1.0, name: 'Fortissimo', short: 'ff' }
+        };
+
+        // DOM Elements
+        const bpmSlider = document.getElementById('bpmSlider');
+        const bpmDisplay = document.getElementById('bpmDisplay');
+        const beatCounter = document.getElementById('beatCounter');
+        const totalBeatsSpan = document.getElementById('totalBeats');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const flashToggle = document.getElementById('flashToggle');
+        const timeSignatureSelect = document.getElementById('timeSignature');
+        const subdivisionSelect = document.getElementById('subdivision');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const beatIndicator = document.getElementById('beatIndicator');
+        const accentGrid = document.getElementById('accentGrid');
+        const barSlider = document.getElementById('barSlider');
+        const barTrack = document.getElementById('barTrack');
+
+        // Create bar segments
+        function createBarSegments() {
+            barTrack.innerHTML = '';
+            for (let i = 0; i < beatsPerMeasure; i++) {
+                const segment = document.createElement('div');
+                segment.className = 'bar-segment';
+                barTrack.appendChild(segment);
+            }
+        }
+
+        // Create beat indicator dots
+        function createBeatIndicator() {
+            beatIndicator.innerHTML = '';
+            for (let i = 0; i < beatsPerMeasure; i++) {
+                const beat = document.createElement('div');
+                beat.className = 'beat';
+                beatIndicator.appendChild(beat);
+            }
+        }
+
+        // Update beat indicator and beat counter for a specific beat
+        function updateBeatIndicator(beatNumber) {
+            // Update beat counter display
+            beatCounter.innerHTML = `Beat <span class="current">${beatNumber + 1}</span> of <span id="totalBeats">${beatsPerMeasure}</span>`;
+
+            const beats = beatIndicator.querySelectorAll('.beat');
+            beats.forEach((beat, index) => {
+                beat.classList.remove('active');
+                if (index === beatNumber) {
+                    beat.classList.add('active');
+                    const accentLevel = beatAccents[index];
+                    if (accentLevel === 0) {
+                        beat.style.background = '#ddd';
+                    } else if (accentLevel === 1) {
+                        beat.style.background = '#b8c5f0';
+                    } else if (accentLevel === 2) {
+                        beat.style.background = '#8fa3e8';
+                    } else if (accentLevel === 3) {
+                        beat.style.background = '#667eea';
+                    } else if (accentLevel === 4) {
+                        beat.style.background = '#e74c3c';
+                    }
+                } else {
+                    beat.style.background = '#ddd';
+                }
+            });
+        }
+
+        // Create accent grid - dynamically creates accent bars based on beatsPerMeasure
+        function createAccentGrid() {
+            accentGrid.innerHTML = '';
+
+            // Resize beatAccents array to match beatsPerMeasure
+            // Preserve existing accent levels where possible
+            const oldAccents = [...beatAccents];
+            beatAccents = [];
+
+            for (let i = 0; i < beatsPerMeasure; i++) {
+                // Preserve old accent if it exists, otherwise default to level 2 (mezzo forte)
+                // Exception: first beat defaults to level 4 (fortissimo) if new
+                if (i < oldAccents.length) {
+                    beatAccents[i] = oldAccents[i];
+                } else {
+                    beatAccents[i] = (i === 0) ? 4 : 2;
+                }
+            }
+
+            // Create accent bars for each beat in the measure
+            for (let beatIndex = 0; beatIndex < beatsPerMeasure; beatIndex++) {
+                const column = document.createElement('div');
+                column.className = 'accent-column';
+
+                const beatNum = document.createElement('div');
+                beatNum.className = 'beat-number';
+                beatNum.textContent = beatIndex + 1;
+
+                const barContainer = document.createElement('div');
+                barContainer.className = 'accent-bar-container';
+
+                const bar = document.createElement('div');
+                bar.className = `accent-bar level-${beatAccents[beatIndex]}`;
+                bar.dataset.beat = beatIndex;
+
+                barContainer.appendChild(bar);
+
+                const label = document.createElement('div');
+                label.className = `accent-label level-${beatAccents[beatIndex]}`;
+                label.textContent = dynamicLevels[beatAccents[beatIndex]].name;
+
+                // Click handler to cycle through accent levels for this specific beat
+                barContainer.addEventListener('click', () => {
+                    // Cycle through: 0 (muted) -> 1 (piano) -> 2 (mf) -> 3 (forte) -> 4 (ff) -> back to 0
+                    beatAccents[beatIndex] = (beatAccents[beatIndex] + 1) % 5;
+                    bar.className = `accent-bar level-${beatAccents[beatIndex]}`;
+                    label.className = `accent-label level-${beatAccents[beatIndex]}`;
+                    label.textContent = dynamicLevels[beatAccents[beatIndex]].name;
+                });
+
+                column.appendChild(beatNum);
+                column.appendChild(barContainer);
+                column.appendChild(label);
+                accentGrid.appendChild(column);
+            }
+        }
+
+        // Play click sound with proper accent level for the specified beat
+        function playClick(time, beatNumber) {
+            // Safety check: make sure beatNumber is within valid range
+            if (beatNumber < 0 || beatNumber >= beatAccents.length) {
+                console.error(`❌ Invalid beatNumber ${beatNumber}, beatAccents length is ${beatAccents.length}`);
+                return;
+            }
+
+            const accentLevel = beatAccents[beatNumber];
+
+            if (accentLevel === 0) {
+                return; // Muted
+            }
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Frequency based on accent - increased difference for more pronounced accents
+            if (accentLevel === 4) {
+                oscillator.frequency.value = 1200; // Fortissimo - highest
+            } else if (accentLevel === 3) {
+                oscillator.frequency.value = 1000; // Forte - high
+            } else if (accentLevel === 2) {
+                oscillator.frequency.value = 800;  // Mezzo Forte - medium
+            } else {
+                oscillator.frequency.value = 650;  // Piano - lower
+            }
+
+            // Volume based on accent level and master volume
+            const dynamicVolume = dynamicLevels[accentLevel].volume;
+            gainNode.gain.value = dynamicVolume * masterVolume;
+
+            oscillator.start(time);
+            oscillator.stop(time + 0.05);
+
+            // Envelope
+            gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+        }
+
+        // Background flash
+        function flashBackground() {
+            if (flashEnabled) {
+                document.body.classList.add('flash');
+                setTimeout(() => {
+                    document.body.classList.remove('flash');
+                }, 100);
+            }
+        }
+
+        // Update bar slider position
+        function updateBarSlider(beatProgress) {
+            // Move across the entire measure
+            const position = ((currentBeat + beatProgress) / beatsPerMeasure) * 100;
+            barSlider.style.left = `${position}%`;
+        }
+
+        // Schedule notes - called for each beat and subdivision
+        function scheduleNote(beatNumber, subBeatNumber, time) {
+            // Only play click on main beats (not subdivisions)
+            if (subBeatNumber === 0) {
+                playClick(time, beatNumber);
+
+                // Update visual indicator (schedule UI update)
+                // DO NOT modify currentBeat here - just update the visual for this specific beat
+                const delayMs = (time - audioContext.currentTime) * 1000;
+
+                setTimeout(() => {
+                    updateBeatIndicator(beatNumber);
+
+                    // Flash background only if beat is not muted
+                    const accentLevel = beatAccents[beatNumber];
+                    if (accentLevel > 0) {
+                        flashBackground();
+                    }
+                }, delayMs);
+            }
+        }
+
+        // Calculate next note timing and advance beat counters
+        function nextNote() {
+            const secondsPerBeat = 60.0 / bpm;
+            const secondsPerSubBeat = secondsPerBeat / subdivision;
+
+            nextNoteTime += secondsPerSubBeat;
+
+            currentSubBeat++;
+
+            if (currentSubBeat >= subdivision) {
+                currentSubBeat = 0;
+                currentBeat++;
+
+                if (currentBeat >= beatsPerMeasure) {
+                    currentBeat = 0;
+                }
+            }
+        }
+
+        // Scheduler - called every 25ms to schedule upcoming notes
+        function scheduler() {
+            let notesScheduled = 0;
+
+            while (nextNoteTime < audioContext.currentTime + scheduleAheadTime) {
+                scheduleNote(currentBeat, currentSubBeat, nextNoteTime);
+                nextNote();
+                notesScheduled++;
+
+                // Safety check to prevent infinite loops
+                if (notesScheduled > 100) {
+                    console.error('⚠️ Scheduler safety limit reached! Breaking loop.');
+                    break;
+                }
+            }
+        }
+
+        // Bar animation
+        let barAnimationId = null;
+        let barStartTime = null;
+
+        function animateBar(timestamp) {
+            if (!barStartTime) barStartTime = timestamp;
+
+            const secondsPerBeat = 60.0 / bpm;
+            const elapsed = (timestamp - barStartTime) / 1000;
+            const totalMeasureTime = secondsPerBeat * beatsPerMeasure;
+            const measureProgress = (elapsed % totalMeasureTime) / totalMeasureTime;
+
+            // Calculate which beat we're on and the progress within that beat
+            const exactBeat = measureProgress * beatsPerMeasure;
+            const beatIndex = Math.floor(exactBeat);
+            const beatProgress = exactBeat - beatIndex;
+
+            updateBarSlider(beatProgress);
+
+            if (isPlaying) {
+                barAnimationId = requestAnimationFrame(animateBar);
+            }
+        }
+
+        // Start/Stop
+        function togglePlayback() {
+            if (isPlaying) {
+                stop();
+            } else {
+                start();
+            }
+        }
+
+        function start() {
+            console.log(`▶️ Starting metronome: ${bpm} BPM, ${beatsPerMeasure}/4 time`);
+
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+
+            isPlaying = true;
+            currentBeat = 0;
+            currentSubBeat = 0;
+            nextNoteTime = audioContext.currentTime;
+            barStartTime = null;
+
+            startStopBtn.textContent = 'Stop';
+            startStopBtn.classList.add('playing');
+
+            timerID = setInterval(() => scheduler(), lookahead);
+            barAnimationId = requestAnimationFrame(animateBar);
+        }
+
+        function stop() {
+            console.log(`⏸️ Stopping metronome`);
+
+            isPlaying = false;
+            clearInterval(timerID);
+            if (barAnimationId) {
+                cancelAnimationFrame(barAnimationId);
+            }
+
+            startStopBtn.textContent = 'Start';
+            startStopBtn.classList.remove('playing');
+
+            // Reset beat counter
+            beatCounter.innerHTML = `Beat <span class="current">-</span> of <span id="totalBeats">${beatsPerMeasure}</span>`;
+
+            // Reset beat indicator
+            const beats = beatIndicator.querySelectorAll('.beat');
+            beats.forEach(beat => {
+                beat.classList.remove('active');
+                beat.style.background = '#ddd';
+            });
+
+            // Reset bar slider
+            barSlider.style.left = '0%';
+        }
+
+        // Event Listeners
+        bpmSlider.addEventListener('input', (e) => {
+            bpm = parseInt(e.target.value);
+            bpmDisplay.textContent = bpm;
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            masterVolume = parseInt(e.target.value) / 100;
+        });
+
+        flashToggle.addEventListener('change', (e) => {
+            flashEnabled = e.target.checked;
+        });
+
+        timeSignatureSelect.addEventListener('change', (e) => {
+            beatsPerMeasure = parseInt(e.target.value);
+
+            // Update total beats display
+            beatCounter.innerHTML = `Beat <span class="current">-</span> of <span id="totalBeats">${beatsPerMeasure}</span>`;
+
+            createBeatIndicator();
+            createBarSegments();
+            createAccentGrid();
+
+            if (isPlaying) {
+                currentBeat = 0;
+            }
+        });
+
+        subdivisionSelect.addEventListener('change', (e) => {
+            subdivision = parseInt(e.target.value);
+        });
+
+        startStopBtn.addEventListener('click', togglePlayback);
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            // Space bar - start/stop metronome
+            if (e.code === 'Space') {
+                e.preventDefault(); // Prevent page scroll
+                togglePlayback();
+            }
+
+            // E key - toggle cyberpunk theme (easter egg)
+            if (e.key === 'e' || e.key === 'E') {
+                // Only toggle if not typing in an input/select
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
+                    document.body.classList.toggle('cyberpunk');
+                    if (document.body.classList.contains('cyberpunk')) {
+                        console.log('🎮 Cyberpunk mode activated!');
+                    } else {
+                        console.log('👔 Normal mode restored.');
+                    }
+                }
+            }
+        });
+
+        // Initialize
+        createBeatIndicator();
+        createBarSegments();
+        createAccentGrid();
+    </script>
+</body>
+</html>
