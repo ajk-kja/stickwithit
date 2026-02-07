@@ -84,16 +84,26 @@
             padding-top: 2rem;
             border-top: 1px solid #222;
         }
-        .apps a {
+        .app-button {
             display: inline-block;
-            padding: 0.5rem 1rem;
-            color: #666;
+            padding: 1.25rem 3rem;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
-        .apps a:hover {
-            color: #e63946;
+        .app-button:hover {
+            background: #1a1a1a;
+            border-color: #e63946;
+            transform: translateY(-2px);
+        }
+        .app-button .emoji {
+            font-size: 1.4rem;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
@@ -115,7 +125,9 @@
         </div>
 
         <div class="apps">
-            <a href="/apps/metrognome/">🥁 MetroGnome</a>
+            <a href="/apps/metrognome/" class="app-button">
+                <span class="emoji">🥁</span> MetroGnome
+            </a>
         </div>
     </div>
 </body>
