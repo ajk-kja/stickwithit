@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Stick With It</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        .logo {
+            width: 50px;
+            height: auto;
+        }
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+        }
+        .site-title:hover {
+            color: #e63946;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            color: #e63946;
+        }
+        .posts {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .post {
+            padding: 1.5rem;
+            border: 1px solid #222;
+            border-radius: 4px;
+            transition: border-color 0.2s;
+        }
+        .post:hover {
+            border-color: #e63946;
+        }
+        .post a {
+            text-decoration: none;
+        }
+        .post-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .post-excerpt {
+            color: #888;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .post-meta {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/">
+                <img src="/StickWithItBlack.png" alt="Stick With It" class="logo">
+            </a>
+            <a href="/" class="site-title">Stick With It</a>
+        </div>
+
+        <h1>Blog</h1>
+
+        <div class="posts">
+            <article class="post">
+                <a href="/blog/posts/sticking-with-it.html">
+                    <h2 class="post-title">Sticking With It</h2>
+                    <p class="post-excerpt">As I look back on my life, I am grateful for the diverse range of experiences and interests that have shaped me. From my early fascination with video games and home video production to my love of music and drumming...</p>
+                    <p class="post-meta">A journey through drums, production, and perseverance</p>
+                </a>
+            </article>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticking With It | Stick With It Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Rain effect */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .rain-drop {
+            position: absolute;
+            width: 1px;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255,255,255,0.4));
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Lightning flash */
+        .lightning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            pointer-events: none;
+            z-index: 2;
+            transition: background 0.1s;
+        }
+
+        .lightning.flash {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Dinosaur silhouette */
+        .dino-container {
+            position: fixed;
+            bottom: 0;
+            right: 5%;
+            width: 300px;
+            height: 250px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .dino-container.visible {
+            opacity: 1;
+        }
+
+        .dino {
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            clip-path: polygon(
+                /* T-Rex silhouette */
+                85% 100%, 85% 85%, 80% 85%, 80% 100%, /* back leg */
+                60% 100%, 60% 80%, 55% 80%, 55% 100%, /* front leg */
+                40% 100%, 35% 70%, 30% 65%, 25% 60%, /* body */
+                15% 55%, 10% 50%, 5% 45%, /* neck */
+                0% 40%, 5% 35%, 15% 30%, 20% 32%, /* head top */
+                25% 35%, 22% 40%, 25% 42%, /* jaw */
+                30% 45%, 35% 50%, 40% 55%, /* back to body */
+                50% 60%, 60% 62%, 75% 65%, 90% 70%, /* tail */
+                95% 75%, 100% 80%, 95% 85%, 90% 100%
+            );
+        }
+
+        /* Palm trees */
+        .palm-left, .palm-right {
+            position: fixed;
+            bottom: 0;
+            width: 150px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .palm-left.visible, .palm-right.visible {
+            opacity: 1;
+        }
+
+        .palm-left {
+            left: 2%;
+        }
+
+        .palm-right {
+            right: 25%;
+        }
+
+        .palm-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 200px;
+            background: #1a1a1a;
+            border-radius: 5px;
+        }
+
+        .palm-frond {
+            position: absolute;
+            top: 50px;
+            width: 80px;
+            height: 15px;
+            background: #1a1a1a;
+            border-radius: 50% 50% 0 0;
+            transform-origin: right center;
+        }
+
+        .palm-frond:nth-child(1) { left: 10%; transform: rotate(-60deg); }
+        .palm-frond:nth-child(2) { left: 20%; transform: rotate(-30deg); }
+        .palm-frond:nth-child(3) { left: 40%; transform: rotate(0deg); }
+        .palm-frond:nth-child(4) { right: 20%; transform: rotate(30deg); transform-origin: left center; }
+        .palm-frond:nth-child(5) { right: 10%; transform: rotate(60deg); transform-origin: left center; }
+
+        /* Content */
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #e63946;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .article p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .article p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            margin-right: 0.5rem;
+            color: #e63946;
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: #e63946;
+        }
+
+        /* Lo-fi scan lines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            opacity: 0.3;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .article p { font-size: 1rem; }
+            .dino-container { width: 150px; height: 125px; right: 2%; }
+            .palm-left, .palm-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Rain -->
+    <div class="rain" id="rain"></div>
+
+    <!-- Lightning flash overlay -->
+    <div class="lightning" id="lightning"></div>
+
+    <!-- Dinosaur silhouette -->
+    <div class="dino-container" id="dino">
+        <div class="dino"></div>
+    </div>
+
+    <!-- Palm trees -->
+    <div class="palm-left" id="palm-left">
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-trunk"></div>
+    </div>
+
+    <div class="palm-right" id="palm-right">
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-trunk"></div>
+    </div>
+
+    <!-- Lo-fi scan lines -->
+    <div class="scanlines"></div>
+
+    <!-- Content -->
+    <div class="content">
+        <a href="/blog/" class="back-link">← Back to Blog</a>
+        
+        <h1>Sticking With It</h1>
+        <p class="date">Posted on Stick With It</p>
+
+        <article class="article">
+            <p>As I look back on my life, I am grateful for the diverse range of experiences and interests that have shaped me. From my early fascination with video games and home video production to my love of music and drumming, I have always been driven by a desire to learn and grow in the fields of digital art and music technology.</p>
+
+            <p>I was always shooting little sketches with my family. It was a natural transition to capture drums when I first started my channel. My biggest challenge as a self taught drummer was being able to visualize the playing while learning by ear. I found that being able to film the drummers I looked up to was a good way to learn their songs. I did my best to invest in myself so I could capture the footage at the best angles and quality for other drummers to learn and be inspired. Breaking traditional cinema norms of shooting in 24 frames per second, I saw the value of being able to upload videos at 60 fps to provide a smoother slow motion playback experience.</p>
+
+            <p>While studying biology in college, I encountered challenges like breaking my arm. It was the worst timing, as it happened right before a battle of the bands I was supposed to play in for a majority of the acts! I also missed some exams, and had to retake some classes over the summer. I took my recovery seriously, and thank god, I was able to get back to playing drums and graduate on time. After working in a hospital for a year, I transitioned into the world of audio engineering and stage production, gaining invaluable experience in various roles within the industry.</p>
+
+            <p>As a freelancer in New York City, I had the privilege of working with numerous production companies and collaborating with talented musicians. These experiences taught me about the challenges and rewards of pursuing a career in music and production. I was able to film some of my favorite drummers and spend some time with them as they toured through NYC. I started streaming my drum set from my basement in 2015. In November of 2016 I produced the Greiner Kilmer Live stream with one of my biggest inspirations— <span class="highlight">Matt Greiner from August Burns Red</span>. Following the live stream, I was able to crash at his house. In the morning, we talked about life, faith and the power of being able to be there for your family. I am afraid in my arrogance and misdirection, I took those lessons for granted in that moment. Looking back at what was said, I have a new found respect for musicians that sacrifice so much to be on the road constantly in pursuit of their dreams, many of which have been morphed and shifted by life on the road as new priorities emerge in life.</p>
+
+            <p>In 2019, I was playing in this 2 piece rock band. I found new ways to express myself in an attempt to level up our live show. I reached out to my digital art professor from Stony Brook, and was connected with someone who was well versed in TouchDesigner. This new tool opened so many doors for creativity, after VJ tools like projection mapping with Serato DJ, and attempting to use a projector on the road with Resolume proved to be harder than anticipated. I built a little rack to contain all the parts of this over complicated drum light trigger.</p>
+
+            <p>During the pandemic, necessity became the mother of invention. I adapted to the new reality by converting my basement into a live streaming studio and performing weekly shows for the internet. Pulling from experience in broadcast studios, live events, and streaming video games in my leisure time, I was able to create a fully integrated streaming and recording space. We expanded the previous drum lights TouchDesigner setup to incorporate Twitch chat and more! This allowed me to continue sharing my love of music while further developing my skills as an AV technologist.</p>
+
+            <p>Throughout my journey, I have remained focused on learning and growing and it has lead to great things just from <span class="highlight">sticking with it</span>. I can't thank god enough for the ability to reflect on past experiences with perspective. I hope people can learn from my mistakes, so that my experiences and insights can serve as an inspiration to others who aspire to pursue a creative career in the arts.</p>
+
+            <p>Thanks for checking out my page, I hope we can both learn something.</p>
+        </article>
+    </div>
+
+    <script>
+        // Create rain drops
+        const rain = document.getElementById('rain');
+        for (let i = 0; i < 100; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            drop.style.animationDelay = Math.random() * 2 + 's';
+            rain.appendChild(drop);
+        }
+
+        // Lightning effect
+        const lightning = document.getElementById('lightning');
+        const dino = document.getElementById('dino');
+        const palmLeft = document.getElementById('palm-left');
+        const palmRight = document.getElementById('palm-right');
+
+        function triggerLightning() {
+            // Flash sequence (subtle, non-epileptic)
+            lightning.classList.add('flash');
+            dino.classList.add('visible');
+            palmLeft.classList.add('visible');
+            palmRight.classList.add('visible');
+
+            setTimeout(() => {
+                lightning.classList.remove('flash');
+                dino.classList.remove('visible');
+                palmLeft.classList.remove('visible');
+                palmRight.classList.remove('visible');
+            }, 150);
+
+            // Occasionally do a double flash
+            if (Math.random() > 0.6) {
+                setTimeout(() => {
+                    lightning.classList.add('flash');
+                    dino.classList.add('visible');
+                    palmLeft.classList.add('visible');
+                    palmRight.classList.add('visible');
+                    setTimeout(() => {
+                        lightning.classList.remove('flash');
+                        dino.classList.remove('visible');
+                        palmLeft.classList.remove('visible');
+                        palmRight.classList.remove('visible');
+                    }, 100);
+                }, 200);
+            }
+
+            // Schedule next lightning (random interval 8-20 seconds)
+            setTimeout(triggerLightning, Math.random() * 12000 + 8000);
+        }
+
+        // Start lightning after a delay
+        setTimeout(triggerLightning, 3000);
+    </script>
+</body>
+</html>
