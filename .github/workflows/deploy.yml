@@ -3,20 +3,19 @@ name: Deploy
 on:
   push:
     branches: [main]
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script: |
-            cd ${{ secrets.DEPLOY_PATH }}
-            git pull origin main
-            docker compose restart
-            echo "✅ Deployed at $(date)"
+      - name: Pull latest
+        run: |
+          cd /home/clank/infra/stickwithit
+          git pull origin main
+          
+      - name: Restart container
+        run: |
+          cd /home/clank/infra/stickwithit
+          docker compose restart
+          echo "✅ Deployed at $(date)"
