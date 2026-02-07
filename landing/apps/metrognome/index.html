@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MetroGnome | Stick With It</title>
-    <meta name="description" content="A clean, accessible metronome for drummers">
     <meta name="theme-color" content="#000000">
-    <link rel="apple-touch-icon" href="/assets/StickWithItBlack.png">
     <style>
         :root {
             --bg: #000;
@@ -14,358 +12,174 @@
             --surface-2: #1a1a1a;
             --border: #333;
             --text: #fff;
-            --text-muted: #888;
+            --text-muted: #666;
             --accent: #e63946;
-            --accent-dim: rgba(230, 57, 70, 0.3);
-            --beat-inactive: #222;
-            --beat-fill: #e63946;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         html, body {
             height: 100%;
             overflow: hidden;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             background: var(--bg);
             color: var(--text);
+        }
+
+        .app {
+            height: 100%;
             display: flex;
             flex-direction: column;
-            touch-action: manipulation;
         }
 
         /* Header */
         .header {
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--border);
             flex-shrink: 0;
         }
 
-        .header a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
+        .header a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
+        .header h1 { font-size: 1rem; font-weight: 600; }
 
-        .header h1 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        /* Tabs */
+        /* Tabs - Segmented Control */
         .tabs {
             display: flex;
-            border-bottom: 1px solid var(--border);
+            margin: 0 1rem 1rem;
+            background: var(--surface);
+            border-radius: 10px;
+            padding: 4px;
             flex-shrink: 0;
         }
 
         .tab {
             flex: 1;
-            padding: 1rem;
+            padding: 0.6rem;
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.15s;
-            position: relative;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
 
         .tab.active {
+            background: var(--surface-2);
             color: var(--text);
-        }
-
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 1rem;
-            right: 1rem;
-            height: 2px;
-            background: var(--accent);
         }
 
         /* Tab Content */
         .tab-content {
             flex: 1;
-            overflow: hidden;
             display: none;
-        }
-
-        .tab-content.active {
-            display: flex;
             flex-direction: column;
+            padding: 0 1rem;
+            min-height: 0;
         }
 
-        /* Main Container */
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
-            gap: 1.5rem;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+        .tab-content.active { display: flex; }
 
-        /* Beat Display */
-        .beat-display {
+        /* Beat Grid Container - Fixed Height */
+        .beat-container {
             background: var(--surface);
             border-radius: 16px;
-            padding: 1.25rem;
+            padding: 1rem;
             flex-shrink: 0;
+            height: 140px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .beat-grid {
-            display: grid;
-            gap: 8px;
-            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-            max-width: 100%;
-        }
-
-        .beat-block {
-            aspect-ratio: 1;
-            min-height: 40px;
-            max-height: 60px;
-            background: var(--beat-inactive);
-            border-radius: 8px;
+        /* Beat Faders */
+        .beat-fader {
+            flex: 1;
+            max-width: 50px;
+            height: 100%;
+            background: var(--surface-2);
+            border-radius: 6px;
             position: relative;
-            overflow: hidden;
             cursor: pointer;
-            transition: transform 0.1s, border-color 0.15s, box-shadow 0.15s;
+            overflow: hidden;
             border: 2px solid transparent;
+            transition: border-color 0.15s;
         }
 
-        .beat-block:active {
-            transform: scale(0.95);
-        }
-
-        .beat-block.accented {
-            border-color: var(--text);
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-
-        .beat-block.normal {
-            border-color: var(--border);
-        }
-
-        .beat-block.muted {
-            opacity: 0.5;
-            border-color: transparent;
-        }
-
-        .beat-block.muted::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent 45%, var(--text-muted) 45%, var(--text-muted) 55%, transparent 55%);
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 2;
-        }
+        .beat-fader.level-3 { border-color: var(--text); }
 
         .beat-fill {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 0%;
-            background: var(--accent);
-            transition: height 0.05s linear;
-            border-radius: 0 0 6px 6px;
+            transition: height 0.1s, background 0.1s;
+            border-radius: 0 0 4px 4px;
         }
 
-        .beat-block.filling .beat-fill {
-            border-radius: 6px;
-        }
+        .beat-fader.level-0 .beat-fill { height: 0%; background: transparent; }
+        .beat-fader.level-1 .beat-fill { height: 33%; background: #444; }
+        .beat-fader.level-2 .beat-fill { height: 66%; background: #888; }
+        .beat-fader.level-3 .beat-fill { height: 100%; background: var(--accent); border-radius: 4px; }
 
-        .beat-block.muted .beat-fill {
-            background: var(--text-muted);
-        }
+        .beat-fader.playing .beat-fill { filter: brightness(1.3); }
 
-        .beat-number {
+        .beat-num {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.85rem;
+            bottom: 4px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--text-muted);
             z-index: 1;
-            transition: color 0.1s;
         }
 
-        .beat-block.accented .beat-number {
-            color: var(--accent);
-        }
+        .beat-fader.level-3 .beat-num,
+        .beat-fader.playing .beat-num { color: var(--text); }
 
-        .beat-block.active .beat-number {
-            color: var(--text);
-        }
-
-        .beat-state {
+        /* Progress overlay */
+        .beat-progress {
             position: absolute;
-            bottom: 3px;
+            bottom: 0;
             left: 0;
             right: 0;
-            font-size: 0.55rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-align: center;
-            color: var(--text-muted);
-            opacity: 0.7;
-            z-index: 1;
+            height: 0%;
+            background: rgba(255,255,255,0.3);
+            pointer-events: none;
+            transition: none;
         }
 
-        .beat-block.accented .beat-state {
-            color: var(--accent);
-        }
-
-        /* BPM Display */
+        /* BPM Section */
         .bpm-section {
             text-align: center;
+            padding: 1rem 0;
             flex-shrink: 0;
         }
 
         .bpm-value {
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-weight: 200;
             line-height: 1;
             font-variant-numeric: tabular-nums;
         }
 
         .bpm-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-top: 0.25rem;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 1rem;
-            align-items: stretch;
-        }
-
-        .control-group {
-            flex: 1;
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1rem;
-        }
-
-        .control-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.75rem;
-            display: block;
-        }
-
-        /* Time Signature */
-        .time-sig {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .time-sig-picker {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .time-sig-value {
-            font-size: 2rem;
-            font-weight: 600;
-            width: 3rem;
-            text-align: center;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .time-sig-btn {
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: var(--surface-2);
-            color: var(--text);
-            border-radius: 8px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.15s;
-        }
-
-        .time-sig-btn:hover {
-            background: var(--border);
-        }
-
-        .time-sig-btn:active {
-            background: var(--accent);
-        }
-
-        .time-sig-divider {
-            font-size: 2.5rem;
-            font-weight: 200;
-            color: var(--text-muted);
-        }
-
-        /* Subdivision */
-        .subdivision-picker {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .subdiv-btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text-muted);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .subdiv-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: var(--bg);
-            font-weight: 600;
         }
 
         /* BPM Slider */
-        .bpm-slider-container {
+        .slider-container {
             padding: 0.5rem 0;
+            flex-shrink: 0;
         }
 
         input[type="range"] {
@@ -373,173 +187,265 @@
             height: 44px;
             -webkit-appearance: none;
             background: transparent;
-            cursor: pointer;
         }
 
         input[type="range"]::-webkit-slider-runnable-track {
             height: 8px;
-            background: var(--surface-2);
+            background: var(--surface);
             border-radius: 4px;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             background: var(--accent);
             border-radius: 50%;
-            margin-top: -10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-top: -12px;
         }
 
         input[type="range"]::-moz-range-track {
             height: 8px;
-            background: var(--surface-2);
+            background: var(--surface);
             border-radius: 4px;
-            border: none;
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             background: var(--accent);
             border-radius: 50%;
             border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
-        .slider-labels {
+        /* Controls Row */
+        .controls-row {
             display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
+            gap: 0.75rem;
+            flex-shrink: 0;
+            padding: 0.5rem 0;
         }
 
-        /* Volume */
-        .volume-row {
+        .settings-btn {
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .volume-icon {
-            font-size: 1.25rem;
+        .settings-btn:active { background: var(--surface); }
+
+        .flash-btn {
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.15s;
         }
 
-        .volume-slider {
-            flex: 1;
+        .flash-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(230,57,70,0.1);
         }
 
         /* Buttons */
         .btn-row {
             display: flex;
             gap: 0.75rem;
+            padding: 0.5rem 0 1rem;
+            flex-shrink: 0;
         }
 
         .play-btn {
             flex: 2;
             padding: 1.25rem;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 14px;
+            font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.15s;
             text-transform: uppercase;
             letter-spacing: 1px;
             background: var(--accent);
             color: var(--bg);
+            transition: all 0.15s;
         }
 
-        .play-btn:hover {
-            filter: brightness(1.1);
-        }
-
-        .play-btn:active {
-            transform: scale(0.98);
-        }
-
-        .play-btn.playing {
-            background: var(--text);
-            color: var(--bg);
-        }
+        .play-btn:active { transform: scale(0.98); }
+        .play-btn.playing { background: var(--text); }
 
         .save-btn {
             flex: 1;
             padding: 1.25rem;
             border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 0.9rem;
+            border-radius: 14px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.15s;
             background: transparent;
             color: var(--text);
         }
 
-        .save-btn:hover {
-            border-color: var(--text);
+        .save-btn:active { background: var(--surface); }
+
+        /* Settings Popup */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
         }
 
-        .save-btn:active {
+        .popup-overlay.active { display: flex; }
+
+        .popup {
             background: var(--surface);
+            border-radius: 20px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 340px;
         }
 
-        /* Toggle */
-        .toggle-row {
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .popup-title { font-size: 1.1rem; font-weight: 600; }
+
+        .popup-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--surface-2);
+            color: var(--text);
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .popup-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .popup-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Time Sig in Popup */
+        .time-sig-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 0;
+            justify-content: center;
+            gap: 1rem;
         }
 
-        .toggle-label {
-            font-size: 0.9rem;
+        .time-picker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .toggle {
-            width: 52px;
-            height: 32px;
+        .time-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
             background: var(--surface-2);
-            border-radius: 16px;
-            position: relative;
+            color: var(--text);
+            border-radius: 10px;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .toggle.active {
-            background: var(--accent);
+        .time-btn:active { background: var(--accent); }
+
+        .time-val {
+            font-size: 2.5rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
         }
 
-        .toggle-knob {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 26px;
-            height: 26px;
-            background: var(--text);
-            border-radius: 50%;
-            transition: transform 0.2s;
+        .time-divider {
+            font-size: 3rem;
+            font-weight: 200;
+            color: var(--text-muted);
         }
 
-        .toggle.active .toggle-knob {
-            transform: translateX(20px);
+        /* Subdivision Notes */
+        .subdiv-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
         }
 
-        /* === Playlist Tab === */
+        .subdiv-opt {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px;
+            transition: all 0.15s;
+        }
+
+        .subdiv-opt.active {
+            border-color: var(--accent);
+            background: rgba(230,57,70,0.15);
+        }
+
+        .subdiv-notes {
+            display: flex;
+            gap: 2px;
+            font-size: 1.2rem;
+        }
+
+        .subdiv-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .subdiv-opt.active .subdiv-label { color: var(--accent); }
+
+        /* Playlist Tab */
         .playlist-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
+            align-items: center;
+            padding: 0.5rem 0;
+            flex-shrink: 0;
         }
 
-        .playlist-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
+        .playlist-title { font-weight: 600; }
 
         .edit-btn {
             padding: 0.5rem 1rem;
@@ -549,7 +455,6 @@
             color: var(--text-muted);
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.15s;
         }
 
         .edit-btn.active {
@@ -561,13 +466,14 @@
         .playlist-list {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
         }
 
         .playlist-empty {
             text-align: center;
             color: var(--text-muted);
-            padding: 3rem 1rem;
+            padding: 2rem;
+            font-size: 0.9rem;
         }
 
         .playlist-item {
@@ -577,85 +483,34 @@
             padding: 1rem;
             background: var(--surface);
             border-radius: 12px;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             cursor: pointer;
-            transition: all 0.15s;
         }
 
-        .playlist-item:hover {
-            background: var(--surface-2);
-        }
+        .playlist-item:active { background: var(--surface-2); }
 
-        .playlist-item:active {
-            transform: scale(0.98);
-        }
+        .pl-info { flex: 1; min-width: 0; }
+        .pl-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pl-details { font-size: 0.8rem; color: var(--text-muted); }
+        .pl-bpm { font-size: 1.4rem; font-weight: 300; color: var(--accent); }
 
-        .playlist-item-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .pl-actions { display: none; gap: 0.5rem; }
+        .editing .pl-actions { display: flex; }
+        .editing .pl-bpm { display: none; }
 
-        .playlist-item-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .playlist-item-details {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .playlist-item-bpm {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: var(--accent);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .playlist-item-actions {
-            display: none;
-            gap: 0.5rem;
-        }
-
-        .editing .playlist-item-actions {
-            display: flex;
-        }
-
-        .editing .playlist-item-bpm {
-            display: none;
-        }
-
-        .item-action-btn {
+        .pl-action {
             width: 36px;
             height: 36px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 1rem;
-            transition: all 0.15s;
         }
 
-        .item-action-btn.rename {
-            background: var(--surface-2);
-            color: var(--text);
-        }
+        .pl-action.rename { background: var(--surface-2); color: var(--text); }
+        .pl-action.delete { background: rgba(230,57,70,0.2); color: var(--accent); }
 
-        .item-action-btn.delete {
-            background: rgba(230, 57, 70, 0.2);
-            color: var(--accent);
-        }
-
-        .item-action-btn:hover {
-            filter: brightness(1.2);
-        }
-
-        .add-btn {
+        .add-item {
             display: none;
             width: 100%;
             padding: 1rem;
@@ -663,53 +518,36 @@
             border-radius: 12px;
             background: transparent;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.15s;
             margin-top: 0.5rem;
         }
 
-        .editing .add-btn {
-            display: block;
-        }
-
-        .add-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .editing .add-item { display: block; }
 
         /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal {
             background: var(--surface);
             border-radius: 16px;
             padding: 1.5rem;
             width: 100%;
-            max-width: 320px;
+            max-width: 300px;
         }
 
-        .modal-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
+        .modal-title { font-weight: 600; margin-bottom: 1rem; }
 
         .modal-input {
             width: 100%;
@@ -722,15 +560,9 @@
             margin-bottom: 1rem;
         }
 
-        .modal-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
+        .modal-input:focus { outline: none; border-color: var(--accent); }
 
-        .modal-btns {
-            display: flex;
-            gap: 0.75rem;
-        }
+        .modal-btns { display: flex; gap: 0.75rem; }
 
         .modal-btn {
             flex: 1;
@@ -742,157 +574,68 @@
             cursor: pointer;
         }
 
-        .modal-btn.cancel {
-            background: var(--surface-2);
-            color: var(--text);
-        }
-
-        .modal-btn.confirm {
-            background: var(--accent);
-            color: var(--bg);
-        }
+        .modal-btn.cancel { background: var(--surface-2); color: var(--text); }
+        .modal-btn.confirm { background: var(--accent); color: var(--bg); }
 
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 2rem;
+            bottom: 1.5rem;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
+            transform: translateX(-50%) translateY(80px);
             background: var(--surface);
-            color: var(--text);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
             opacity: 0;
             transition: all 0.3s;
             z-index: 50;
             border: 1px solid var(--border);
         }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* Accessibility */
-        .visually-hidden {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        *:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        @media (min-width: 768px) {
-            .main {
-                max-width: 500px;
-                margin: 0 auto;
-            }
-            .playlist-list {
-                max-width: 500px;
-                margin: 0 auto;
-            }
+        @media (min-width: 500px) {
+            .tab-content, .tabs { max-width: 400px; margin-left: auto; margin-right: auto; }
         }
     </style>
 </head>
 <body>
+<div class="app">
     <header class="header">
-        <a href="/" aria-label="Back to Stick With It">← Home</a>
+        <a href="/">← Home</a>
         <h1>MetroGnome</h1>
-        <div style="width: 50px;"></div>
+        <div style="width:50px"></div>
     </header>
 
-    <!-- Tabs -->
     <nav class="tabs">
-        <button class="tab active" data-tab="metronome">Metronome</button>
+        <button class="tab active" data-tab="metro">Metronome</button>
         <button class="tab" data-tab="playlist">Playlist</button>
     </nav>
 
     <!-- Metronome Tab -->
-    <div class="tab-content active" id="metronome-tab">
-        <main class="main">
-            <section class="beat-display" aria-label="Beat visualization">
-                <div class="beat-grid" id="beatGrid" role="group" aria-label="Beat indicators"></div>
-            </section>
+    <div class="tab-content active" id="metro-tab">
+        <div class="beat-container" id="beatContainer"></div>
 
-            <section class="bpm-section">
-                <div class="bpm-value" id="bpmValue" aria-live="polite">120</div>
-                <div class="bpm-label">BPM</div>
-            </section>
+        <div class="bpm-section">
+            <div class="bpm-value" id="bpmValue">120</div>
+            <div class="bpm-label">BPM</div>
+        </div>
 
-            <div class="controls">
-                <div class="control-row">
-                    <div class="control-group">
-                        <label class="control-label">Time Signature</label>
-                        <div class="time-sig">
-                            <div class="time-sig-picker">
-                                <button class="time-sig-btn" data-target="top" data-dir="up" aria-label="Increase beats">+</button>
-                                <div class="time-sig-value" id="timeSigTop">4</div>
-                                <button class="time-sig-btn" data-target="top" data-dir="down" aria-label="Decrease beats">−</button>
-                            </div>
-                            <div class="time-sig-divider">/</div>
-                            <div class="time-sig-picker">
-                                <button class="time-sig-btn" data-target="bottom" data-dir="up" aria-label="Increase note value">+</button>
-                                <div class="time-sig-value" id="timeSigBottom">4</div>
-                                <button class="time-sig-btn" data-target="bottom" data-dir="down" aria-label="Decrease note value">−</button>
-                            </div>
-                        </div>
-                    </div>
+        <div class="slider-container">
+            <input type="range" id="bpmSlider" min="30" max="300" value="120">
+        </div>
 
-                    <div class="control-group">
-                        <label class="control-label">Subdivision</label>
-                        <div class="subdivision-picker" role="radiogroup" aria-label="Subdivision selection">
-                            <button class="subdiv-btn active" data-subdiv="1" role="radio" aria-checked="true">1</button>
-                            <button class="subdiv-btn" data-subdiv="2" role="radio" aria-checked="false">2</button>
-                            <button class="subdiv-btn" data-subdiv="3" role="radio" aria-checked="false">3</button>
-                            <button class="subdiv-btn" data-subdiv="4" role="radio" aria-checked="false">4</button>
-                        </div>
-                    </div>
-                </div>
+        <div class="controls-row">
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
+            <button class="flash-btn" id="flashBtn">💡</button>
+            <div style="flex:1"></div>
+        </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="bpmSlider">Tempo</label>
-                    <div class="bpm-slider-container">
-                        <input type="range" id="bpmSlider" min="30" max="300" value="120" aria-label="BPM">
-                    </div>
-                    <div class="slider-labels">
-                        <span>30</span>
-                        <span>300</span>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label">Volume</label>
-                    <div class="volume-row">
-                        <span class="volume-icon">🔈</span>
-                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80" aria-label="Volume">
-                        <span class="volume-icon">🔊</span>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <div class="toggle-row">
-                        <span class="toggle-label">Flash on Beat</span>
-                        <div class="toggle" id="flashToggle" role="switch" aria-checked="false" tabindex="0">
-                            <div class="toggle-knob"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="btn-row">
-                    <button class="play-btn" id="playBtn" aria-label="Start metronome">Start</button>
-                    <button class="save-btn" id="saveBtn">Save</button>
-                </div>
-            </div>
-        </main>
+        <div class="btn-row">
+            <button class="play-btn" id="playBtn">Start</button>
+            <button class="save-btn" id="saveBtn">Save</button>
+        </div>
     </div>
 
     <!-- Playlist Tab -->
@@ -902,496 +645,471 @@
             <button class="edit-btn" id="editBtn">Edit</button>
         </div>
         <div class="playlist-list" id="playlistList">
-            <div class="playlist-empty" id="playlistEmpty">
-                No saved tempos yet.<br>Save one from the Metronome tab!
+            <div class="playlist-empty">No saved tempos yet</div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Popup -->
+<div class="popup-overlay" id="settingsPopup">
+    <div class="popup">
+        <div class="popup-header">
+            <span class="popup-title">Settings</span>
+            <button class="popup-close" id="popupClose">×</button>
+        </div>
+
+        <div class="popup-section">
+            <div class="popup-label">Time Signature</div>
+            <div class="time-sig-row">
+                <div class="time-picker">
+                    <button class="time-btn" data-t="top" data-d="up">+</button>
+                    <div class="time-val" id="tsTop">4</div>
+                    <button class="time-btn" data-t="top" data-d="down">−</button>
+                </div>
+                <div class="time-divider">/</div>
+                <div class="time-picker">
+                    <button class="time-btn" data-t="bot" data-d="up">+</button>
+                    <div class="time-val" id="tsBot">4</div>
+                    <button class="time-btn" data-t="bot" data-d="down">−</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-section">
+            <div class="popup-label">Subdivision</div>
+            <div class="subdiv-options" id="subdivOptions">
+                <button class="subdiv-opt active" data-sub="1">
+                    <div class="subdiv-notes">♩</div>
+                    <div class="subdiv-label">1</div>
+                </button>
+                <button class="subdiv-opt" data-sub="2">
+                    <div class="subdiv-notes">♪♪</div>
+                    <div class="subdiv-label">2</div>
+                </button>
+                <button class="subdiv-opt" data-sub="3">
+                    <div class="subdiv-notes">♪♪♪</div>
+                    <div class="subdiv-label">3</div>
+                </button>
+                <button class="subdiv-opt" data-sub="4">
+                    <div class="subdiv-notes">♬♬</div>
+                    <div class="subdiv-label">4</div>
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Rename Modal -->
-    <div class="modal-overlay" id="renameModal">
-        <div class="modal">
-            <div class="modal-title">Rename Tempo</div>
-            <input type="text" class="modal-input" id="renameInput" placeholder="Enter name...">
-            <div class="modal-btns">
-                <button class="modal-btn cancel" id="renameCancel">Cancel</button>
-                <button class="modal-btn confirm" id="renameConfirm">Save</button>
-            </div>
+<!-- Rename Modal -->
+<div class="modal-overlay" id="renameModal">
+    <div class="modal">
+        <div class="modal-title">Rename</div>
+        <input type="text" class="modal-input" id="renameInput" placeholder="Name...">
+        <div class="modal-btns">
+            <button class="modal-btn cancel" id="renameCancel">Cancel</button>
+            <button class="modal-btn confirm" id="renameConfirm">Save</button>
         </div>
     </div>
+</div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">Saved!</div>
+<div class="toast" id="toast">Saved!</div>
 
-    <script>
-        // === Audio Context ===
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
+<script>
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
 
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
+const state = {
+    playing: false,
+    bpm: 120,
+    beats: 4,
+    noteVal: 4,
+    subdiv: 1,
+    flash: false,
+    // 4 levels: 0=off, 1=quiet, 2=medium, 3=accent
+    levels: [3, 2, 2, 2],
+    curBeat: 0,
+    curSub: 0,
+    nextTime: 0,
+    timer: null,
+    animFrame: null
+};
 
-        // === State ===
-        const state = {
-            isPlaying: false,
-            bpm: 120,
-            beatsPerMeasure: 4,
-            noteValue: 4,
-            subdivision: 1,
-            volume: 0.8,
-            flashEnabled: false,
-            currentBeat: 0,
-            currentSubdiv: 0,
-            beatAccents: [4, 2, 2, 2],
-            nextNoteTime: 0,
-            schedulerTimer: null,
-            animationFrame: null
-        };
+let playlist = JSON.parse(localStorage.getItem('mg-playlist') || '[]');
+let editing = false;
+let renameIdx = null;
 
-        // === Playlist State ===
-        let playlist = JSON.parse(localStorage.getItem('metrognome-playlist') || '[]');
-        let isEditing = false;
-        let renameIndex = null;
+const $ = id => document.getElementById(id);
 
-        // === DOM Elements ===
-        const els = {
-            beatGrid: document.getElementById('beatGrid'),
-            bpmValue: document.getElementById('bpmValue'),
-            bpmSlider: document.getElementById('bpmSlider'),
-            volumeSlider: document.getElementById('volumeSlider'),
-            timeSigTop: document.getElementById('timeSigTop'),
-            timeSigBottom: document.getElementById('timeSigBottom'),
-            playBtn: document.getElementById('playBtn'),
-            saveBtn: document.getElementById('saveBtn'),
-            flashToggle: document.getElementById('flashToggle'),
-            subdivBtns: document.querySelectorAll('.subdiv-btn'),
-            timeSigBtns: document.querySelectorAll('.time-sig-btn'),
-            tabs: document.querySelectorAll('.tab'),
-            tabContents: document.querySelectorAll('.tab-content'),
-            playlistList: document.getElementById('playlistList'),
-            playlistEmpty: document.getElementById('playlistEmpty'),
-            editBtn: document.getElementById('editBtn'),
-            renameModal: document.getElementById('renameModal'),
-            renameInput: document.getElementById('renameInput'),
-            renameCancel: document.getElementById('renameCancel'),
-            renameConfirm: document.getElementById('renameConfirm'),
-            toast: document.getElementById('toast')
-        };
+const beatContainer = $('beatContainer');
+const bpmValue = $('bpmValue');
+const bpmSlider = $('bpmSlider');
+const playBtn = $('playBtn');
+const saveBtn = $('saveBtn');
+const settingsBtn = $('settingsBtn');
+const settingsPopup = $('settingsPopup');
+const popupClose = $('popupClose');
+const flashBtn = $('flashBtn');
+const tsTop = $('tsTop');
+const tsBot = $('tsBot');
+const subdivOptions = $('subdivOptions');
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+const playlistList = $('playlistList');
+const editBtn = $('editBtn');
+const renameModal = $('renameModal');
+const renameInput = $('renameInput');
+const toast = $('toast');
 
-        // === Tabs ===
-        els.tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.dataset.tab;
-                els.tabs.forEach(t => t.classList.toggle('active', t === tab));
-                els.tabContents.forEach(c => c.classList.toggle('active', c.id === `${target}-tab`));
-                if (target === 'playlist') renderPlaylist();
-            });
+// Audio
+function initAudio() {
+    if (!audioCtx) audioCtx = new AudioContext();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playClick(time, level) {
+    if (level === 0) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    const freqs = [0, 600, 800, 1000];
+    const vols = [0, 0.4, 0.7, 1.0];
+    
+    osc.frequency.value = freqs[level];
+    gain.gain.setValueAtTime(vols[level], time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    osc.start(time);
+    osc.stop(time + 0.05);
+}
+
+function playSubClick(time) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = 500;
+    gain.gain.setValueAtTime(0.3, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+    osc.start(time);
+    osc.stop(time + 0.03);
+}
+
+// Beat Grid
+function buildBeats() {
+    beatContainer.innerHTML = '';
+    const old = [...state.levels];
+    state.levels = [];
+    for (let i = 0; i < state.beats; i++) {
+        state.levels[i] = i < old.length ? old[i] : (i === 0 ? 3 : 2);
+    }
+    
+    for (let i = 0; i < state.beats; i++) {
+        const el = document.createElement('div');
+        el.className = `beat-fader level-${state.levels[i]}`;
+        el.dataset.idx = i;
+        el.innerHTML = `
+            <div class="beat-fill"></div>
+            <div class="beat-progress"></div>
+            <div class="beat-num">${i + 1}</div>
+        `;
+        el.addEventListener('click', () => cycleLevel(i));
+        beatContainer.appendChild(el);
+    }
+}
+
+function cycleLevel(i) {
+    // 2 -> 3 -> 0 -> 1 -> 2
+    const map = {0: 1, 1: 2, 2: 3, 3: 0};
+    state.levels[i] = map[state.levels[i]];
+    const el = beatContainer.children[i];
+    el.className = `beat-fader level-${state.levels[i]}`;
+}
+
+function updateBeatVisuals(beatIdx, progress) {
+    const faders = beatContainer.children;
+    for (let i = 0; i < faders.length; i++) {
+        const f = faders[i];
+        const prog = f.querySelector('.beat-progress');
+        f.classList.toggle('playing', i === beatIdx);
+        prog.style.height = i === beatIdx ? `${progress}%` : '0%';
+    }
+}
+
+function resetVisuals() {
+    const faders = beatContainer.children;
+    for (const f of faders) {
+        f.classList.remove('playing');
+        f.querySelector('.beat-progress').style.height = '0%';
+    }
+}
+
+// Scheduler
+const AHEAD = 0.1, LOOK = 25;
+
+function scheduler() {
+    while (state.nextTime < audioCtx.currentTime + AHEAD) {
+        scheduleNote();
+        advance();
+    }
+}
+
+function scheduleNote() {
+    if (state.curSub === 0) {
+        const lvl = state.levels[state.curBeat];
+        playClick(state.nextTime, lvl);
+        const delay = Math.max(0, (state.nextTime - audioCtx.currentTime) * 1000);
+        setTimeout(() => {
+            if (state.playing && state.flash && lvl > 0) flash();
+        }, delay);
+    } else {
+        playSubClick(state.nextTime);
+    }
+}
+
+function advance() {
+    const secPerBeat = 60 / state.bpm;
+    state.nextTime += secPerBeat / state.subdiv;
+    state.curSub++;
+    if (state.curSub >= state.subdiv) {
+        state.curSub = 0;
+        state.curBeat = (state.curBeat + 1) % state.beats;
+    }
+}
+
+let animStart = null;
+
+function animate(ts) {
+    if (!state.playing) return;
+    if (!animStart) animStart = ts;
+    const secPerBeat = 60 / state.bpm;
+    const msPerMeasure = secPerBeat * state.beats * 1000;
+    const elapsed = ts - animStart;
+    const prog = (elapsed % msPerMeasure) / msPerMeasure;
+    const exact = prog * state.beats;
+    const idx = Math.floor(exact);
+    const pct = (exact - idx) * 100;
+    updateBeatVisuals(idx, pct);
+    state.animFrame = requestAnimationFrame(animate);
+}
+
+function flash() {
+    document.body.style.background = '#1a1a1a';
+    setTimeout(() => document.body.style.background = '', 60);
+}
+
+function start() {
+    initAudio();
+    state.playing = true;
+    state.curBeat = 0;
+    state.curSub = 0;
+    state.nextTime = audioCtx.currentTime;
+    animStart = null;
+    playBtn.textContent = 'Stop';
+    playBtn.classList.add('playing');
+    state.timer = setInterval(scheduler, LOOK);
+    state.animFrame = requestAnimationFrame(animate);
+}
+
+function stop() {
+    state.playing = false;
+    clearInterval(state.timer);
+    cancelAnimationFrame(state.animFrame);
+    playBtn.textContent = 'Start';
+    playBtn.classList.remove('playing');
+    resetVisuals();
+}
+
+function toggle() { state.playing ? stop() : start(); }
+
+// Playlist
+function saveCurrent() {
+    playlist.push({
+        name: `${state.bpm} BPM - ${state.beats}/${state.noteVal}`,
+        bpm: state.bpm,
+        beats: state.beats,
+        noteVal: state.noteVal,
+        subdiv: state.subdiv,
+        levels: [...state.levels]
+    });
+    localStorage.setItem('mg-playlist', JSON.stringify(playlist));
+    showToast('Saved!');
+}
+
+function loadItem(i) {
+    const p = playlist[i];
+    state.bpm = p.bpm;
+    state.beats = p.beats;
+    state.noteVal = p.noteVal;
+    state.subdiv = p.subdiv;
+    state.levels = [...p.levels];
+    bpmValue.textContent = state.bpm;
+    bpmSlider.value = state.bpm;
+    tsTop.textContent = state.beats;
+    tsBot.textContent = state.noteVal;
+    subdivOptions.querySelectorAll('.subdiv-opt').forEach(o => {
+        o.classList.toggle('active', +o.dataset.sub === state.subdiv);
+    });
+    buildBeats();
+    tabs[0].click();
+    showToast('Loaded!');
+}
+
+function deleteItem(i) {
+    playlist.splice(i, 1);
+    localStorage.setItem('mg-playlist', JSON.stringify(playlist));
+    renderPlaylist();
+}
+
+function renameItem(i, name) {
+    playlist[i].name = name;
+    localStorage.setItem('mg-playlist', JSON.stringify(playlist));
+    renderPlaylist();
+}
+
+function renderPlaylist() {
+    playlistList.innerHTML = '';
+    playlistList.classList.toggle('editing', editing);
+    
+    if (!playlist.length) {
+        playlistList.innerHTML = '<div class="playlist-empty">No saved tempos yet</div>';
+        return;
+    }
+    
+    playlist.forEach((p, i) => {
+        const el = document.createElement('div');
+        el.className = 'playlist-item';
+        el.innerHTML = `
+            <div class="pl-info">
+                <div class="pl-name">${p.name}</div>
+                <div class="pl-details">${p.beats}/${p.noteVal} • Sub ${p.subdiv}</div>
+            </div>
+            <div class="pl-bpm">${p.bpm}</div>
+            <div class="pl-actions">
+                <button class="pl-action rename" data-i="${i}">✏️</button>
+                <button class="pl-action delete" data-i="${i}">🗑️</button>
+            </div>
+        `;
+        if (!editing) el.addEventListener('click', () => loadItem(i));
+        playlistList.appendChild(el);
+    });
+    
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-item';
+    addBtn.textContent = '+ Add Current';
+    addBtn.addEventListener('click', () => { saveCurrent(); renderPlaylist(); });
+    playlistList.appendChild(addBtn);
+    
+    playlistList.querySelectorAll('.pl-action.rename').forEach(b => {
+        b.addEventListener('click', e => {
+            e.stopPropagation();
+            renameIdx = +b.dataset.i;
+            renameInput.value = playlist[renameIdx].name;
+            renameModal.classList.add('active');
+            renameInput.focus();
         });
-
-        // === Beat Grid ===
-        function createBeatGrid() {
-            els.beatGrid.innerHTML = '';
-            const cols = state.beatsPerMeasure <= 4 ? state.beatsPerMeasure 
-                       : state.beatsPerMeasure <= 8 ? 4 
-                       : Math.min(4, Math.ceil(state.beatsPerMeasure / 4));
-            els.beatGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-
-            const oldAccents = [...state.beatAccents];
-            state.beatAccents = [];
-            for (let i = 0; i < state.beatsPerMeasure; i++) {
-                state.beatAccents[i] = i < oldAccents.length ? oldAccents[i] : (i === 0 ? 4 : 2);
-            }
-
-            for (let i = 0; i < state.beatsPerMeasure; i++) {
-                const block = document.createElement('div');
-                block.className = 'beat-block';
-                block.dataset.beat = i;
-                
-                const accent = state.beatAccents[i];
-                if (accent === 0) block.classList.add('muted');
-                else if (accent === 4) block.classList.add('accented');
-                else block.classList.add('normal');
-
-                const stateLabel = accent === 4 ? 'accent' : accent === 0 ? 'mute' : '';
-
-                block.innerHTML = `
-                    <div class="beat-fill"></div>
-                    <span class="beat-number">${i + 1}</span>
-                    <span class="beat-state">${stateLabel}</span>
-                `;
-
-                block.addEventListener('click', () => cycleAccent(i));
-                els.beatGrid.appendChild(block);
-            }
-        }
-
-        function cycleAccent(beatIndex) {
-            const current = state.beatAccents[beatIndex];
-            state.beatAccents[beatIndex] = current === 2 ? 4 : current === 4 ? 0 : 2;
-            
-            const newVal = state.beatAccents[beatIndex];
-            const block = els.beatGrid.children[beatIndex];
-            const stateEl = block.querySelector('.beat-state');
-            
-            block.classList.remove('muted', 'accented', 'normal');
-            if (newVal === 0) block.classList.add('muted');
-            else if (newVal === 4) block.classList.add('accented');
-            else block.classList.add('normal');
-            
-            stateEl.textContent = newVal === 4 ? 'accent' : newVal === 0 ? 'mute' : '';
-        }
-
-        function updateBeatDisplay(beatIndex, fillPercent) {
-            const blocks = els.beatGrid.children;
-            for (let i = 0; i < blocks.length; i++) {
-                const block = blocks[i];
-                const fill = block.querySelector('.beat-fill');
-                if (i < beatIndex) {
-                    fill.style.height = '100%';
-                    block.classList.add('active');
-                    block.classList.remove('filling');
-                } else if (i === beatIndex) {
-                    fill.style.height = `${fillPercent}%`;
-                    block.classList.add('active', 'filling');
-                } else {
-                    fill.style.height = '0%';
-                    block.classList.remove('active', 'filling');
-                }
-            }
-        }
-
-        function resetBeatDisplay() {
-            const blocks = els.beatGrid.children;
-            for (const block of blocks) {
-                block.querySelector('.beat-fill').style.height = '0%';
-                block.classList.remove('active', 'filling');
-            }
-        }
-
-        // === Audio ===
-        function playClick(time, isAccent, isMuted) {
-            if (isMuted) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = isAccent ? 1000 : 800;
-            const vol = state.volume * (isAccent ? 1.0 : 0.6);
-            gain.gain.setValueAtTime(vol, time);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-            osc.start(time);
-            osc.stop(time + 0.05);
-        }
-
-        function playSubdivClick(time) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = 600;
-            const vol = state.volume * 0.3;
-            gain.gain.setValueAtTime(vol, time);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
-            osc.start(time);
-            osc.stop(time + 0.03);
-        }
-
-        // === Scheduler ===
-        const scheduleAhead = 0.1;
-        const lookahead = 25;
-
-        function scheduler() {
-            while (state.nextNoteTime < audioCtx.currentTime + scheduleAhead) {
-                scheduleNote(state.currentBeat, state.currentSubdiv, state.nextNoteTime);
-                advanceNote();
-            }
-        }
-
-        function scheduleNote(beat, subdiv, time) {
-            const isMainBeat = subdiv === 0;
-            if (isMainBeat) {
-                const accent = state.beatAccents[beat];
-                playClick(time, accent === 4, accent === 0);
-                const delay = Math.max(0, (time - audioCtx.currentTime) * 1000);
-                setTimeout(() => {
-                    if (state.isPlaying && state.flashEnabled && accent !== 0) flashScreen();
-                }, delay);
-            } else {
-                playSubdivClick(time);
-            }
-        }
-
-        function advanceNote() {
-            const secondsPerBeat = 60.0 / state.bpm;
-            const secondsPerSubdiv = secondsPerBeat / state.subdivision;
-            state.nextNoteTime += secondsPerSubdiv;
-            state.currentSubdiv++;
-            if (state.currentSubdiv >= state.subdivision) {
-                state.currentSubdiv = 0;
-                state.currentBeat++;
-                if (state.currentBeat >= state.beatsPerMeasure) state.currentBeat = 0;
-            }
-        }
-
-        // === Animation ===
-        let animationStart = null;
-
-        function animate(timestamp) {
-            if (!state.isPlaying) return;
-            if (!animationStart) animationStart = timestamp;
-            const secondsPerBeat = 60.0 / state.bpm;
-            const msPerMeasure = secondsPerBeat * state.beatsPerMeasure * 1000;
-            const elapsed = timestamp - animationStart;
-            const measureProgress = (elapsed % msPerMeasure) / msPerMeasure;
-            const exactBeat = measureProgress * state.beatsPerMeasure;
-            const beatIndex = Math.floor(exactBeat);
-            const beatProgress = (exactBeat - beatIndex) * 100;
-            updateBeatDisplay(beatIndex, beatProgress);
-            state.animationFrame = requestAnimationFrame(animate);
-        }
-
-        function flashScreen() {
-            document.body.style.background = '#1a1a1a';
-            setTimeout(() => { document.body.style.background = ''; }, 80);
-        }
-
-        // === Start/Stop ===
-        function start() {
-            initAudio();
-            state.isPlaying = true;
-            state.currentBeat = 0;
-            state.currentSubdiv = 0;
-            state.nextNoteTime = audioCtx.currentTime;
-            animationStart = null;
-            els.playBtn.textContent = 'Stop';
-            els.playBtn.classList.add('playing');
-            state.schedulerTimer = setInterval(scheduler, lookahead);
-            state.animationFrame = requestAnimationFrame(animate);
-        }
-
-        function stop() {
-            state.isPlaying = false;
-            clearInterval(state.schedulerTimer);
-            cancelAnimationFrame(state.animationFrame);
-            els.playBtn.textContent = 'Start';
-            els.playBtn.classList.remove('playing');
-            resetBeatDisplay();
-        }
-
-        function toggle() {
-            state.isPlaying ? stop() : start();
-        }
-
-        // === Save & Playlist ===
-        function saveToPlaylist() {
-            const entry = {
-                name: `${state.bpm} BPM - ${state.beatsPerMeasure}/${state.noteValue}`,
-                bpm: state.bpm,
-                beatsPerMeasure: state.beatsPerMeasure,
-                noteValue: state.noteValue,
-                subdivision: state.subdivision,
-                beatAccents: [...state.beatAccents]
-            };
-            playlist.push(entry);
-            localStorage.setItem('metrognome-playlist', JSON.stringify(playlist));
-            showToast('Saved to playlist!');
-        }
-
-        function loadFromPlaylist(index) {
-            const entry = playlist[index];
-            state.bpm = entry.bpm;
-            state.beatsPerMeasure = entry.beatsPerMeasure;
-            state.noteValue = entry.noteValue;
-            state.subdivision = entry.subdivision;
-            state.beatAccents = [...entry.beatAccents];
-
-            els.bpmValue.textContent = state.bpm;
-            els.bpmSlider.value = state.bpm;
-            els.timeSigTop.textContent = state.beatsPerMeasure;
-            els.timeSigBottom.textContent = state.noteValue;
-            
-            els.subdivBtns.forEach(b => {
-                b.classList.toggle('active', parseInt(b.dataset.subdiv) === state.subdivision);
-            });
-
-            createBeatGrid();
-
-            // Switch to metronome tab
-            els.tabs[0].click();
-            showToast('Loaded!');
-        }
-
-        function deleteFromPlaylist(index) {
-            playlist.splice(index, 1);
-            localStorage.setItem('metrognome-playlist', JSON.stringify(playlist));
-            renderPlaylist();
-        }
-
-        function renameInPlaylist(index, newName) {
-            playlist[index].name = newName;
-            localStorage.setItem('metrognome-playlist', JSON.stringify(playlist));
-            renderPlaylist();
-        }
-
-        function renderPlaylist() {
-            els.playlistList.innerHTML = '';
-            els.playlistList.classList.toggle('editing', isEditing);
-
-            if (playlist.length === 0) {
-                els.playlistList.innerHTML = `
-                    <div class="playlist-empty">No saved tempos yet.<br>Save one from the Metronome tab!</div>
-                `;
-                return;
-            }
-
-            playlist.forEach((entry, index) => {
-                const item = document.createElement('div');
-                item.className = 'playlist-item';
-                item.innerHTML = `
-                    <div class="playlist-item-info">
-                        <div class="playlist-item-name">${entry.name}</div>
-                        <div class="playlist-item-details">${entry.beatsPerMeasure}/${entry.noteValue} • Subdiv ${entry.subdivision}</div>
-                    </div>
-                    <div class="playlist-item-bpm">${entry.bpm}</div>
-                    <div class="playlist-item-actions">
-                        <button class="item-action-btn rename" data-index="${index}" aria-label="Rename">✏️</button>
-                        <button class="item-action-btn delete" data-index="${index}" aria-label="Delete">🗑️</button>
-                    </div>
-                `;
-
-                if (!isEditing) {
-                    item.addEventListener('click', () => loadFromPlaylist(index));
-                }
-
-                els.playlistList.appendChild(item);
-            });
-
-            // Add button
-            const addBtn = document.createElement('button');
-            addBtn.className = 'add-btn';
-            addBtn.textContent = '+ Add Current Settings';
-            addBtn.addEventListener('click', () => {
-                saveToPlaylist();
-                renderPlaylist();
-            });
-            els.playlistList.appendChild(addBtn);
-
-            // Attach action listeners
-            els.playlistList.querySelectorAll('.item-action-btn.rename').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    renameIndex = parseInt(btn.dataset.index);
-                    els.renameInput.value = playlist[renameIndex].name;
-                    els.renameModal.classList.add('active');
-                    els.renameInput.focus();
-                });
-            });
-
-            els.playlistList.querySelectorAll('.item-action-btn.delete').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deleteFromPlaylist(parseInt(btn.dataset.index));
-                });
-            });
-        }
-
-        function showToast(message) {
-            els.toast.textContent = message;
-            els.toast.classList.add('show');
-            setTimeout(() => els.toast.classList.remove('show'), 2000);
-        }
-
-        // === Event Listeners ===
-        els.playBtn.addEventListener('click', toggle);
-        els.saveBtn.addEventListener('click', saveToPlaylist);
-
-        els.editBtn.addEventListener('click', () => {
-            isEditing = !isEditing;
-            els.editBtn.classList.toggle('active', isEditing);
-            els.editBtn.textContent = isEditing ? 'Done' : 'Edit';
-            renderPlaylist();
+    });
+    
+    playlistList.querySelectorAll('.pl-action.delete').forEach(b => {
+        b.addEventListener('click', e => {
+            e.stopPropagation();
+            deleteItem(+b.dataset.i);
         });
+    });
+}
 
-        els.renameCancel.addEventListener('click', () => {
-            els.renameModal.classList.remove('active');
-            renameIndex = null;
-        });
+function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1500);
+}
 
-        els.renameConfirm.addEventListener('click', () => {
-            if (renameIndex !== null && els.renameInput.value.trim()) {
-                renameInPlaylist(renameIndex, els.renameInput.value.trim());
-            }
-            els.renameModal.classList.remove('active');
-            renameIndex = null;
-        });
+// Events
+playBtn.addEventListener('click', toggle);
+saveBtn.addEventListener('click', saveCurrent);
 
-        els.renameInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') els.renameConfirm.click();
-            if (e.key === 'Escape') els.renameCancel.click();
-        });
+bpmSlider.addEventListener('input', e => {
+    state.bpm = +e.target.value;
+    bpmValue.textContent = state.bpm;
+});
 
-        els.bpmSlider.addEventListener('input', (e) => {
-            state.bpm = parseInt(e.target.value);
-            els.bpmValue.textContent = state.bpm;
-        });
+settingsBtn.addEventListener('click', () => settingsPopup.classList.add('active'));
+popupClose.addEventListener('click', () => settingsPopup.classList.remove('active'));
+settingsPopup.addEventListener('click', e => {
+    if (e.target === settingsPopup) settingsPopup.classList.remove('active');
+});
 
-        els.volumeSlider.addEventListener('input', (e) => {
-            state.volume = parseInt(e.target.value) / 100;
-        });
+flashBtn.addEventListener('click', () => {
+    state.flash = !state.flash;
+    flashBtn.classList.toggle('active', state.flash);
+});
 
-        els.timeSigBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = btn.dataset.target;
-                const dir = btn.dataset.dir;
-                if (target === 'top') {
-                    state.beatsPerMeasure = Math.max(1, Math.min(16, state.beatsPerMeasure + (dir === 'up' ? 1 : -1)));
-                    els.timeSigTop.textContent = state.beatsPerMeasure;
-                    createBeatGrid();
-                    if (state.isPlaying) { state.currentBeat = 0; animationStart = null; }
-                } else {
-                    const values = [1, 2, 4, 8, 16];
-                    const idx = values.indexOf(state.noteValue);
-                    const newIdx = Math.max(0, Math.min(values.length - 1, idx + (dir === 'up' ? 1 : -1)));
-                    state.noteValue = values[newIdx];
-                    els.timeSigBottom.textContent = state.noteValue;
-                }
-            });
-        });
+document.querySelectorAll('.time-btn').forEach(b => {
+    b.addEventListener('click', () => {
+        const t = b.dataset.t, d = b.dataset.d;
+        if (t === 'top') {
+            state.beats = Math.max(1, Math.min(16, state.beats + (d === 'up' ? 1 : -1)));
+            tsTop.textContent = state.beats;
+            buildBeats();
+            if (state.playing) { state.curBeat = 0; animStart = null; }
+        } else {
+            const vals = [1, 2, 4, 8, 16];
+            const idx = vals.indexOf(state.noteVal);
+            state.noteVal = vals[Math.max(0, Math.min(4, idx + (d === 'up' ? 1 : -1)))];
+            tsBot.textContent = state.noteVal;
+        }
+    });
+});
 
-        els.subdivBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                els.subdivBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-checked', 'false'); });
-                btn.classList.add('active');
-                btn.setAttribute('aria-checked', 'true');
-                state.subdivision = parseInt(btn.dataset.subdiv);
-            });
-        });
+subdivOptions.querySelectorAll('.subdiv-opt').forEach(o => {
+    o.addEventListener('click', () => {
+        subdivOptions.querySelectorAll('.subdiv-opt').forEach(x => x.classList.remove('active'));
+        o.classList.add('active');
+        state.subdiv = +o.dataset.sub;
+    });
+});
 
-        els.flashToggle.addEventListener('click', () => {
-            state.flashEnabled = !state.flashEnabled;
-            els.flashToggle.classList.toggle('active', state.flashEnabled);
-            els.flashToggle.setAttribute('aria-checked', state.flashEnabled);
-        });
+tabs.forEach(t => {
+    t.addEventListener('click', () => {
+        tabs.forEach(x => x.classList.toggle('active', x === t));
+        tabContents.forEach(c => c.classList.toggle('active', c.id === `${t.dataset.tab}-tab`));
+        if (t.dataset.tab === 'playlist') renderPlaylist();
+    });
+});
 
-        els.flashToggle.addEventListener('keydown', (e) => {
-            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); els.flashToggle.click(); }
-        });
+editBtn.addEventListener('click', () => {
+    editing = !editing;
+    editBtn.classList.toggle('active', editing);
+    editBtn.textContent = editing ? 'Done' : 'Edit';
+    renderPlaylist();
+});
 
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
-                e.preventDefault();
-                toggle();
-            }
-        });
+$('renameCancel').addEventListener('click', () => {
+    renameModal.classList.remove('active');
+    renameIdx = null;
+});
 
-        // === Init ===
-        createBeatGrid();
-    </script>
+$('renameConfirm').addEventListener('click', () => {
+    if (renameIdx !== null && renameInput.value.trim()) {
+        renameItem(renameIdx, renameInput.value.trim());
+    }
+    renameModal.classList.remove('active');
+    renameIdx = null;
+});
+
+renameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') $('renameConfirm').click();
+    if (e.key === 'Escape') $('renameCancel').click();
+});
+
+document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !['BUTTON', 'INPUT'].includes(e.target.tagName)) {
+        e.preventDefault();
+        toggle();
+    }
+});
+
+// Init
+buildBeats();
+</script>
 </body>
 </html>
