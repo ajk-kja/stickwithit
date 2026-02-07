@@ -8,12 +8,13 @@
   <style>
     :root {
       --bg: #000;
-      --surface: #111;
+      --surface: #0a0a0a;
       --border: #333;
       --text: #fff;
       --text-muted: #666;
       --accent: #e63946;
-      --staff-line: #444;
+      --staff-line: #555;
+      --note-fill: #fff;
     }
 
     * {
@@ -40,7 +41,7 @@
 
     /* Header */
     .header {
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -57,7 +58,7 @@
     .header a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     .header a:active {
@@ -65,7 +66,7 @@
     }
 
     .header h1 {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -75,14 +76,14 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .share-btn {
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       padding: 4px;
     }
@@ -92,13 +93,13 @@
     }
 
     .bpm-display {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       font-variant-numeric: tabular-nums;
     }
 
     .bpm-label {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       margin-left: 2px;
     }
@@ -108,8 +109,8 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 12px;
-      gap: 10px;
+      padding: 10px 12px;
+      gap: 8px;
       overflow: hidden;
       min-height: 0;
     }
@@ -123,52 +124,39 @@
       min-height: 0;
     }
 
+    /* 5-line staff */
     .staff {
       position: relative;
-      height: 80px;
+      height: 90px;
       background: var(--surface);
-      border-radius: 8px;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      padding: 8px 0;
+      padding: 12px 8px 12px 8px;
     }
 
     .staff-lines {
       position: absolute;
-      left: 32px;
-      right: 0;
-      top: 8px;
-      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      top: 12px;
+      bottom: 12px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
     .staff-line {
-      height: 2px;
+      height: 1px;
       background: var(--staff-line);
-      position: relative;
-    }
-
-    .staff-line::before {
-      content: attr(data-label);
-      position: absolute;
-      right: calc(100% + 6px);
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 9px;
-      color: var(--text-muted);
-      font-weight: 600;
-      width: 20px;
-      text-align: right;
     }
 
     /* Notes container */
     .notes-container {
       position: absolute;
-      left: 40px;
+      left: 8px;
       right: 8px;
-      top: 8px;
-      bottom: 8px;
+      top: 12px;
+      bottom: 12px;
       display: flex;
       align-items: stretch;
     }
@@ -178,60 +166,115 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       cursor: pointer;
       position: relative;
+      padding-top: 0;
     }
 
     .note-slot:active {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.03);
     }
 
+    /* Note element */
     .note {
-      width: 20px;
-      height: 20px;
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: top 0.1s ease;
+    }
+
+    /* Accent mark */
+    .accent {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--note-fill);
+      line-height: 1;
+      margin-bottom: -2px;
+    }
+
+    /* Note head */
+    .note-head {
+      width: 14px;
+      height: 10px;
       border-radius: 50%;
-      background: var(--accent);
+      background: var(--note-fill);
+      position: relative;
+    }
+
+    /* X notehead for hi-hat */
+    .note-head.x-head {
+      background: transparent;
+      width: 14px;
+      height: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 9px;
-      font-weight: 700;
-      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--note-fill);
+      border-radius: 0;
+    }
+
+    .note-head.x-head::before {
+      content: '×';
+    }
+
+    /* Ghost note (parentheses) */
+    .note.ghost .note-head {
+      opacity: 0.4;
+      transform: scale(0.85);
+    }
+
+    /* Stem */
+    .stem {
+      width: 2px;
+      height: 28px;
+      background: var(--note-fill);
       position: absolute;
-      transition: top 0.1s ease;
-      box-shadow: 0 2px 4px rgba(230, 57, 70, 0.4);
+      right: -1px;
+      top: 5px;
     }
 
-    .note.ghost {
-      background: transparent;
-      border: 2px solid var(--accent);
+    .stem.down {
+      top: auto;
+      bottom: 5px;
+      right: -1px;
+    }
+
+    /* Playing highlight */
+    .note.playing .note-head {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .note.playing .note-head.x-head {
       color: var(--accent);
-      box-shadow: none;
-      opacity: 0.6;
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent);
     }
 
-    .note.playing {
-      transform: translateY(-50%) scale(1.25);
-      box-shadow: 0 0 12px var(--accent);
+    .note.playing .accent {
+      color: var(--accent);
     }
 
     /* Sticking row */
     .sticking-row {
       display: flex;
       justify-content: center;
-      padding: 0 40px 0 40px;
       margin-top: 6px;
+      padding: 0 8px;
     }
 
     .sticking-slot {
       flex: 1;
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 4px 0;
+      padding: 3px 0;
     }
 
     .sticking-slot:active {
@@ -245,7 +288,7 @@
     /* Note count display */
     .note-count {
       text-align: center;
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -259,30 +302,30 @@
     .controls {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
     .control-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       justify-content: center;
     }
 
     .btn {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       color: var(--text);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
-      padding: 10px 14px;
+      padding: 8px 12px;
       cursor: pointer;
       transition: all 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .btn:active {
@@ -291,7 +334,7 @@
     }
 
     .btn-icon {
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .btn-accent {
@@ -307,7 +350,7 @@
       display: flex;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
     }
 
@@ -315,8 +358,8 @@
       border: none;
       border-radius: 0;
       flex: 1;
-      min-width: 40px;
-      padding: 10px 6px;
+      min-width: 36px;
+      padding: 8px 5px;
     }
 
     .btn-group .btn:not(:last-child) {
@@ -324,11 +367,11 @@
     }
 
     .btn-group .btn-value {
-      min-width: 48px;
+      min-width: 44px;
       font-variant-numeric: tabular-nums;
       pointer-events: none;
       font-weight: 600;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     /* Play button */
@@ -339,25 +382,25 @@
     }
 
     .btn-play {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      font-size: 20px;
+      font-size: 18px;
       padding: 0;
     }
 
     /* Toast notification */
     .toast {
       position: fixed;
-      bottom: 70px;
+      bottom: 60px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
@@ -370,7 +413,7 @@
 
     /* Footer */
     footer {
-      padding: 8px 16px;
+      padding: 6px 16px;
       text-align: center;
       border-top: 1px solid var(--border);
       flex-shrink: 0;
@@ -379,51 +422,54 @@
     footer a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 11px;
+      font-size: 10px;
     }
 
     footer a:hover {
       color: var(--accent);
     }
 
-    /* Landscape / larger screens */
-    @media (min-height: 600px) {
+    /* Larger screens */
+    @media (min-height: 650px) {
       main {
-        gap: 16px;
-        padding: 16px;
+        gap: 12px;
+        padding: 14px 16px;
       }
 
       .staff {
-        height: 100px;
+        height: 110px;
       }
 
-      .note {
-        width: 24px;
-        height: 24px;
-        font-size: 10px;
+      .note-head {
+        width: 16px;
+        height: 12px;
+      }
+
+      .stem {
+        height: 32px;
       }
 
       .controls {
-        gap: 14px;
+        gap: 12px;
       }
 
       .btn {
-        padding: 12px 18px;
-        font-size: 14px;
+        padding: 10px 16px;
+        font-size: 13px;
       }
 
       .btn-play {
-        width: 60px;
-        height: 60px;
-        font-size: 22px;
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
       }
     }
 
     @media (orientation: landscape) and (max-height: 420px) {
       main {
         flex-direction: row;
-        gap: 16px;
-        padding: 8px 16px;
+        gap: 12px;
+        padding: 6px 12px;
       }
 
       .staff-container {
@@ -433,31 +479,30 @@
       .controls {
         flex: 1;
         justify-content: center;
-        gap: 8px;
+        gap: 6px;
       }
 
       .staff {
-        height: 64px;
+        height: 70px;
       }
 
-      .note {
-        width: 16px;
-        height: 16px;
-        font-size: 8px;
+      .note-head {
+        width: 12px;
+        height: 8px;
       }
 
-      .sticking-row {
-        padding: 0 32px;
+      .stem {
+        height: 22px;
       }
 
       .sticking-slot {
-        font-size: 10px;
+        font-size: 9px;
       }
 
       .btn-play {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
       }
 
       footer {
@@ -485,10 +530,11 @@
     <div class="staff-container">
       <div class="staff" id="staff">
         <div class="staff-lines" id="staffLines">
-          <div class="staff-line" data-label="HH"></div>
-          <div class="staff-line" data-label="S"></div>
-          <div class="staff-line" data-label="T"></div>
-          <div class="staff-line" data-label="K"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
         </div>
         <div class="notes-container" id="notesContainer"></div>
       </div>
@@ -532,19 +578,23 @@
   </footer>
 
   <script>
-    // Drum definitions - staff lines top to bottom: HH, S, T, K
+    // Standard 5-line staff positions (0 = top line, 4 = bottom line, spaces are 0.5, 1.5, etc.)
+    // Line 0 (top): Hi-hat
+    // Line 2 (middle): Snare
+    // Space 2.5: Tom (between lines 2 and 3, the "A" space)
+    // Line 4 (bottom): Kick
     const DRUMS = {
-      HIHAT:       { name: 'HH', line: 0, sticking: true },
-      SNARE:       { name: 'S',  line: 1, sticking: true },
-      SNARE_GHOST: { name: 'g',  line: 1, sticking: true, ghost: true },
-      TOM:         { name: 'T',  line: 2, sticking: true },
-      KICK:        { name: 'K',  line: 3, sticking: false }
+      HIHAT:       { name: 'HH', staffPos: 0, sticking: true, xHead: true },
+      SNARE:       { name: 'S',  staffPos: 2, sticking: true, accent: true },
+      SNARE_GHOST: { name: 'g',  staffPos: 2, sticking: true, ghost: true },
+      TOM:         { name: 'T',  staffPos: 2.5, sticking: true },
+      KICK:        { name: 'K',  staffPos: 4, sticking: false }
     };
 
     // Cycle order: bottom to top (K → T → ghost → S → HH)
     const CYCLE_ORDER = ['KICK', 'TOM', 'SNARE_GHOST', 'SNARE', 'HIHAT'];
 
-    // URL encoding map
+    // URL encoding
     const DRUM_CHARS = { HIHAT: 'H', TOM: 'T', SNARE: 'S', SNARE_GHOST: 'g', KICK: 'K' };
     const CHAR_TO_DRUM = Object.fromEntries(Object.entries(DRUM_CHARS).map(([k,v]) => [v, k]));
 
@@ -556,7 +606,10 @@
     let currentNoteIndex = -1;
     let audioContext = null;
     let notes = [];
-    let lineYPositions = [];
+
+    // Staff geometry
+    let staffTop = 0;
+    let lineSpacing = 0;
 
     // ==================== URL STATE ====================
     function encodeState() {
@@ -607,8 +660,7 @@
 
     function copyLink() {
       updateURL();
-      const url = window.location.href;
-      navigator.clipboard.writeText(url).then(() => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
         showToast('Link copied!');
       }).catch(() => {
         showToast('Copy failed');
@@ -622,7 +674,7 @@
       setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    // ==================== AUDIO SYNTHESIS ====================
+    // ==================== AUDIO ====================
     function initAudio() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -650,21 +702,20 @@
       osc.type = 'sine';
       osc.frequency.setValueAtTime(150, now);
       osc.frequency.exponentialRampToValueAtTime(30, now + 0.08);
-      oscGain.gain.setValueAtTime(0.9, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      oscGain.gain.setValueAtTime(0.85, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
       
       const click = audioContext.createOscillator();
       const clickGain = audioContext.createGain();
       click.type = 'sine';
-      click.frequency.setValueAtTime(600, now);
-      click.frequency.exponentialRampToValueAtTime(80, now + 0.02);
-      clickGain.gain.setValueAtTime(0.4, now);
-      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+      click.frequency.setValueAtTime(500, now);
+      click.frequency.exponentialRampToValueAtTime(60, now + 0.015);
+      clickGain.gain.setValueAtTime(0.35, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
       
       const filter = audioContext.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(180, now);
-      filter.Q.value = 1;
+      filter.frequency.value = 160;
       
       osc.connect(filter);
       filter.connect(oscGain);
@@ -673,31 +724,30 @@
       clickGain.connect(audioContext.destination);
       
       osc.start(now);
-      osc.stop(now + 0.5);
+      osc.stop(now + 0.4);
       click.start(now);
-      click.stop(now + 0.05);
+      click.stop(now + 0.04);
     }
 
     function playSnare(velocity = 1) {
       const now = audioContext.currentTime;
-      const vol = velocity;
       
       const osc = audioContext.createOscillator();
       const oscGain = audioContext.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(180, now);
-      osc.frequency.exponentialRampToValueAtTime(110, now + 0.05);
-      oscGain.gain.setValueAtTime(0.35 * vol, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      osc.frequency.exponentialRampToValueAtTime(100, now + 0.04);
+      oscGain.gain.setValueAtTime(0.32 * velocity, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
       
       const noise = audioContext.createBufferSource();
-      noise.buffer = createNoiseBuffer(0.15);
+      noise.buffer = createNoiseBuffer(0.12);
       const noiseFilter = audioContext.createBiquadFilter();
       noiseFilter.type = 'highpass';
-      noiseFilter.frequency.value = 1200;
+      noiseFilter.frequency.value = 1400;
       const noiseGain = audioContext.createGain();
-      noiseGain.gain.setValueAtTime(0.3 * vol, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      noiseGain.gain.setValueAtTime(0.28 * velocity, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
       
       osc.connect(oscGain);
       oscGain.connect(audioContext.destination);
@@ -706,12 +756,12 @@
       noiseGain.connect(audioContext.destination);
       
       osc.start(now);
-      osc.stop(now + 0.15);
+      osc.stop(now + 0.12);
       noise.start(now);
     }
 
     function playSnareGhost() {
-      playSnare(0.25);
+      playSnare(0.2);
     }
 
     function playTom() {
@@ -720,18 +770,18 @@
       const osc = audioContext.createOscillator();
       const oscGain = audioContext.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(140, now);
-      osc.frequency.exponentialRampToValueAtTime(85, now + 0.12);
-      oscGain.gain.setValueAtTime(0.55, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.frequency.setValueAtTime(130, now);
+      osc.frequency.exponentialRampToValueAtTime(75, now + 0.1);
+      oscGain.gain.setValueAtTime(0.5, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
       
       const osc2 = audioContext.createOscillator();
       const osc2Gain = audioContext.createGain();
       osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(280, now);
-      osc2.frequency.exponentialRampToValueAtTime(170, now + 0.08);
-      osc2Gain.gain.setValueAtTime(0.12, now);
-      osc2Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+      osc2.frequency.setValueAtTime(260, now);
+      osc2.frequency.exponentialRampToValueAtTime(150, now + 0.06);
+      osc2Gain.gain.setValueAtTime(0.1, now);
+      osc2Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
       
       osc.connect(oscGain);
       oscGain.connect(audioContext.destination);
@@ -739,33 +789,33 @@
       osc2Gain.connect(audioContext.destination);
       
       osc.start(now);
-      osc.stop(now + 0.35);
+      osc.stop(now + 0.3);
       osc2.start(now);
-      osc2.stop(now + 0.15);
+      osc2.stop(now + 0.1);
     }
 
     function playHihat() {
       const now = audioContext.currentTime;
       
       const noise = audioContext.createBufferSource();
-      noise.buffer = createNoiseBuffer(0.08);
+      noise.buffer = createNoiseBuffer(0.06);
       
-      const highpass = audioContext.createBiquadFilter();
-      highpass.type = 'highpass';
-      highpass.frequency.value = 7000;
+      const hp = audioContext.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 7500;
       
-      const bandpass = audioContext.createBiquadFilter();
-      bandpass.type = 'bandpass';
-      bandpass.frequency.value = 10000;
-      bandpass.Q.value = 1;
+      const bp = audioContext.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = 10000;
+      bp.Q.value = 1.2;
       
       const gain = audioContext.createGain();
-      gain.gain.setValueAtTime(0.22, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
       
-      noise.connect(highpass);
-      highpass.connect(bandpass);
-      bandpass.connect(gain);
+      noise.connect(hp);
+      hp.connect(bp);
+      bp.connect(gain);
       gain.connect(audioContext.destination);
       
       noise.start(now);
@@ -782,7 +832,7 @@
       }
     }
 
-    // ==================== PATTERN LOGIC ====================
+    // ==================== PATTERN ====================
     function generateRandomPattern() {
       notes = [];
       for (let i = 0; i < noteCount; i++) {
@@ -836,21 +886,28 @@
     }
 
     // ==================== RENDERING ====================
-    function calculateLinePositions() {
+    function calculateStaffGeometry() {
       const staffLines = document.getElementById('staffLines');
+      const container = document.getElementById('notesContainer');
+      const containerRect = container.getBoundingClientRect();
       const lines = staffLines.querySelectorAll('.staff-line');
-      const containerRect = document.getElementById('notesContainer').getBoundingClientRect();
       
-      lineYPositions = [];
-      lines.forEach(line => {
-        const lineRect = line.getBoundingClientRect();
-        const y = lineRect.top - containerRect.top + 1;
-        lineYPositions.push(y);
-      });
+      if (lines.length >= 2) {
+        const firstLine = lines[0].getBoundingClientRect();
+        const lastLine = lines[lines.length - 1].getBoundingClientRect();
+        staffTop = firstLine.top - containerRect.top;
+        lineSpacing = (lastLine.top - firstLine.top) / 4; // 4 spaces between 5 lines
+      }
+    }
+
+    function getYPosition(staffPos) {
+      // staffPos: 0 = line 1 (top), 4 = line 5 (bottom)
+      // Spaces are 0.5, 1.5, 2.5, 3.5
+      return staffTop + (staffPos * lineSpacing);
     }
 
     function render() {
-      calculateLinePositions();
+      calculateStaffGeometry();
       
       const container = document.getElementById('notesContainer');
       const stickingRow = document.getElementById('stickingRow');
@@ -869,18 +926,41 @@
         noteEl.className = 'note';
         if (drum.ghost) noteEl.classList.add('ghost');
         if (index === currentNoteIndex) noteEl.classList.add('playing');
-        
-        const yPos = lineYPositions[drum.line];
+
+        // Accent mark for full snare
+        if (drum.accent) {
+          const accent = document.createElement('div');
+          accent.className = 'accent';
+          accent.textContent = '>';
+          noteEl.appendChild(accent);
+        }
+
+        // Note head
+        const head = document.createElement('div');
+        head.className = 'note-head';
+        if (drum.xHead) {
+          head.classList.add('x-head');
+        }
+        noteEl.appendChild(head);
+
+        // Stem
+        const stem = document.createElement('div');
+        stem.className = 'stem';
+        // Stem goes up for notes below middle, down for notes above
+        if (drum.staffPos <= 2) {
+          stem.classList.add('down');
+        }
+        head.appendChild(stem);
+
+        // Position
+        const yPos = getYPosition(drum.staffPos);
         noteEl.style.top = yPos + 'px';
         noteEl.style.transform = 'translateY(-50%)';
-        
-        let display = drum.name;
-        if (drum.ghost) display = 'g';
-        noteEl.textContent = display;
 
         slot.appendChild(noteEl);
         container.appendChild(slot);
 
+        // Sticking
         const stickingEl = document.createElement('div');
         stickingEl.className = 'sticking-slot';
         if (!drum.sticking) stickingEl.classList.add('kick');
@@ -932,14 +1012,15 @@
       }
     }
 
-    // ==================== PLAYBACK ====================
+    // ==================== PLAYBACK (8th notes) ====================
     function startPlayback() {
       initAudio();
       isPlaying = true;
       document.getElementById('playBtn').textContent = '⏹';
       currentNoteIndex = -1;
       
-      const intervalMs = (60 / bpm) * 1000;
+      // 8th note timing: 2 notes per beat
+      const intervalMs = (60 / bpm / 2) * 1000;
       
       function playNext() {
         currentNoteIndex = (currentNoteIndex + 1) % notes.length;
@@ -963,11 +1044,8 @@
     }
 
     function togglePlayback() {
-      if (isPlaying) {
-        stopPlayback();
-      } else {
-        startPlayback();
-      }
+      if (isPlaying) stopPlayback();
+      else startPlayback();
     }
 
     // ==================== INIT ====================
