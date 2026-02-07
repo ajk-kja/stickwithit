@@ -796,32 +796,112 @@
                 return; // Muted
             }
 
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            // Frequency based on accent - increased difference for more pronounced accents
+            // Level 4 (fortissimo): 8bit Kick Drum
             if (accentLevel === 4) {
-                oscillator.frequency.value = 1200; // Fortissimo - highest
-            } else if (accentLevel === 3) {
-                oscillator.frequency.value = 1000; // Forte - high
-            } else if (accentLevel === 2) {
-                oscillator.frequency.value = 800;  // Mezzo Forte - medium
-            } else {
-                oscillator.frequency.value = 650;  // Piano - lower
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(150, time);
+                osc.frequency.exponentialRampToValueAtTime(50, time + 0.1);
+                
+                gain.gain.setValueAtTime(1.0 * masterVolume, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+                
+                osc.start(time);
+                osc.stop(time + 0.15);
             }
-
-            // Volume based on accent level and master volume
-            const dynamicVolume = dynamicLevels[accentLevel].volume;
-            gainNode.gain.value = dynamicVolume * masterVolume;
-
-            oscillator.start(time);
-            oscillator.stop(time + 0.05);
-
-            // Envelope
-            gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+            // Level 3 (forte): 8bit Snare
+            else if (accentLevel === 3) {
+                const osc = audioContext.createOscillator();
+                const noise = audioContext.createBufferSource();
+                const gain = audioContext.createGain();
+                const noiseGain = audioContext.createGain();
+                
+                osc.connect(gain);
+                noise.connect(noiseGain);
+                gain.connect(audioContext.destination);
+                noiseGain.connect(audioContext.destination);
+                
+                // Noise buffer for snare
+                const bufferSize = audioContext.sampleRate * 0.1;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                noise.buffer = buffer;
+                
+                osc.type = 'triangle';
+                osc.frequency.value = 200;
+                
+                gain.gain.setValueAtTime(0.5 * masterVolume, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+                
+                noiseGain.gain.setValueAtTime(0.4 * masterVolume, time);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+                
+                osc.start(time);
+                osc.stop(time + 0.08);
+                noise.start(time);
+                noise.stop(time + 0.08);
+            }
+            // Level 2 (mezzo forte): 8bit Hi-Hat
+            else if (accentLevel === 2) {
+                const noise = audioContext.createBufferSource();
+                const filter = audioContext.createBiquadFilter();
+                const gain = audioContext.createGain();
+                
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                const bufferSize = audioContext.sampleRate * 0.05;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                noise.buffer = buffer;
+                
+                filter.type = 'highpass';
+                filter.frequency.value = 7000;
+                
+                gain.gain.setValueAtTime(0.3 * masterVolume, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+                
+                noise.start(time);
+                noise.stop(time + 0.04);
+            }
+            // Level 1 (piano): Softer 8bit Hi-Hat
+            else {
+                const noise = audioContext.createBufferSource();
+                const filter = audioContext.createBiquadFilter();
+                const gain = audioContext.createGain();
+                
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                const bufferSize = audioContext.sampleRate * 0.03;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                noise.buffer = buffer;
+                
+                filter.type = 'highpass';
+                filter.frequency.value = 8000;
+                
+                gain.gain.setValueAtTime(0.15 * masterVolume, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+                
+                noise.start(time);
+                noise.stop(time + 0.03);
+            }
         }
 
         // Background flash

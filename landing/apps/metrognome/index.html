@@ -759,19 +759,86 @@ function initAudio() {
 
 function playClick(time, level) {
     if (level === 0) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
     
-    const freqs = [0, 600, 800, 1000];
-    const vols = [0, 0.4, 0.7, 1.0];
-    
-    osc.frequency.value = freqs[level];
-    gain.gain.setValueAtTime(vols[level], time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-    osc.start(time);
-    osc.stop(time + 0.05);
+    // Level 3 (accent): 8bit Kick Drum
+    if (level === 3) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(150, time);
+        osc.frequency.exponentialRampToValueAtTime(50, time + 0.1);
+        
+        gain.gain.setValueAtTime(1.0, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+        
+        osc.start(time);
+        osc.stop(time + 0.15);
+    }
+    // Level 2 (medium): 8bit Snare
+    else if (level === 2) {
+        const osc = audioCtx.createOscillator();
+        const noise = audioCtx.createBufferSource();
+        const gain = audioCtx.createGain();
+        const noiseGain = audioCtx.createGain();
+        
+        osc.connect(gain);
+        noise.connect(noiseGain);
+        gain.connect(audioCtx.destination);
+        noiseGain.connect(audioCtx.destination);
+        
+        // Noise buffer for snare
+        const bufferSize = audioCtx.sampleRate * 0.1;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        noise.buffer = buffer;
+        
+        osc.type = 'triangle';
+        osc.frequency.value = 200;
+        
+        gain.gain.setValueAtTime(0.5, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+        
+        noiseGain.gain.setValueAtTime(0.4, time);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+        
+        osc.start(time);
+        osc.stop(time + 0.08);
+        noise.start(time);
+        noise.stop(time + 0.08);
+    }
+    // Level 1 (quiet): 8bit Hi-Hat
+    else if (level === 1) {
+        const noise = audioCtx.createBufferSource();
+        const filter = audioCtx.createBiquadFilter();
+        const gain = audioCtx.createGain();
+        
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        const bufferSize = audioCtx.sampleRate * 0.05;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        noise.buffer = buffer;
+        
+        filter.type = 'highpass';
+        filter.frequency.value = 7000;
+        
+        gain.gain.setValueAtTime(0.3, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+        
+        noise.start(time);
+        noise.stop(time + 0.04);
+    }
 }
 
 function playSubClick(time) {
@@ -779,11 +846,12 @@ function playSubClick(time) {
     const gain = audioCtx.createGain();
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-    osc.frequency.value = 500;
-    gain.gain.setValueAtTime(0.3, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+    osc.type = 'square';
+    osc.frequency.value = 800;
+    gain.gain.setValueAtTime(0.15, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
     osc.start(time);
-    osc.stop(time + 0.03);
+    osc.stop(time + 0.02);
 }
 
 // Beat Grid
