@@ -17,56 +17,43 @@
             align-items: center;
             justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000000;
-            color: #ffffff;
+            background: #000;
+            color: #fff;
             padding: 2rem;
         }
         .container {
             max-width: 600px;
             text-align: center;
         }
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 1.5rem;
+        }
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            color: #ff0000;
-            text-shadow: 2px 2px 4px rgba(255, 0, 0, 0.3);
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 2px;
         }
         .tagline {
-            font-size: 1.2rem;
-            color: #cccccc;
+            font-size: 1.1rem;
+            color: #e63946;
             margin-bottom: 2rem;
+            font-weight: 500;
         }
         .welcome {
-            font-size: 1.1rem;
-            color: #ffffff;
-            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 0.5rem;
         }
         .section-title {
-            font-size: 0.9rem;
-            color: #999999;
+            font-size: 0.85rem;
+            color: #666;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 2rem 0 1rem;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .links a {
-            display: block;
-            padding: 1rem 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .links a:hover {
-            background: rgba(255, 0, 0, 0.1);
-            border-color: #ff0000;
-            transform: translateY(-2px);
+            letter-spacing: 3px;
+            margin: 2.5rem 0 1rem;
         }
         .social-links {
             display: flex;
@@ -77,39 +64,43 @@
         }
         .social-links a {
             padding: 0.75rem 1.5rem;
-            background: #ff0000;
-            border: 2px solid #ff0000;
-            border-radius: 25px;
-            color: #ffffff;
+            background: transparent;
+            border: 2px solid #e63946;
+            border-radius: 4px;
+            color: #e63946;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
             transition: all 0.2s ease;
         }
         .social-links a:hover {
-            background: #cc0000;
-            border-color: #cc0000;
-            transform: scale(1.05);
+            background: #e63946;
+            color: #000;
         }
         .apps {
             margin-top: 3rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid #222;
         }
         .apps a {
             display: inline-block;
             padding: 0.5rem 1rem;
-            color: #999999;
+            color: #666;
             text-decoration: none;
             font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
         .apps a:hover {
-            color: #ff0000;
+            color: #e63946;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Stick With It</h1>
+        <img src="/StickWithItBlack.png" alt="Stick With It" class="logo">
+        <h1>STICK WITH IT</h1>
         <p class="tagline">Drummers Unite!</p>
         
         <p class="welcome">Thanks for being here.</p>
