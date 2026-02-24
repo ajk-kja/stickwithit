@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon-256.png" sizes="256x256">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chopmeister | Stick With It</title>
+  <meta name="theme-color" content="#000000">
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #0a0a0a;
+      --border: #333;
+      --text: #fff;
+      --text-muted: #666;
+      --accent: #e63946;
+      --staff-line: #555;
+      --note-fill: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      touch-action: manipulation;
+    }
+
+    .mobile-audio-splash {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 600;
+    }
+    .mobile-audio-splash.active {
+      display: flex;
+    }
+    .mobile-audio-splash .card {
+      background: #111;
+      border-radius: 20px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
+    .mobile-audio-splash h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+    .mobile-audio-splash ul {
+      margin: 0 0 1.1rem 1.1rem;
+      color: #ddd;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .mobile-audio-splash button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: var(--bg);
+      cursor: pointer;
+    }
+    .mobile-audio-splash p.small {
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-top: 1rem;
+    }
+
+    /* Header */
+    .header {
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+    }
+
+    .header a:active {
+      color: var(--accent);
+    }
+
+    .header h1 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .share-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .share-btn:active {
+      color: var(--accent);
+    }
+
+    .bpm-display {
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bpm-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    /* Main content */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 12px;
+      gap: 8px;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* Staff container */
+    .staff-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    /* 5-line staff */
+    .staff {
+      position: relative;
+      height: 90px;
+      background: var(--surface);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 12px 8px 12px 8px;
+    }
+
+    .staff-lines {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 12px;
+      bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .staff-line {
+      height: 1px;
+      background: var(--staff-line);
+    }
+
+    /* Notes container */
+    .notes-container {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 12px;
+      bottom: 12px;
+      display: grid;
+      grid-template-columns: repeat(var(--note-columns, 8), minmax(28px, 1fr));
+      column-gap: 8px;
+      align-items: stretch;
+      justify-items: center;
+    }
+
+    .note-slot {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+      position: relative;
+      padding-top: 0;
+    }
+
+    .note-slot:active {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Note element */
+    .note {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: top 0.1s ease;
+      padding: 0 10px;
+    }
+
+    .note.ghost::before,
+    .note.ghost::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .note.ghost::before {
+      content: '(';
+      left: -4px;
+    }
+
+    .note.ghost::after {
+      content: ')';
+      right: -4px;
+    }
+
+    .note.ghost .note-head {
+      background: transparent;
+      border: 1px solid var(--note-fill);
+    }
+
+    /* Accent mark */
+    .accent {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--note-fill);
+      line-height: 1;
+      margin-bottom: -2px;
+    }
+
+    /* Note head */
+    .note-head {
+      width: 14px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--note-fill);
+      position: relative;
+    }
+
+    /* X notehead for hi-hat */
+    .note-head.x-head {
+      background: transparent;
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--note-fill);
+      border-radius: 0;
+    }
+
+    .note-head.x-head::before {
+      content: '×';
+    }
+
+    /* Ghost note (parentheses) */
+    .note.ghost .note-head {
+      opacity: 0.4;
+      transform: scale(0.85);
+    }
+
+    /* Stem */
+    .stem {
+      width: 2px;
+      height: 28px;
+      background: var(--note-fill);
+      position: absolute;
+      right: -1px;
+      top: 5px;
+    }
+
+    .stem.down {
+      top: auto;
+      bottom: 5px;
+      right: -1px;
+    }
+
+    /* Playing highlight */
+    .note.playing .note-head {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .note.playing .note-head.x-head {
+      color: var(--accent);
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent);
+    }
+
+    .note.playing .accent {
+      color: var(--accent);
+    }
+
+    /* Sticking row */
+    .sticking-row {
+      display: grid;
+      grid-template-columns: repeat(var(--note-columns, 8), minmax(28px, 1fr));
+      column-gap: 8px;
+      margin-top: 6px;
+      padding: 0 8px;
+    }
+
+    .sticking-slot {
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .sticking-slot:active {
+      color: var(--accent);
+    }
+
+    .sticking-slot.kick {
+      opacity: 0.3;
+    }
+
+    /* Note count display */
+    .note-count {
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .note-count span {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn:active {
+      background: var(--border);
+      transform: scale(0.98);
+    }
+
+    .btn-icon {
+      font-size: 13px;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-accent:active {
+      background: #c5303d;
+    }
+
+    .btn-group {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .btn-group .btn {
+      border: none;
+      border-radius: 0;
+      flex: 1;
+      min-width: 36px;
+      padding: 8px 5px;
+    }
+
+    .btn-group .btn:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .btn-group .btn-value {
+      min-width: 44px;
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    /* Play button */
+    .play-section {
+      display: flex;
+      justify-content: center;
+      padding: 2px 0;
+    }
+
+    .btn-play {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 18px;
+      padding: 0;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      padding: 6px 16px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 10px;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+    }
+
+    .chop-splash {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 200;
+      transition: opacity 0.3s ease;
+    }
+
+    .chop-splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .chop-splash__card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 360px;
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .chop-splash__card h2 {
+      margin-top: 0;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .chop-splash__card ul {
+      padding-left: 18px;
+      margin: 0 0 14px;
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .chop-splash__cta {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    /* Larger screens */
+    @media (min-height: 650px) {
+      main {
+        gap: 12px;
+        padding: 14px 16px;
+      }
+
+      .staff {
+        height: 110px;
+      }
+
+      .note-head {
+        width: 16px;
+        height: 12px;
+      }
+
+      .stem {
+        height: 32px;
+      }
+
+      .controls {
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+
+      .btn-play {
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 420px) {
+      main {
+        flex-direction: row;
+        gap: 12px;
+        padding: 6px 12px;
+      }
+
+      .staff-container {
+        flex: 2;
+      }
+
+      .controls {
+        flex: 1;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .staff {
+        height: 70px;
+      }
+
+      .note-head {
+        width: 12px;
+        height: 8px;
+      }
+
+      .stem {
+        height: 22px;
+      }
+
+      .sticking-slot {
+        font-size: 9px;
+      }
+
+      .btn-play {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+
+      footer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="chop-splash" id="chopSplash">
+    <div class="chop-splash__card">
+      <h2>Welcome to Chopmeister</h2>
+      <p>Build quick chops in three steps:</p>
+      <ul>
+        <li><strong>Pattern</strong> shuffles the R/L/K sticking only.</li>
+        <li><strong>Drums</strong> re-orchestrates the hits across the kit.</li>
+        <li>Tap <strong>Share</strong> to copy a link with your current groove.</li>
+      </ul>
+      <button class="btn btn-accent chop-splash__cta" id="chopSplashDismiss">Let's go</button>
+    </div>
+  </div>
+  <div class="mobile-audio-splash" id="mobileAudioSplash">
+    <div class="card">
+      <h2>Heads up for phone audio</h2>
+      <ul>
+        <li>Flip off the iPhone mute switch / raise your volume.</li>
+        <li>Use Do Not Disturb or Airplane Mode when rehearsing or live.</li>
+        <li>If the phone is muted, the chops won’t make a sound.</li>
+      </ul>
+      <button id="mobileAudioDismiss">Understood</button>
+      <p class="small">Tip: Tap Play again if you adjust sound settings.</p>
+    </div>
+  </div>
+  <header class="header">
+    <div class="header-left">
+      <a href="https://www.stickwithit.xyz">← Home</a>
+      <h1>Chopmeister</h1>
+    </div>
+    <div class="header-right">
+      <button class="share-btn" id="shareBtn" title="Copy link">🔗</button>
+      <div>
+        <span class="bpm-display" id="bpmDisplay">120</span>
+        <span class="bpm-label">BPM</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="staff-container">
+      <div class="staff" id="staff">
+        <div class="staff-lines" id="staffLines">
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+        </div>
+        <div class="notes-container" id="notesContainer"></div>
+      </div>
+      <div class="sticking-row" id="stickingRow"></div>
+      <div class="note-count"><span id="noteCountDisplay">8</span> notes</div>
+    </div>
+
+    <div class="controls">
+      <div class="control-row">
+        <button class="btn" id="randomPattern" title="Randomize Pattern">
+          <span class="btn-icon">🎲</span> Pattern
+        </button>
+        <button class="btn" id="randomOrchestration" title="Randomize Orchestration">
+          <span class="btn-icon">🥁</span> Drums
+        </button>
+      </div>
+
+      <div class="control-row">
+        <div class="btn-group">
+          <button class="btn" id="notesMinus">−</button>
+          <div class="btn btn-value" id="notesValue">8</div>
+          <button class="btn" id="notesPlus">+</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn" id="bpmMinus">−</button>
+          <div class="btn btn-value" id="bpmValue">120</div>
+          <button class="btn" id="bpmPlus">+</button>
+        </div>
+      </div>
+
+      <div class="play-section">
+        <button class="btn btn-accent btn-play" id="playBtn">▶</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">Link copied!</div>
+
+  <footer>
+    <a href="https://www.stickwithit.xyz">stickwithit.xyz</a>
+  </footer>
+
+  <script>
+    // Standard 5-line staff positions (0 = top line, 4 = bottom line, spaces are 0.5, 1.5, etc.)
+    // Line 0 (top): Hi-hat
+    // Line 2 (middle): Snare
+    // Space 2.5: Tom (between lines 2 and 3, the "A" space)
+    // Line 4 (bottom): Kick
+    const DRUMS = {
+      HIHAT:       { name: 'HH', staffPos: 0, sticking: true, xHead: true },
+      SNARE:       { name: 'S',  staffPos: 2, sticking: true, accent: true },
+      SNARE_GHOST: { name: 'g',  staffPos: 2, sticking: true, ghost: true },
+      TOM:         { name: 'T',  staffPos: 2.5, sticking: true },
+      KICK:        { name: 'K',  staffPos: 4, sticking: false }
+    };
+
+    // Cycle order: bottom to top (K → T → ghost → S → HH)
+    const CYCLE_ORDER = ['KICK', 'TOM', 'SNARE_GHOST', 'SNARE', 'HIHAT'];
+
+    // URL encoding
+    const DRUM_CHARS = { HIHAT: 'H', TOM: 'T', SNARE: 'S', SNARE_GHOST: 'g', KICK: 'K' };
+    const CHAR_TO_DRUM = Object.fromEntries(Object.entries(DRUM_CHARS).map(([k,v]) => [v, k]));
+
+    // State
+    let noteCount = 8;
+    let bpm = 120;
+    let isPlaying = false;
+    let playInterval = null;
+    let currentNoteIndex = -1;
+    let notes = [];
+    const SPLASH_STORAGE_KEY = 'chopmeisterSplashSeen';
+
+    // Staff geometry
+    let staffTop = 0;
+    let lineSpacing = 0;
+
+    // ==================== URL STATE ====================
+    function encodeState() {
+      const noteStr = notes.map(n => DRUM_CHARS[n.drum] + n.sticking).join('');
+      return `${bpm}-${noteStr}`;
+    }
+
+    function decodeState(hash) {
+      try {
+        const parts = hash.split('-');
+        if (parts.length !== 2) return false;
+        
+        const newBpm = parseInt(parts[0], 10);
+        if (isNaN(newBpm) || newBpm < 40 || newBpm > 300) return false;
+        
+        const noteStr = parts[1];
+        if (noteStr.length < 2 || noteStr.length % 2 !== 0) return false;
+        
+        const newNotes = [];
+        for (let i = 0; i < noteStr.length; i += 2) {
+          const drumChar = noteStr[i];
+          const sticking = noteStr[i + 1];
+          const drumKey = CHAR_TO_DRUM[drumChar];
+          if (!drumKey || !['R', 'L', 'K'].includes(sticking)) return false;
+          newNotes.push({ drum: drumKey, sticking });
+        }
+        
+        if (newNotes.length < 1 || newNotes.length > 16) return false;
+        
+        bpm = newBpm;
+        notes = newNotes;
+        noteCount = newNotes.length;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function updateURL() {
+      const state = encodeState();
+      history.replaceState(null, '', '#' + state);
+    }
+
+    function loadFromURL() {
+      const hash = window.location.hash.slice(1);
+      return hash && decodeState(hash);
+    }
+
+    function copyLink() {
+      updateURL();
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Link copied!');
+      }).catch(() => {
+        showToast('Copy failed');
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    const mobileAudioSplash = document.getElementById('mobileAudioSplash');
+    const mobileAudioDismiss = document.getElementById('mobileAudioDismiss');
+    if (mobileAudioSplash && mobileAudioDismiss) {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        mobileAudioSplash.classList.add('active');
+      }
+      mobileAudioDismiss.addEventListener('click', () => {
+        mobileAudioSplash.classList.remove('active');
+      });
+    }
+
+    // ==================== AUDIO ====================
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    let audioContext = null;
+
+    const audioBuffers = {};
+    function getAudioContext() {
+      if (!AudioContextClass) return null;
+      if (!audioContext) {
+        try {
+          audioContext = new AudioContextClass();
+        } catch (err) {
+          console.error('Unable to create AudioContext', err);
+          audioContext = null;
+        }
+      }
+      return audioContext;
+    }
+
+    function warmupAudioPulse() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.0001;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } catch (err) {
+        console.warn('Warmup oscillator failed', err);
+      }
+    }
+
+    async function ensureAudioReady() {
+      const needsResume = state => state === 'suspended' || state === 'interrupted';
+      let ctx = getAudioContext();
+      if (!ctx) return false;
+      if (needsResume(ctx.state) && typeof ctx.resume === 'function') {
+        try {
+          await ctx.resume();
+        } catch (err) {
+          console.warn('Audio resume failed', err);
+        }
+      }
+      if (ctx.state === 'running') return true;
+      try {
+        await ctx.close();
+      } catch (err) {
+        console.warn('Audio context close failed', err);
+      }
+      audioContext = null;
+      ctx = getAudioContext();
+      if (!ctx) return false;
+      if (needsResume(ctx.state) && typeof ctx.resume === 'function') {
+        try {
+          await ctx.resume();
+        } catch (err) {
+          console.warn('Audio resume failed', err);
+          return false;
+        }
+      }
+      return ctx.state === 'running';
+    }
+
+    let samplesLoaded = false;
+    const samplePaths = {
+      kick: 'sounds/kick.mp3',
+      snareGhost: 'sounds/snare-ghost.mp3',
+      snareRimshot: 'sounds/snare-rimshot.mp3',
+      hihat: 'sounds/hihat.mp3',
+      tom: 'sounds/tom-floor.mp3'
+    };
+
+
+    async function loadSamples(force = false) {
+      if (samplesLoaded && !force) return;
+      const ready = await ensureAudioReady();
+      if (!ready) throw new Error('Audio not unlocked');
+      const ctx = getAudioContext();
+      if (!ctx) throw new Error('Audio context unavailable');
+      const loadPromises = Object.entries(samplePaths).map(async ([key, path]) => {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error('Failed to load ' + path);
+        const arrayBuffer = await response.arrayBuffer();
+        audioBuffers[key] = await ctx.decodeAudioData(arrayBuffer);
+      });
+      await Promise.all(loadPromises);
+      samplesLoaded = true;
+    }
+
+    function playSample(bufferKey, gain = 1.0) {
+      const ctx = getAudioContext();
+      if (!ctx || !audioBuffers[bufferKey]) return;
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffers[bufferKey];
+      const gainNode = ctx.createGain();
+      gainNode.gain.value = gain;
+      source.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      source.start(0);
+    }
+
+    function playSound(drum) {
+      switch (drum) {
+        case 'KICK':
+          playSample('kick', 0.9);
+          break;
+        case 'SNARE':
+          playSample('snareRimshot', 0.85);
+          break;
+        case 'SNARE_GHOST':
+          playSample('snareGhost', 0.3);
+          break;
+        case 'TOM':
+          playSample('tom', 0.8);
+          break;
+        case 'HIHAT':
+          playSample('hihat', 0.7);
+          break;
+      }
+    }
+
+    function getRandomDrumKey() {
+      const drumKeys = Object.keys(DRUMS);
+      return drumKeys[Math.floor(Math.random() * drumKeys.length)];
+    }
+
+    function createRandomNote() {
+      const drumKey = getRandomDrumKey();
+      const drum = DRUMS[drumKey];
+      return {
+        drum: drumKey,
+        sticking: drum.sticking ? (Math.random() > 0.5 ? 'R' : 'L') : 'K'
+      };
+    }
+
+    function ensureNotesInitialized() {
+      if (!notes.length) {
+        notes = Array.from({ length: noteCount }, () => createRandomNote());
+      }
+    }
+
+    // ==================== PATTERN ====================
+    function generateRandomPattern(forceSeed = false) {
+      if (forceSeed) {
+        notes = Array.from({ length: noteCount }, () => createRandomNote());
+      } else {
+        ensureNotesInitialized();
+      }
+
+      notes.forEach(note => {
+        const drum = DRUMS[note.drum];
+        note.sticking = drum.sticking ? (Math.random() > 0.5 ? 'R' : 'L') : 'K';
+      });
+      updateURL();
+      render();
+    }
+
+    function randomizeOrchestration() {
+      ensureNotesInitialized();
+      notes.forEach(note => {
+        const randomDrum = getRandomDrumKey();
+        const drum = DRUMS[randomDrum];
+        note.drum = randomDrum;
+        if (!drum.sticking) {
+          note.sticking = 'K';
+        } else if (note.sticking === 'K') {
+          note.sticking = Math.random() > 0.5 ? 'R' : 'L';
+        }
+      });
+      updateURL();
+      render();
+    }
+
+    function cycleDrum(index) {
+      const currentDrum = notes[index].drum;
+      const currentCycleIndex = CYCLE_ORDER.indexOf(currentDrum);
+      const nextCycleIndex = (currentCycleIndex + 1) % CYCLE_ORDER.length;
+      const nextDrum = CYCLE_ORDER[nextCycleIndex];
+      const drum = DRUMS[nextDrum];
+      
+      notes[index].drum = nextDrum;
+      if (!drum.sticking) {
+        notes[index].sticking = 'K';
+      } else if (notes[index].sticking === 'K') {
+        notes[index].sticking = 'R';
+      }
+      updateURL();
+      render();
+    }
+
+    function cycleSticking(index) {
+      const drum = DRUMS[notes[index].drum];
+      if (!drum.sticking) return;
+      notes[index].sticking = notes[index].sticking === 'R' ? 'L' : 'R';
+      updateURL();
+      render();
+    }
+
+    // ==================== RENDERING ====================
+    function calculateStaffGeometry() {
+      const staffLines = document.getElementById('staffLines');
+      const container = document.getElementById('notesContainer');
+      const containerRect = container.getBoundingClientRect();
+      const lines = staffLines.querySelectorAll('.staff-line');
+      
+      if (lines.length >= 2) {
+        const firstLine = lines[0].getBoundingClientRect();
+        const lastLine = lines[lines.length - 1].getBoundingClientRect();
+        staffTop = firstLine.top - containerRect.top;
+        lineSpacing = (lastLine.top - firstLine.top) / 4; // 4 spaces between 5 lines
+      }
+    }
+
+    function getYPosition(staffPos) {
+      // staffPos: 0 = line 1 (top), 4 = line 5 (bottom)
+      // Spaces are 0.5, 1.5, 2.5, 3.5
+      return staffTop + (staffPos * lineSpacing);
+    }
+
+    function render() {
+      calculateStaffGeometry();
+      
+      const staffWrapper = document.querySelector('.staff-container');
+      if (staffWrapper) {
+        staffWrapper.style.setProperty('--note-columns', noteCount);
+      }
+      const container = document.getElementById('notesContainer');
+      const stickingRow = document.getElementById('stickingRow');
+      
+      container.innerHTML = '';
+      stickingRow.innerHTML = '';
+
+      notes.forEach((note, index) => {
+        const drum = DRUMS[note.drum];
+        
+        const slot = document.createElement('div');
+        slot.className = 'note-slot';
+        slot.onclick = () => cycleDrum(index);
+
+        const noteEl = document.createElement('div');
+        noteEl.className = 'note';
+        if (drum.ghost) noteEl.classList.add('ghost');
+        if (index === currentNoteIndex) noteEl.classList.add('playing');
+
+        // Accent mark for full snare
+        if (drum.accent) {
+          const accent = document.createElement('div');
+          accent.className = 'accent';
+          accent.textContent = '>';
+          noteEl.appendChild(accent);
+        }
+
+        // Note head
+        const head = document.createElement('div');
+        head.className = 'note-head';
+        if (drum.xHead) {
+          head.classList.add('x-head');
+        }
+        noteEl.appendChild(head);
+
+        // Stem
+        const stem = document.createElement('div');
+        stem.className = 'stem';
+        // Stem goes up for notes below middle, down for notes above
+        if (drum.staffPos <= 2) {
+          stem.classList.add('down');
+        }
+        head.appendChild(stem);
+
+        // Position
+        const yPos = getYPosition(drum.staffPos);
+        noteEl.style.top = yPos + 'px';
+        noteEl.style.transform = 'translateY(-50%)';
+
+        slot.appendChild(noteEl);
+        container.appendChild(slot);
+
+        // Sticking
+        const stickingEl = document.createElement('div');
+        stickingEl.className = 'sticking-slot';
+        if (!drum.sticking) stickingEl.classList.add('kick');
+        stickingEl.textContent = note.sticking;
+        stickingEl.onclick = (e) => {
+          e.stopPropagation();
+          cycleSticking(index);
+        };
+        stickingRow.appendChild(stickingEl);
+      });
+
+      document.getElementById('noteCountDisplay').textContent = noteCount;
+      document.getElementById('notesValue').textContent = noteCount;
+      document.getElementById('bpmDisplay').textContent = bpm;
+      document.getElementById('bpmValue').textContent = bpm;
+    }
+
+    function changeNoteCount(delta) {
+      const newCount = noteCount + delta;
+      if (newCount < 1 || newCount > 16) return;
+      
+      if (delta > 0) {
+        const drumKeys = Object.keys(DRUMS);
+        const randomDrum = drumKeys[Math.floor(Math.random() * drumKeys.length)];
+        const drum = DRUMS[randomDrum];
+        notes.push({
+          drum: randomDrum,
+          sticking: drum.sticking ? (Math.random() > 0.5 ? 'R' : 'L') : 'K'
+        });
+      } else {
+        notes.pop();
+      }
+      
+      noteCount = newCount;
+      updateURL();
+      render();
+    }
+
+    function changeBpm(delta) {
+      const newBpm = bpm + delta;
+      if (newBpm < 40 || newBpm > 300) return;
+      bpm = newBpm;
+      updateURL();
+      render();
+      
+      if (isPlaying) {
+        stopPlayback();
+        startPlayback();
+      }
+    }
+
+    // ==================== PLAYBACK (8th notes) ====================
+    async function startPlayback() {
+      const ready = await ensureAudioReady();
+      if (!ready) {
+        showToast('Tap again to enable audio');
+        return;
+      }
+      warmupAudioPulse();
+      try {
+        await loadSamples();
+      } catch (err) {
+        console.error('Unable to load audio buffers:', err);
+        showToast('Audio not ready yet');
+        return;
+      }
+      if (!notes.length) return;
+      isPlaying = true;
+      document.getElementById('playBtn').textContent = '⏹';
+      currentNoteIndex = -1;
+      
+      // 8th note timing: 2 notes per beat
+      const intervalMs = (60 / bpm / 2) * 1000;
+      
+      function playNext() {
+        if (!notes.length) return;
+        currentNoteIndex = (currentNoteIndex + 1) % notes.length;
+        playSound(notes[currentNoteIndex].drum);
+        render();
+      }
+      
+      playNext();
+      playInterval = setInterval(playNext, intervalMs);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      document.getElementById('playBtn').textContent = '▶';
+      currentNoteIndex = -1;
+      if (playInterval) {
+        clearInterval(playInterval);
+        playInterval = null;
+      }
+      render();
+    }
+
+    async function togglePlayback() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        await startPlayback();
+      }
+    }
+
+    // ==================== INIT ====================
+    function bindEvents() {
+      document.getElementById('randomPattern').onclick = generateRandomPattern;
+      document.getElementById('randomOrchestration').onclick = randomizeOrchestration;
+      document.getElementById('notesMinus').onclick = () => changeNoteCount(-1);
+      document.getElementById('notesPlus').onclick = () => changeNoteCount(1);
+      document.getElementById('bpmMinus').onclick = () => changeBpm(-5);
+      document.getElementById('bpmPlus').onclick = () => changeBpm(5);
+      document.getElementById('playBtn').onclick = () => togglePlayback();
+      document.getElementById('shareBtn').onclick = copyLink;
+
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          togglePlayback();
+        }
+      });
+      
+      window.addEventListener('resize', render);
+    }
+
+    function setupSplash() {
+      const splash = document.getElementById('chopSplash');
+      const dismissBtn = document.getElementById('chopSplashDismiss');
+      if (!splash || !dismissBtn) return;
+      if (localStorage.getItem(SPLASH_STORAGE_KEY)) {
+        splash.classList.add('hidden');
+      }
+
+      const dismiss = () => {
+        splash.classList.add('hidden');
+        localStorage.setItem(SPLASH_STORAGE_KEY, '1');
+      };
+
+      dismissBtn.addEventListener('click', dismiss);
+      splash.addEventListener('click', (event) => {
+        if (event.target === splash) {
+          dismiss();
+        }
+      });
+    }
+
+    async function init() {
+      // Load samples first
+      try {
+        await loadSamples();
+      } catch (e) {
+        console.error('Failed to load samples:', e);
+        showToast('Failed to load sounds');
+      }
+      
+      try {
+        await loadSamples();
+      } catch (err) {
+        console.error('Failed to load samples:', err);
+        showToast('Failed to load sounds');
+      }
+      if (!loadFromURL()) {
+        generateRandomPattern(true);
+      } else {
+        render();
+      }
+      bindEvents();
+      setupSplash();
+    }
+
+    init();
+  </script>
+</body>
+</html>
