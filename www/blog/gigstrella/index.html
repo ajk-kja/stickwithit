@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gigstrella | Stick With It Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Rain effect */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .rain-drop {
+            position: absolute;
+            width: 1px;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255,255,255,0.4));
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Lightning flash */
+        .lightning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            pointer-events: none;
+            z-index: 2;
+            transition: background 0.1s;
+        }
+
+        .lightning.flash {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Dinosaur silhouette */
+        .dino-container {
+            position: fixed;
+            bottom: 0;
+            right: 5%;
+            width: 300px;
+            height: 250px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .dino-container.visible {
+            opacity: 1;
+        }
+
+        .dino {
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            clip-path: polygon(
+                /* T-Rex silhouette */
+                85% 100%, 85% 85%, 80% 85%, 80% 100%, /* back leg */
+                60% 100%, 60% 80%, 55% 80%, 55% 100%, /* front leg */
+                40% 100%, 35% 70%, 30% 65%, 25% 60%, /* body */
+                15% 55%, 10% 50%, 5% 45%, /* neck */
+                0% 40%, 5% 35%, 15% 30%, 20% 32%, /* head top */
+                25% 35%, 22% 40%, 25% 42%, /* jaw */
+                30% 45%, 35% 50%, 40% 55%, /* back to body */
+                50% 60%, 60% 62%, 75% 65%, 90% 70%, /* tail */
+                95% 75%, 100% 80%, 95% 85%, 90% 100%
+            );
+        }
+
+        /* Palm trees */
+        .palm-left, .palm-right {
+            position: fixed;
+            bottom: 0;
+            width: 150px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .palm-left.visible, .palm-right.visible {
+            opacity: 1;
+        }
+
+        .palm-left {
+            left: 2%;
+        }
+
+        .palm-right {
+            right: 25%;
+        }
+
+        .palm-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 200px;
+            background: #1a1a1a;
+            border-radius: 5px;
+        }
+
+        .palm-frond {
+            position: absolute;
+            top: 50px;
+            width: 80px;
+            height: 15px;
+            background: #1a1a1a;
+            border-radius: 50% 50% 0 0;
+            transform-origin: right center;
+        }
+
+        .palm-frond:nth-child(1) { left: 10%; transform: rotate(-60deg); }
+        .palm-frond:nth-child(2) { left: 20%; transform: rotate(-30deg); }
+        .palm-frond:nth-child(3) { left: 40%; transform: rotate(0deg); }
+        .palm-frond:nth-child(4) { right: 20%; transform: rotate(30deg); transform-origin: left center; }
+        .palm-frond:nth-child(5) { right: 10%; transform: rotate(60deg); transform-origin: left center; }
+
+        /* Content */
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #e63946;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .article p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .article p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            margin-right: 0.5rem;
+            color: #e63946;
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: #e63946;
+        }
+
+        /* Lo-fi scan lines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            opacity: 0.3;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .article p { font-size: 1rem; }
+            .dino-container { width: 150px; height: 125px; right: 2%; }
+            .palm-left, .palm-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Rain -->
+    <div class="rain" id="rain"></div>
+
+    <!-- Lightning flash overlay -->
+    <div class="lightning" id="lightning"></div>
+
+    <!-- Dinosaur silhouette -->
+    <div class="dino-container" id="dino">
+        <div class="dino"></div>
+    </div>
+
+    <!-- Palm trees -->
+    <div class="palm-left" id="palm-left">
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-trunk"></div>
+    </div>
+
+    <div class="palm-right" id="palm-right">
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-trunk"></div>
+    </div>
+
+    <!-- Lo-fi scan lines -->
+    <div class="scanlines"></div>
+
+    <!-- Content -->
+    <div class="content">
+        <a href="/blog/" class="back-link">← Back to Blog</a>
+        
+        <h1>Gigstrella: Setlist Reps Anywhere</h1>
+        <p class="date">Posted on Stick With It</p>
+
+        <article class="article">
+            <p>Gigstrella is the practice rig I wanted before every run of shows: a setlist-first workspace where every song, marker, and loop lives side-by-side so I can keep drilling the exact entrance that keeps me up at night. It launches instantly in the browser and keeps my focus on solving one transition at a time.</p>
+
+            <p>You can load as many songs as you need for a gig, and each one remembers its own BPM mode, notes, and markers. Upload the reference file once, give it a name that matches your chart, and Gigstrella stores the metadata so you never have to rebuild it mid-week.</p>
+
+            <p>The dual AB and CD loops are the heart of the app. AB is perfect for the verse pickup or the chorus hit, while CD can live on the outro vamp or a tricky bombastic ending. Flip either loop on, drag the markers, and the player immediately jumps back into the phrase until your hands stop second-guessing.</p>
+
+            <p>Because loop states, tempo modes, and notes are saved per song, you can bounce between tracks without losing the exact bar counts you dialed in. The next time you open Gigstrella, every region is waiting—no scavenger hunt, no spreadsheet.</p>
+
+            <p>And since it's 100% web-based, it works wherever you can open a browser: on the subway to rehearsal, in the back of an Uber on the way to the club, or backstage while the monitor engineer rings out wedges. If you have five spare minutes, you have enough time to tighten the spot that's giving you grief.</p>
+        </article>
+    </div>
+
+    <script>
+        // Create rain drops
+        const rain = document.getElementById('rain');
+        for (let i = 0; i < 100; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            drop.style.animationDelay = Math.random() * 2 + 's';
+            rain.appendChild(drop);
+        }
+
+        // Lightning effect
+        const lightning = document.getElementById('lightning');
+        const dino = document.getElementById('dino');
+        const palmLeft = document.getElementById('palm-left');
+        const palmRight = document.getElementById('palm-right');
+
+        function triggerLightning() {
+            // Flash sequence (subtle, non-epileptic)
+            lightning.classList.add('flash');
+            dino.classList.add('visible');
+            palmLeft.classList.add('visible');
+            palmRight.classList.add('visible');
+
+            setTimeout(() => {
+                lightning.classList.remove('flash');
+                dino.classList.remove('visible');
+                palmLeft.classList.remove('visible');
+                palmRight.classList.remove('visible');
+            }, 150);
+
+            // Occasionally do a double flash
+            if (Math.random() > 0.6) {
+                setTimeout(() => {
+                    lightning.classList.add('flash');
+                    dino.classList.add('visible');
+                    palmLeft.classList.add('visible');
+                    palmRight.classList.add('visible');
+                    setTimeout(() => {
+                        lightning.classList.remove('flash');
+                        dino.classList.remove('visible');
+                        palmLeft.classList.remove('visible');
+                        palmRight.classList.remove('visible');
+                    }, 100);
+                }, 200);
+            }
+
+            // Schedule next lightning (random interval 8-20 seconds)
+            setTimeout(triggerLightning, Math.random() * 12000 + 8000);
+        }
+
+        // Start lightning after a delay
+        setTimeout(triggerLightning, 3000);
+    </script>
+</body>
+</html>
