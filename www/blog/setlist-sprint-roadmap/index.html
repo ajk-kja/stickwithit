@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gigstrella Notes | Stick With It Blog</title>
+    <meta name="description" content="How I use The Gigstrella to rehearse intros and outros with AB/CD loops, plus the rig details that keep it synced.">
+    <style>
+        :root { color-scheme: dark; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #020202;
+            color: #f5f5f5;
+            font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.8;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+        .container { max-width: 760px; margin: 0 auto; }
+        a.back-link {
+            color: #5dd0ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 2.1rem;
+        }
+        h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); margin-bottom: 0.5rem; }
+        .meta { color: #7f8590; margin-bottom: 2.2rem; }
+        section { margin-bottom: 2rem; }
+        h2 { font-size: 1.3rem; color: #5dd0ff; margin-bottom: 0.6rem; }
+        .tech-notes {
+            border-top: 1px solid #1a1a1a;
+            padding-top: 2rem;
+        }
+        ul { margin: 0.6rem 0 0 1.2rem; color: #d7d7d7; }
+        .keywords {
+            border: 1px dashed #2d2d2d;
+            padding: 1.1rem;
+            font-size: 0.95rem;
+            color: #b8b8b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="/blog/">&#8592; Back to Blog</a>
+        <h1>The Gigstrella: Locking the Edges of Every Song</h1>
+        <p class="meta">Published February 24, 2026 · Practice log</p>
+
+        <section>
+            <p>
+                “Setlist Sprint” was the working title back when this was just a hackathon board. These days the app lives on shows because it does one thing well: it helps drummers nail the moments the crowd actually remembers. The new name, <strong>The Gigstrella</strong>, leans into that mission—stick the intro, stick the outro, and stay calm in between.
+            </p>
+        </section>
+
+        <section>
+            <h2>Using AB/CD loops like a safety net</h2>
+            <p>
+                The workflow is simple: drag the latest board mix into the browser, drop marker A where the count-in lands, B at the top of verse one, C at the start of the outro vamp, and D where the band buttons the song. With AB active, the app keeps spitting the intro back until the pickup feels automatic. Flip to CD and it loops the ending tag so players can shed stickings over a pad without touching a DAW.
+            </p>
+        </section>
+
+        <section>
+            <h2>Show-night triage</h2>
+            <p>
+                On gig night the same project becomes a quiet stage manager. If the singer cuts the third tune, the drummer (or MD) types the new order and The Gigstrella immediately recalculates runtime based on each song’s BPM and note count. No spreadsheets, no head math—just a quick glance before calling the next number.
+            </p>
+        </section>
+
+        <section class="tech-notes">
+            <h2>Rig Notes</h2>
+            <ul>
+                <li>AB/CD loop states, markers, and BPM settings live in IndexedDB so I can rehearse offline on an iPad.</li>
+                <li>Manual + auto BPM detection share the same UI; detected tempos land first, but I can type in whatever the band actually plays.</li>
+                <li>Runtime math and set summaries serialize into the URL, which makes it easy to drop a “latest plan” link into chat.</li>
+                <li>The Nextcloud upload webhook still feeds a “StickWithIt Clips” folder so finished videos move themselves into the archival spot once the status flips to done.</li>
+            </ul>
+        </section>
+
+        <div class="keywords">
+            <strong>Search focus:</strong> gigstrella app, drummer loop coach, AB CD loop practice, setlist runtime planner, Stick With It updates.
+        </div>
+    </div>
+</body>
+</html>

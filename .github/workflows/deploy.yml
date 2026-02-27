@@ -11,11 +11,11 @@ jobs:
     steps:
       - name: Pull latest
         run: |
-          cd /home/clank/infra/stickwithit
+          cd /home/clank/projects/stickwithit/docker
           git pull origin main
           
       - name: Restart container
         run: |
-          cd /home/clank/infra/stickwithit
+          cd /home/clank/projects/stickwithit/docker
           docker compose restart
           echo "✅ Deployed at $(date)"

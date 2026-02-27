@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Free Drum Tools | Stick With It Blog</title>
+    <meta name="description" content="MetroGnome, Lickmeister, and Setlist Sprint are free web apps for drummers. Explore the free online metronome plus composition and planning tools used across Stick With It projects.">
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top, #111 0%, #050505 60%);
+            color: #e8e8e8;
+            line-height: 1.7;
+            padding: 2rem 1.25rem 4rem;
+        }
+        .wrap {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+        a.back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            color: #e63946;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .meta {
+            color: #8a8a8a;
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+        .lede {
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            color: #f7f7f7;
+        }
+        section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            border: 1px solid #1f1f1f;
+            border-radius: 10px;
+            background: rgba(10,10,10,0.85);
+        }
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            color: #ff5c70;
+        }
+        h3 {
+            font-size: 1.15rem;
+            margin: 1.4rem 0 0.4rem;
+            color: #fff;
+        }
+        p + p {
+            margin-top: 1rem;
+        }
+        ul {
+            margin: 0.8rem 0 0 1.2rem;
+            color: #c7c7c7;
+        }
+        .keywords {
+            border-left: 4px solid #e63946;
+            padding-left: 1rem;
+            margin-top: 3rem;
+            color: #b0b0b0;
+            font-size: 0.95rem;
+        }
+        .tool-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .tool-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        .card {
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.2rem;
+            background: #0c0c0c;
+        }
+        .card span {
+            font-size: 2rem;
+            display: inline-block;
+            margin-bottom: 0.6rem;
+        }
+        .card strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <a class="back-link" href="/blog/">&#8592; Back to Blog</a>
+        <h1>Three Free Drum Tools for Everyday Practice</h1>
+        <p class="meta">Published February 24, 2026 · Project log entry</p>
+        <p class="lede">
+            Stick With It keeps its flagship practice utilities on the open web so anyone can load a free online metronome, sketch grooves, or plan a set without signing in. Here is how MetroGnome, Lickmeister, and Setlist Sprint currently work together to cover timing, vocabulary, and performance logistics.
+        </p>
+
+        <section>
+            <h2>MetroGnome — the free online metronome built for drummers</h2>
+            <p>
+                MetroGnome stays laser-focused on clarity: bold beat blocks, accent cycling, subdivisions up to four, and a tap-to-set tempo. Because it is a browser-native free online metronome, it runs on phones backstage, tablets on the kit, or a laptop at rehearsal. The playlist tab saves favorite tempos and feel breakdowns locally so drummers can flip between ballad clicks and shed tempos without reprogramming.
+            </p>
+            <ul>
+                <li>Accessible UI with high-contrast faders for accent, ghost, mute, or off.</li>
+                <li>Flash-on-beat option for silent count-ins during live streams.</li>
+                <li>LocalStorage playlists so repeat sessions launch at the exact tempo map.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Lickmeister — fast sticking ideas on a staff</h2>
+            <p>
+                Lickmeister layers kick, tom, snare, ghost notes, and hi-hat into a minimal four-line staff. Each tap cycles articulations and immediately updates playback, so players can audition sticking ideas before committing them to the pad. It mirrors MetroGnome’s styling to make the switch between timing and vocabulary feel seamless.
+            </p>
+            <ul>
+                <li>Cycle order from low end to cymbal voice keeps finger travel minimal on mobile.</li>
+                <li>Share-ready screenshots help instructors trade ideas without extra software.</li>
+                <li>Future roadmap: export as JSON for deeper sharing inside Discord clinics.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Setlist Sprint — rehearsal logistics in 60 seconds</h2>
+            <p>
+                Setlist Sprint is the glue layer. Type song titles, drag them into the show order, and save multiple versions for different venues. A timing estimator watches BPM, bar count, and notes so bands can keep sets under time limits. Because it lives next to the practice tools, a drummer can go from MetroGnome tempo discovery to set planning without leaving StickWithIt.xyz.
+            </p>
+            <ul>
+                <li>Keyboard-driven UI for power users, touch targets for quick edits on stage.</li>
+                <li>URL-based presets make it simple to text the night’s plan to the band.</li>
+                <li>Renaming effort underway to better reflect the sprint-to-stage workflow.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Project update</h2>
+            <div class="tool-grid">
+                <div class="card">
+                    <span>🧭</span>
+                    <strong>Coverage</strong>
+                    Timing (MetroGnome), idea generation (Lickmeister), logistics (Setlist Sprint) now share fonts, color palette, and navigation, reinforcing the idea of a unified practice hub.
+                </div>
+                <div class="card">
+                    <span>🚧</span>
+                    <strong>Next up</strong>
+                    Daily blogging cron will highlight one transcript insight per post, keeping these tools discoverable while documenting incremental product tweaks.
+                </div>
+            </div>
+        </section>
+
+        <div class="keywords">
+            <strong>Search focus:</strong> free online metronome, MetroGnome app, free drum practice tools, browser drum lick generator, drummer setlist planner.
+        </div>
+    </div>
+</body>
+</html>

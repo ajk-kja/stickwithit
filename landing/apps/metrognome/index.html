@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="/assets/favicon-256.png" sizes="256x256">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MetroGnome | Stick With It</title>
@@ -26,6 +27,55 @@
             color: var(--text);
         }
 
+        /* Mobile Usage Splash */
+        .mobile-splash {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 500;
+        }
+        .mobile-splash.active {
+            display: flex;
+        }
+        .mobile-splash .card {
+            background: #111;
+            border-radius: 20px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+        }
+        .mobile-splash h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+        }
+        .mobile-splash ul {
+            margin: 0 0 1.2rem 1.1rem;
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .mobile-splash button {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 0.9rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: var(--bg);
+            cursor: pointer;
+        }
+        .mobile-splash p.small {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 1rem;
+        }
         .app {
             height: 100%;
             display: flex;
@@ -594,6 +644,20 @@
     </style>
 </head>
 <body>
+<div class="mobile-splash" id="mobileSplash">
+    <div class="card">
+        <h2>Before you start</h2>
+        <p>For iOS & Android:</p>
+        <ul>
+            <li>Turn volume up & switch off hardware mute (iOS ring switch).</li>
+            <li>Use Do Not Disturb / Airplane Mode while on stage to avoid interruptions.</li>
+            <li>iOS will silence the metronome if the phone is muted.</li>
+        </ul>
+        <p class="small">Tap Start again if you change audio settings.</p>
+        <button id="splashDismiss">Got it</button>
+    </div>
+</div>
+
 <div class="app">
     <header class="header">
         <a href="/">← Home</a>
@@ -706,8 +770,71 @@
 <div class="toast" id="toast">Saved!</div>
 
 <script>
-const AudioContext = window.AudioContext || window.webkitAudioContext;
+const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
+
+function getAudioContext() {
+    if (!AudioContextClass) return null;
+    if (!audioCtx) {
+        try {
+            audioCtx = new AudioContextClass();
+        } catch (err) {
+            console.error('Unable to create AudioContext', err);
+            audioCtx = null;
+        }
+    }
+    return audioCtx;
+}
+
+function warmupAudioPulse() {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.0001;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        osc.start(now);
+        osc.stop(now + 0.05);
+    } catch (err) {
+        console.warn('Warmup oscillator failed', err);
+    }
+}
+
+async function ensureAudioReady() {
+    let ctx = getAudioContext();
+    if (!ctx) return false;
+    const needsResume = state => state === 'suspended' || state === 'interrupted';
+    if (needsResume(ctx.state) && typeof ctx.resume === 'function') {
+        try {
+            await ctx.resume();
+        } catch (err) {
+            console.warn('Audio resume failed', err);
+        }
+    }
+    if (ctx.state === 'running') return true;
+    // Fallback: recreate context and try again
+    try {
+        await ctx.close();
+    } catch (err) {
+        console.warn('Audio context close failed', err);
+    }
+    audioCtx = null;
+    ctx = getAudioContext();
+    if (!ctx) return false;
+    if (needsResume(ctx.state) && typeof ctx.resume === 'function') {
+        try {
+            await ctx.resume();
+        } catch (err) {
+            console.warn('Audio resume failed', err);
+            return false;
+        }
+    }
+    return ctx.state === 'running';
+}
+
 
 const state = {
     playing: false,
@@ -722,7 +849,8 @@ const state = {
     curSub: 0,
     nextTime: 0,
     timer: null,
-    animFrame: null
+    animFrame: null,
+    playStartCtxTime: 0
 };
 
 let playlist = JSON.parse(localStorage.getItem('mg-playlist') || '[]');
@@ -750,22 +878,37 @@ const editBtn = $('editBtn');
 const renameModal = $('renameModal');
 const renameInput = $('renameInput');
 const toast = $('toast');
+const splash = document.getElementById('mobileSplash');
+let fallbackStartTime = 0;
+const splashDismiss = document.getElementById('splashDismiss');
+if (splash && splashDismiss) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+        splash.classList.add('active');
+    }
+    splashDismiss.addEventListener('click', () => {
+        splash.classList.remove('active');
+    });
+}
+
 
 // Audio
-function initAudio() {
-    if (!audioCtx) audioCtx = new AudioContext();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-}
+
+
+
+
 
 function playClick(time, level) {
     if (level === 0) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
     
     // Level 3 (accent): 8bit Kick Drum
     if (level === 3) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(ctx.destination);
         
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(150, time);
@@ -779,19 +922,19 @@ function playClick(time, level) {
     }
     // Level 2 (medium): 8bit Snare
     else if (level === 2) {
-        const osc = audioCtx.createOscillator();
-        const noise = audioCtx.createBufferSource();
-        const gain = audioCtx.createGain();
-        const noiseGain = audioCtx.createGain();
+        const osc = ctx.createOscillator();
+        const noise = ctx.createBufferSource();
+        const gain = ctx.createGain();
+        const noiseGain = ctx.createGain();
         
         osc.connect(gain);
         noise.connect(noiseGain);
-        gain.connect(audioCtx.destination);
-        noiseGain.connect(audioCtx.destination);
+        gain.connect(ctx.destination);
+        noiseGain.connect(ctx.destination);
         
         // Noise buffer for snare
-        const bufferSize = audioCtx.sampleRate * 0.1;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const bufferSize = ctx.sampleRate * 0.1;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
             data[i] = Math.random() * 2 - 1;
@@ -814,16 +957,16 @@ function playClick(time, level) {
     }
     // Level 1 (quiet): 8bit Hi-Hat
     else if (level === 1) {
-        const noise = audioCtx.createBufferSource();
-        const filter = audioCtx.createBiquadFilter();
-        const gain = audioCtx.createGain();
+        const noise = ctx.createBufferSource();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
         
         noise.connect(filter);
         filter.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(ctx.destination);
         
-        const bufferSize = audioCtx.sampleRate * 0.05;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const bufferSize = ctx.sampleRate * 0.05;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
             data[i] = Math.random() * 2 - 1;
@@ -842,10 +985,12 @@ function playClick(time, level) {
 }
 
 function playSubClick(time) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
     osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    gain.connect(ctx.destination);
     osc.type = 'square';
     osc.frequency.value = 800;
     gain.gain.setValueAtTime(0.15, time);
@@ -907,17 +1052,21 @@ function resetVisuals() {
 const AHEAD = 0.1, LOOK = 25;
 
 function scheduler() {
-    while (state.nextTime < audioCtx.currentTime + AHEAD) {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    while (state.nextTime < ctx.currentTime + AHEAD) {
         scheduleNote();
         advance();
     }
 }
 
 function scheduleNote() {
+    const ctx = getAudioContext();
+    if (!ctx) return;
     if (state.curSub === 0) {
         const lvl = state.levels[state.curBeat];
         playClick(state.nextTime, lvl);
-        const delay = Math.max(0, (state.nextTime - audioCtx.currentTime) * 1000);
+        const delay = Math.max(0, (state.nextTime - ctx.currentTime) * 1000);
         setTimeout(() => {
             if (state.playing && state.flash && lvl > 0) flash();
         }, delay);
@@ -936,17 +1085,17 @@ function advance() {
     }
 }
 
-let animStart = null;
-
-function animate(ts) {
+function animate() {
     if (!state.playing) return;
-    if (!animStart) animStart = ts;
+    const ctx = getAudioContext();
+    const now = ctx ? ctx.currentTime : performance.now() / 1000;
+    const base = ctx && state.playStartCtxTime ? state.playStartCtxTime : fallbackStartTime;
+    const elapsed = now - base;
     const secPerBeat = 60 / state.bpm;
-    const msPerMeasure = secPerBeat * state.beats * 1000;
-    const elapsed = ts - animStart;
-    const prog = (elapsed % msPerMeasure) / msPerMeasure;
-    const exact = prog * state.beats;
-    const idx = Math.floor(exact);
+    const measure = secPerBeat * state.beats;
+    const normalized = ((elapsed % measure) + measure) % measure;
+    const exact = normalized / secPerBeat;
+    const idx = Math.floor(exact) % Math.max(1, state.beats);
     const pct = (exact - idx) * 100;
     updateBeatVisuals(idx, pct);
     state.animFrame = requestAnimationFrame(animate);
@@ -957,21 +1106,35 @@ function flash() {
     setTimeout(() => document.body.style.background = '', 60);
 }
 
-function start() {
-    initAudio();
+function beginPlayback() {
+    const ctx = getAudioContext();
+    if (!ctx) return;
     state.playing = true;
     state.curBeat = 0;
     state.curSub = 0;
-    state.nextTime = audioCtx.currentTime;
-    animStart = null;
+    state.nextTime = ctx.currentTime;
+    state.playStartCtxTime = ctx.currentTime;
+    fallbackStartTime = performance.now() / 1000;
     playBtn.textContent = 'Stop';
     playBtn.classList.add('playing');
     state.timer = setInterval(scheduler, LOOK);
     state.animFrame = requestAnimationFrame(animate);
 }
 
-function stop() {
+async function startMetronome() {
+    const ready = await ensureAudioReady();
+    if (!ready) {
+        showToast('Tap again to enable audio');
+        return;
+    }
+    warmupAudioPulse();
+    if (state.playing) return;
+    beginPlayback();
+}
+
+function stopMetronome() {
     state.playing = false;
+    state.playStartCtxTime = 0;
     clearInterval(state.timer);
     cancelAnimationFrame(state.animFrame);
     playBtn.textContent = 'Start';
@@ -979,7 +1142,9 @@ function stop() {
     resetVisuals();
 }
 
-function toggle() { state.playing ? stop() : start(); }
+function togglePlayback() {
+    state.playing ? stopMetronome() : startMetronome();
+}
 
 // Playlist
 function saveCurrent() {
@@ -1084,7 +1249,7 @@ function showToast(msg) {
 }
 
 // Events
-playBtn.addEventListener('click', toggle);
+playBtn.addEventListener('click', togglePlayback);
 saveBtn.addEventListener('click', saveCurrent);
 
 bpmSlider.addEventListener('input', e => {
@@ -1164,7 +1329,7 @@ renameInput.addEventListener('keydown', e => {
 document.addEventListener('keydown', e => {
     if (e.code === 'Space' && !['BUTTON', 'INPUT'].includes(e.target.tagName)) {
         e.preventDefault();
-        toggle();
+        togglePlayback();
     }
 });
 

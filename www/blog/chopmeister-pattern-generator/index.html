@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chopmeister Origins | Stick With It Blog</title>
+    <meta name="description" content="How I lean on Chopmeister for quick stickings, plus the rig notes that keep the web version humming.">
+    <style>
+        :root { color-scheme: dark; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+            background: #050505;
+            color: #e2e2e2;
+            line-height: 1.75;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+        .shell { max-width: 760px; margin: 0 auto; }
+        a.back-link {
+            color: #ffbd59;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: clamp(2.1rem, 5vw, 3rem); margin-bottom: 0.4rem; color: #fff; }
+        .meta { color: #8b8b8b; margin-bottom: 2.4rem; }
+        p { margin-bottom: 1.3rem; }
+        h2 { font-size: 1.35rem; margin: 2rem 0 0.8rem; color: #ffbd59; }
+        .tech-notes {
+            border-top: 1px solid #1f1f1f;
+            padding-top: 2rem;
+        }
+        ul { margin: 0.4rem 0 0 1.2rem; color: #cfcfcf; }
+        .keywords {
+            margin-top: 3rem;
+            padding: 1.2rem;
+            border: 1px dashed #3c3c3c;
+            font-size: 0.95rem;
+            color: #b9b9b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <a class="back-link" href="/blog/">&#8592; Back to Blog</a>
+        <h1>Chopmeister and the Pattern Generator DNA</h1>
+        <p class="meta">Published February 24, 2026 · Practice log</p>
+
+        <section>
+            <p>
+                I still remember killing time in a tour van with the old Android Pattern Generator app, poking at randomized cells until a fresh sticking fell out. Chopmeister is the browser version of that ritual. When a drummer has five minutes before tracking, they can open the grid, flip a few toggles, and let the loop run while tapping on a leg. No ego, no “look what I made,” just a low-stakes idea machine.
+            </p>
+        </section>
+
+        <section>
+            <h2>Why the workflow stuck</h2>
+            <p>
+                The charm of Pattern Generator was how quickly it rewarded curiosity. Chopmeister keeps that energy. Each lane still feels tactile on an iPad, so players can sketch with a stick butt or a fingertip. When something worth saving appears, the URL doubles as the share button—drop it in a band chat and the exact grid loads with zero logins.
+            </p>
+        </section>
+
+        <section>
+            <h2>How it shows up in real rehearsals</h2>
+            <p>
+                Take a halftime shuffle rehearsal: mute the kick lane, let snare plus hats drive the syncopation, and toggle probability on every other ghost note. Within seconds the loop nudges the drummer toward a fresher fill that sits better with the band. Once it lands, screenshot the grid for later and clear the board for the next idea.
+            </p>
+        </section>
+
+        <section class="tech-notes">
+            <h2>Rig Notes</h2>
+            <ul>
+                <li>Four-lane matrix with velocity-aware playback so accents survive laptop speakers.</li>
+                <li>Every edit re-renders the URL parameters, making Discord or SMS sharing painless.</li>
+                <li>Probability sliders and future humanizer hooks live behind lightweight Web Audio nodes, keeping CPU low on tablets.</li>
+                <li>Local persistence via IndexedDB so half-finished chops survive a browser refresh mid-lesson.</li>
+            </ul>
+        </section>
+
+        <div class="keywords">
+            <strong>Search focus:</strong> Chopmeister drum app, Pattern Generator alternative, web-based lick generator, shareable drum grids, Stick With It practice updates.
+        </div>
+    </div>
+</body>
+</html>
