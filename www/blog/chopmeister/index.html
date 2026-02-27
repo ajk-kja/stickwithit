@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* Rain effect */
         .rain {
             position: fixed;
             top: 0;
@@ -41,12 +40,9 @@
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
+            to { transform: translateY(100vh); }
         }
 
-        /* Lightning flash */
         .lightning {
             position: fixed;
             top: 0;
@@ -63,7 +59,6 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
-        /* Dinosaur silhouette */
         .dino-container {
             position: fixed;
             bottom: 0;
@@ -76,29 +71,25 @@
             transition: opacity 0.05s;
         }
 
-        .dino-container.visible {
-            opacity: 1;
-        }
+        .dino-container.visible { opacity: 1; }
 
         .dino {
             width: 100%;
             height: 100%;
             background: #1a1a1a;
             clip-path: polygon(
-                /* T-Rex silhouette */
-                85% 100%, 85% 85%, 80% 85%, 80% 100%, /* back leg */
-                60% 100%, 60% 80%, 55% 80%, 55% 100%, /* front leg */
-                40% 100%, 35% 70%, 30% 65%, 25% 60%, /* body */
-                15% 55%, 10% 50%, 5% 45%, /* neck */
-                0% 40%, 5% 35%, 15% 30%, 20% 32%, /* head top */
-                25% 35%, 22% 40%, 25% 42%, /* jaw */
-                30% 45%, 35% 50%, 40% 55%, /* back to body */
-                50% 60%, 60% 62%, 75% 65%, 90% 70%, /* tail */
+                85% 100%, 85% 85%, 80% 85%, 80% 100%,
+                60% 100%, 60% 80%, 55% 80%, 55% 100%,
+                40% 100%, 35% 70%, 30% 65%, 25% 60%,
+                15% 55%, 10% 50%, 5% 45%,
+                0% 40%, 5% 35%, 15% 30%, 20% 32%,
+                25% 35%, 22% 40%, 25% 42%,
+                30% 45%, 35% 50%, 40% 55%,
+                50% 60%, 60% 62%, 75% 65%, 90% 70%,
                 95% 75%, 100% 80%, 95% 85%, 90% 100%
             );
         }
 
-        /* Palm trees */
         .palm-left, .palm-right {
             position: fixed;
             bottom: 0;
@@ -110,17 +101,9 @@
             transition: opacity 0.05s;
         }
 
-        .palm-left.visible, .palm-right.visible {
-            opacity: 1;
-        }
-
-        .palm-left {
-            left: 2%;
-        }
-
-        .palm-right {
-            right: 25%;
-        }
+        .palm-left.visible, .palm-right.visible { opacity: 1; }
+        .palm-left { left: 2%; }
+        .palm-right { right: 25%; }
 
         .palm-trunk {
             position: absolute;
@@ -149,7 +132,6 @@
         .palm-frond:nth-child(4) { right: 20%; transform: rotate(30deg); transform-origin: left center; }
         .palm-frond:nth-child(5) { right: 10%; transform: rotate(60deg); transform-origin: left center; }
 
-        /* Content */
         .content {
             position: relative;
             z-index: 10;
@@ -167,9 +149,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .back-link:hover {
-            text-decoration: underline;
-        }
+        .back-link:hover { text-decoration: underline; }
 
         h1 {
             font-size: 2.5rem;
@@ -199,11 +179,17 @@
             font-weight: bold;
         }
 
-        .highlight {
-            color: #e63946;
+        .highlight { color: #e63946; }
+
+        ul {
+            margin-top: 1.5rem;
+            margin-left: 1.5rem;
         }
 
-        /* Lo-fi scan lines */
+        li {
+            margin-bottom: 0.75rem;
+        }
+
         .scanlines {
             position: fixed;
             top: 0;
@@ -231,18 +217,9 @@
     </style>
 </head>
 <body>
-    <!-- Rain -->
     <div class="rain" id="rain"></div>
-
-    <!-- Lightning flash overlay -->
     <div class="lightning" id="lightning"></div>
-
-    <!-- Dinosaur silhouette -->
-    <div class="dino-container" id="dino">
-        <div class="dino"></div>
-    </div>
-
-    <!-- Palm trees -->
+    <div class="dino-container" id="dino"><div class="dino"></div></div>
     <div class="palm-left" id="palm-left">
         <div class="palm-frond"></div>
         <div class="palm-frond"></div>
@@ -251,7 +228,6 @@
         <div class="palm-frond"></div>
         <div class="palm-trunk"></div>
     </div>
-
     <div class="palm-right" id="palm-right">
         <div class="palm-frond"></div>
         <div class="palm-frond"></div>
@@ -260,37 +236,34 @@
         <div class="palm-frond"></div>
         <div class="palm-trunk"></div>
     </div>
-
-    <!-- Lo-fi scan lines -->
     <div class="scanlines"></div>
 
-    <!-- Content -->
     <div class="content">
         <a href="/blog/" class="back-link">← Back to Blog</a>
-        
         <h1>Chopmeister: Instant Linear Licks</h1>
-        <p class="date">Posted on Stick With It</p>
+        <p class="date">Published on Stick With It</p>
 
         <article class="article">
-            <p>Chopmeister is a browser-based chop machine built for the moments before rehearsal when your brain wants inspiration but your hands don't have time to write it out. Open the page and you're already staring at a playable idea.</p>
+            <p>Chopmeister is a chill way to spark ideas before rehearsal without unpacking the laptop. Load the site and it instantly hands you a playable RLK sketch so you can get sticks on pads instead of staring at a blank notebook.</p>
 
-            <p>It's tuned for mobile from the jump. The buttons are thumb-sized, the sliders are forgiving, and you never have to smash an iPad with the butt of a stick or download yet another native app just to brainstorm a fill.</p>
+            <p>The layout is built for phones from the jump. Buttons are big, the controls respond to thumbs, and everything lives in the browser so you’re not downloading another app just to workshop fills.</p>
 
-            <p>A random chop loads automatically. Tap the <span class="highlight">Drums</span> button to spin another groove, or hit <span class="highlight">Pattern</span> to reshuffle the sticking/voicing so the same rhythm lands on a new surface. It's a fast way to hear RLK/LKR inversions without opening a DAW.</p>
+            <p>A fresh chop appears the second the page loads. Tap the <span class="highlight">Drums</span> button whenever you want another vibe, or hit <span class="highlight">Pattern</span> to shuffle where the sticking lands so the same rhythm moves across different voices. Tempo and note-count controls sit right below so you can slow the idea down, lengthen it, or trim it to a tight four-count.</p>
 
-            <p>The tempo and note-count controls live at the bottom so you can slow things down, stretch the subdivision, or stack more attacks before committing it to muscle memory. Now you don't have to throw change on the floor to come up with a linear idea that feels fresh.</p>
+            <p>That loop keeps reheating every time you press the buttons, meaning you can chase variations while the band is talking through form changes. Now you don’t have to dump change on the floor for inspiration; you just tap the interface and let it feed new stickings.</p>
 
             <h2 style="margin-top:2rem; color:#e63946; font-size:1.4rem;">Rig Notes</h2>
-            <ul style="margin-top:1rem; margin-left:1.25rem; list-style:disc; color:#e0e0e0;">
-                <li style="margin-bottom:0.75rem;">Five expressive voices — kick, snare, hats, rack tom, and a ghost-note lane — keep the phrasing grounded while still letting you test dynamics.</li>
-                <li style="margin-bottom:0.75rem;">Mobile-first UI with big transport buttons means you can tweak chops with one thumb between takes or while listening back to rehearsal recordings.</li>
-                <li>Launch it any time at <a href="https://www.stickwithit.xyz/apps/chopmeister/" style="color:#e63946;">https://www.stickwithit.xyz/apps/chopmeister/</a>.</li>
+            <ul>
+                <li>Five core voices — kick, snare, hats, rack tom, and a ghost-note lane — keep the grooves musical while still checking your dynamics.</li>
+                <li>Mobile-friendly UI with oversized transport controls makes one-thumb tweaking possible between takes.</li>
+                <li>Save a unique URL for every chop so you can text it to the band or revisit it later.</li>
             </ul>
+
+            <p style="margin-top:1.5rem;">Launch it any time at <a href="https://www.stickwithit.xyz/apps/chopmeister/" style="color:#e63946;">stickwithit.xyz/apps/chopmeister</a>.</p>
         </article>
     </div>
 
     <script>
-        // Create rain drops
         const rain = document.getElementById('rain');
         for (let i = 0; i < 100; i++) {
             const drop = document.createElement('div');
@@ -301,14 +274,12 @@
             rain.appendChild(drop);
         }
 
-        // Lightning effect
         const lightning = document.getElementById('lightning');
         const dino = document.getElementById('dino');
         const palmLeft = document.getElementById('palm-left');
         const palmRight = document.getElementById('palm-right');
 
         function triggerLightning() {
-            // Flash sequence (subtle, non-epileptic)
             lightning.classList.add('flash');
             dino.classList.add('visible');
             palmLeft.classList.add('visible');
@@ -321,7 +292,6 @@
                 palmRight.classList.remove('visible');
             }, 150);
 
-            // Occasionally do a double flash
             if (Math.random() > 0.6) {
                 setTimeout(() => {
                     lightning.classList.add('flash');
@@ -337,11 +307,9 @@
                 }, 200);
             }
 
-            // Schedule next lightning (random interval 8-20 seconds)
             setTimeout(triggerLightning, Math.random() * 12000 + 8000);
         }
 
-        // Start lightning after a delay
         setTimeout(triggerLightning, 3000);
     </script>
 </body>

@@ -85,15 +85,14 @@
             height: 100%;
             background: #1a1a1a;
             clip-path: polygon(
-                /* T-Rex silhouette */
-                85% 100%, 85% 85%, 80% 85%, 80% 100%, /* back leg */
-                60% 100%, 60% 80%, 55% 80%, 55% 100%, /* front leg */
-                40% 100%, 35% 70%, 30% 65%, 25% 60%, /* body */
-                15% 55%, 10% 50%, 5% 45%, /* neck */
-                0% 40%, 5% 35%, 15% 30%, 20% 32%, /* head top */
-                25% 35%, 22% 40%, 25% 42%, /* jaw */
-                30% 45%, 35% 50%, 40% 55%, /* back to body */
-                50% 60%, 60% 62%, 75% 65%, 90% 70%, /* tail */
+                85% 100%, 85% 85%, 80% 85%, 80% 100%,
+                60% 100%, 60% 80%, 55% 80%, 55% 100%,
+                40% 100%, 35% 70%, 30% 65%, 25% 60%,
+                15% 55%, 10% 50%, 5% 45%,
+                0% 40%, 5% 35%, 15% 30%, 20% 32%,
+                25% 35%, 22% 40%, 25% 42%,
+                30% 45%, 35% 50%, 40% 55%,
+                50% 60%, 60% 62%, 75% 65%, 90% 70%,
                 95% 75%, 100% 80%, 95% 85%, 90% 100%
             );
         }
@@ -203,7 +202,6 @@
             color: #e63946;
         }
 
-        /* Lo-fi scan lines */
         .scanlines {
             position: fixed;
             top: 0;
@@ -231,18 +229,11 @@
     </style>
 </head>
 <body>
-    <!-- Rain -->
     <div class="rain" id="rain"></div>
-
-    <!-- Lightning flash overlay -->
     <div class="lightning" id="lightning"></div>
-
-    <!-- Dinosaur silhouette -->
     <div class="dino-container" id="dino">
         <div class="dino"></div>
     </div>
-
-    <!-- Palm trees -->
     <div class="palm-left" id="palm-left">
         <div class="palm-frond"></div>
         <div class="palm-frond"></div>
@@ -251,7 +242,6 @@
         <div class="palm-frond"></div>
         <div class="palm-trunk"></div>
     </div>
-
     <div class="palm-right" id="palm-right">
         <div class="palm-frond"></div>
         <div class="palm-frond"></div>
@@ -260,32 +250,27 @@
         <div class="palm-frond"></div>
         <div class="palm-trunk"></div>
     </div>
-
-    <!-- Lo-fi scan lines -->
     <div class="scanlines"></div>
 
-    <!-- Content -->
     <div class="content">
         <a href="/blog/" class="back-link">← Back to Blog</a>
-        
         <h1>Gigstrella: Setlist Reps Anywhere</h1>
-        <p class="date">Posted on Stick With It</p>
+        <p class="date">Published on Stick With It</p>
 
         <article class="article">
-            <p>Gigstrella is the practice rig I wanted before every run of shows: a setlist-first workspace where every song, marker, and loop lives side-by-side so I can keep drilling the exact entrance that keeps me up at night. It launches instantly in the browser and keeps my focus on solving one transition at a time.</p>
+            <p>Gigstrella is the way I keep a whole show in my back pocket. It opens to a setlist-first view so every song, loop, and note is already grouped by the moment it belongs to. When the van is parked outside the venue and I only have five minutes, I can still tighten the entrance that usually eats a quarter of rehearsal.</p>
 
-            <p>You can load as many songs as you need for a gig, and each one remembers its own BPM mode, notes, and markers. Upload the reference file once, give it a name that matches your chart, and Gigstrella stores the metadata so you never have to rebuild it mid-week.</p>
+            <p>Add as many songs as you need for a night and each one hangs onto its own BPM mode, transport settings, and scribbled reminders. Upload the reference track once, slap the title on it, and Gigstrella remembers everything the next time you log in. No re-importing, no digging through folders.</p>
 
-            <p>The dual AB and CD loops are the heart of the app. AB is perfect for the verse pickup or the chorus hit, while CD can live on the outro vamp or a tricky bombastic ending. Flip either loop on, drag the markers, and the player immediately jumps back into the phrase until your hands stop second-guessing.</p>
+            <p>The dual loop lanes are the secret sauce. <span class="highlight">AB</span> and <span class="highlight">CD</span> can live on completely different sections, so I keep AB on the verse pickup and CD on the outro hits. Drag the markers, flip the toggle, and it instantly cycles the trouble spot until your hands stop guessing.</p>
 
-            <p>Because loop states, tempo modes, and notes are saved per song, you can bounce between tracks without losing the exact bar counts you dialed in. The next time you open Gigstrella, every region is waiting—no scavenger hunt, no spreadsheet.</p>
+            <p>Loop states, notes, and marker positions are saved per song, which means you can bounce between tunes without losing the exact two bars you dialed in yesterday. It behaves like a memory palace for your show—every transition is waiting right where you left it.</p>
 
-            <p>And since it's 100% web-based, it works wherever you can open a browser: on the subway to rehearsal, in the back of an Uber on the way to the club, or backstage while the monitor engineer rings out wedges. If you have five spare minutes, you have enough time to tighten the spot that's giving you grief.</p>
+            <p>Because it’s a pure web app, it works anywhere there’s a browser: on the subway ride to rehearsal, riding shotgun on the way to soundcheck, or pacing backstage while the monitor engineer does their thing. Open the tab, punch the loop you want, and keep stacking confident reps while everyone else is doomscrolling.</p>
         </article>
     </div>
 
     <script>
-        // Create rain drops
         const rain = document.getElementById('rain');
         for (let i = 0; i < 100; i++) {
             const drop = document.createElement('div');
@@ -296,14 +281,12 @@
             rain.appendChild(drop);
         }
 
-        // Lightning effect
         const lightning = document.getElementById('lightning');
         const dino = document.getElementById('dino');
         const palmLeft = document.getElementById('palm-left');
         const palmRight = document.getElementById('palm-right');
 
         function triggerLightning() {
-            // Flash sequence (subtle, non-epileptic)
             lightning.classList.add('flash');
             dino.classList.add('visible');
             palmLeft.classList.add('visible');
@@ -316,7 +299,6 @@
                 palmRight.classList.remove('visible');
             }, 150);
 
-            // Occasionally do a double flash
             if (Math.random() > 0.6) {
                 setTimeout(() => {
                     lightning.classList.add('flash');
@@ -332,11 +314,9 @@
                 }, 200);
             }
 
-            // Schedule next lightning (random interval 8-20 seconds)
             setTimeout(triggerLightning, Math.random() * 12000 + 8000);
         }
 
-        // Start lightning after a delay
         setTimeout(triggerLightning, 3000);
     </script>
 </body>
