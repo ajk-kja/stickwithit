@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rudimentor | Stick With It</title>
   <meta name="theme-color" content="#000000">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/4.1.0/vexflow.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.min.js"></script>
   <style>
     :root {
       --bg: #000;
@@ -1333,20 +1333,29 @@
 
     function renderSheetMusic(stickingPattern) {
       const container = document.getElementById('sheetMusic');
+      if (!container) return;
+      
       container.innerHTML = '';
       
       try {
+        // Check if Vex is loaded
+        if (typeof Vex === 'undefined') {
+          console.warn('VexFlow not loaded yet');
+          container.innerHTML = '<div style="font-family: monospace; text-align: center; padding: 1rem;">🎵 ' + stickingPattern + '</div>';
+          return;
+        }
+        
         const VF = Vex.Flow;
+        const width = Math.min(container.offsetWidth || 350, 350);
         const renderer = new VF.Renderer(container, VF.Renderer.Backends.SVG);
-        const width = Math.min(container.offsetWidth || 400, 400);
-        renderer.resize(width, 150);
+        renderer.resize(width, 140);
         
         const context = renderer.getContext();
         const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
         context.setFillStyle(isDark ? '#fff' : '#000');
         context.setStrokeStyle(isDark ? '#fff' : '#000');
         
-        const stave = new VF.Stave(10, 30, width - 20);
+        const stave = new VF.Stave(5, 25, width - 10);
         stave.addClef('percussion');
         stave.setContext(context).draw();
         
@@ -1361,6 +1370,7 @@
             align_center: true
           });
           
+          // Add accent for uppercase (not f or d which are grace notes)
           if (stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd') {
             note.addModifier(new VF.Articulation('a>').setPosition(VF.Modifier.Position.ABOVE));
           }
@@ -1368,18 +1378,26 @@
           notes.push(note);
         });
         
-        const beams = VF.Beam.generateBeams(notes);
         const voice = new VF.Voice({ num_beats: notes.length, beat_value: 4 });
         voice.addTickables(notes);
         
-        new VF.Formatter().joinVoices([voice]).format([voice], width - 20);
-        voice.draw(context, stave);
-        beams.forEach(beam => beam.setContext(context).draw());
+        // Beam if possible
+        try {
+          const beams = VF.Beam.generateBeams(notes);
+          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
+          voice.draw(context, stave);
+          beams.forEach(beam => beam.setContext(context).draw());
+        } catch (beamErr) {
+          // If beaming fails, just draw without beams
+          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
+          voice.draw(context, stave);
+        }
         
-        console.log('✓ Sheet music rendered');
+        console.log('✓ VexFlow sheet music rendered for:', stickingPattern);
       } catch (e) {
         console.error('Sheet music error:', e);
-        container.innerHTML = '<div style="font-family: monospace; text-align: center; padding: 1rem;">🎵 ' + stickingPattern + '</div>';
+        // Fallback to text
+        container.innerHTML = '<div style="font-family: monospace; text-align: center; padding: 1rem; font-size: 1rem;">🎵 ' + stickingPattern + '</div>';
       }
     }
 
