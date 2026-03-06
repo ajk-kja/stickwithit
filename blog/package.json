@@ -1,0 +1,22 @@
+{
+  "name": "stickwithit-blog",
+  "version": "1.0.0",
+  "description": "Eleventy pipeline that turns Obsidian Blog notes into StickWithIt HTML pages",
+  "type": "module",
+  "scripts": {
+    "publish-blog": "node scripts/sync-notes.mjs && node scripts/clean-posts.mjs && npx @11ty/eleventy --config=eleventy.config.mjs",
+    "dev": "npm run publish-blog -- --watch",
+    "clean": "rm -rf content/posts/*.md ../www/blog"
+  },
+  "keywords": [
+    "obsidian",
+    "eleventy",
+    "stickwithit",
+    "blog"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "luxon": "^3.7.2"
+  }
+}

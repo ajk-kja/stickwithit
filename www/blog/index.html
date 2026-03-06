@@ -1,121 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog | Stick With It</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;
-            color: #fff;
-            padding: 2rem;
-        }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-        .logo {
-            width: 50px;
-            height: auto;
-        }
-        .site-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff;
-            text-decoration: none;
-        }
-        .site-title:hover {
-            color: #e63946;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            font-weight: 400;
-            color: #e63946;
-        }
-        .posts {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        .post {
-            padding: 1.5rem;
-            border: 1px solid #222;
-            border-radius: 4px;
-            transition: border-color 0.2s;
-        }
-        .post:hover {
-            border-color: #e63946;
-        }
-        .post a {
-            text-decoration: none;
-        }
-        .post-title {
-            font-size: 1.3rem;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-        .post-excerpt {
-            color: #888;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        .post-meta {
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: #555;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256" />
+  <link rel="shortcut icon" href="/assets/StickWithItBlack.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>Blog | Stick With It</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 2rem;
+    }
+    a {
+      color: inherit;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .logo {
+      width: 50px;
+      height: auto;
+    }
+    .site-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+    }
+    .site-title:hover {
+      color: #e63946;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <a href="/">
-                <img src="/assets/StickWithItBlack.png" alt="Stick With It" class="logo">
-            </a>
-            <a href="/" class="site-title">Stick With It</a>
-        </div>
-
-        <h1>Blog</h1>
-
-        <div class="posts">
-            <article class="post">
-                <a href="/blog/gigstrella/">
-                    <h2 class="post-title">Gigstrella: Setlist Reps Anywhere</h2>
-                    <p class="post-excerpt">Upload every song in your show, drop AB/CD loops on the trouble spots, and keep practicing wherever you can open a browser — even in the back of an Uber on the way to soundcheck.</p>
-                    <p class="post-meta">Setlist-first looping with portable muscle-memory reps</p>
-                </a>
-            </article>
-
-            <article class="post">
-                <a href="/blog/chopmeister/">
-                    <h2 class="post-title">Chopmeister: Instant Linear Licks</h2>
-                    <p class="post-excerpt">A mobile-friendly chop generator that serves fresh RLK ideas, lets you reshuffle orchestrations, and gives you tempo + note controls without installing another app.</p>
-                    <p class="post-meta">Phone-ready inspiration for fills between rehearsals</p>
-                </a>
-            </article>
-
-            <article class="post">
-                <a href="/blog/sticking-with-it/">
-                    <h2 class="post-title">Sticking With It</h2>
-                    <p class="post-excerpt">As I look back on my life, I am grateful for the diverse range of experiences and interests that have shaped me. From my early fascination with video games and home video production to my love of music and drumming...</p>
-                    <p class="post-meta">A journey through drums, production, and perseverance</p>
-                </a>
-            </article>
-        </div>
+  <div class="container">
+    <div class="header">
+      <a href="/">
+        <img src="/assets/StickWithItBlack.png" alt="Stick With It" class="logo" />
+      </a>
+      <a class="site-title" href="/">Stick With It</a>
     </div>
+
+    <h1 style="font-size:2rem;margin-bottom:2rem;font-weight:400;color:#e63946;">Blog</h1>
+<div class="posts" style="display:flex;flex-direction:column;gap:1.5rem;">
+  
+  <article class="post" style="padding:1.5rem;border:1px solid #222;border-radius:4px;transition:border-color 0.2s;">
+    <a href="/blog/chopmeister/" style="text-decoration:none;">
+      <h2 class="post-title" style="font-size:1.3rem;color:#fff;margin-bottom:0.5rem;">Chopmeister: Instant Linear Licks</h2>
+      
+      <p class="post-excerpt" style="color:#888;font-size:0.95rem;line-height:1.6;">Mobile-first chop generator that spits out RLK ideas, orchestration flips, and tempo-ready drills in seconds.</p>
+      
+      <p class="post-meta" style="margin-top:1rem;font-size:0.85rem;color:#555;">
+        February 28, 2026
+      </p>
+    </a>
+  </article>
+  
+  <article class="post" style="padding:1.5rem;border:1px solid #222;border-radius:4px;transition:border-color 0.2s;">
+    <a href="/blog/setlist-sprint-roadmap/" style="text-decoration:none;">
+      <h2 class="post-title" style="font-size:1.3rem;color:#fff;margin-bottom:0.5rem;">Renaming Setlist Sprint &amp; Sharpening Its Job</h2>
+      
+      <p class="post-excerpt" style="color:#888;font-size:0.95rem;line-height:1.6;">Show planning, runtime math, and why the next name (ShowFlow) needs to reflect calm control instead of chaos.</p>
+      
+      <p class="post-meta" style="margin-top:1rem;font-size:0.85rem;color:#555;">
+        February 20, 2026
+      </p>
+    </a>
+  </article>
+  
+  <article class="post" style="padding:1.5rem;border:1px solid #222;border-radius:4px;transition:border-color 0.2s;">
+    <a href="/blog/gigstrella/" style="text-decoration:none;">
+      <h2 class="post-title" style="font-size:1.3rem;color:#fff;margin-bottom:0.5rem;">Gigstrella: Setlist Reps Anywhere</h2>
+      
+      <p class="post-excerpt" style="color:#888;font-size:0.95rem;line-height:1.6;">Setlist-first looping workspace that keeps every show file, marker, and loop ready wherever you can launch a browser.</p>
+      
+      <p class="post-meta" style="margin-top:1rem;font-size:0.85rem;color:#555;">
+        February 10, 2026
+      </p>
+    </a>
+  </article>
+  
+  <article class="post" style="padding:1.5rem;border:1px solid #222;border-radius:4px;transition:border-color 0.2s;">
+    <a href="/blog/free-drum-tools/" style="text-decoration:none;">
+      <h2 class="post-title" style="font-size:1.3rem;color:#fff;margin-bottom:0.5rem;">Three Free Drum Tools for Everyday Practice</h2>
+      
+      <p class="post-excerpt" style="color:#888;font-size:0.95rem;line-height:1.6;">MetroGnome, Lickmeister, and Setlist Sprint now cover timing, vocabulary, and logistics in one free toolkit—anchored by a truly free metronome.</p>
+      
+      <p class="post-meta" style="margin-top:1rem;font-size:0.85rem;color:#555;">
+        February 5, 2026
+      </p>
+    </a>
+  </article>
+  
+  <article class="post" style="padding:1.5rem;border:1px solid #222;border-radius:4px;transition:border-color 0.2s;">
+    <a href="/blog/sticking-with-it/" style="text-decoration:none;">
+      <h2 class="post-title" style="font-size:1.3rem;color:#fff;margin-bottom:0.5rem;">Sticking With It</h2>
+      
+      <p class="post-excerpt" style="color:#888;font-size:0.95rem;line-height:1.6;">A journey through drums, production, and perseverance across games, cameras, and kits.</p>
+      
+      <p class="post-meta" style="margin-top:1rem;font-size:0.85rem;color:#555;">
+        February 1, 2026
+      </p>
+    </a>
+  </article>
+  
+</div>
+
+  </div>
 </body>
 </html>

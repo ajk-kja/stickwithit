@@ -1,0 +1,20 @@
+---
+layout: base.njk
+title: Blog
+---
+<h1 style="font-size:2rem;margin-bottom:2rem;font-weight:400;color:#e63946;">Blog</h1>
+<div class="posts" style="display:flex;flex-direction:column;gap:1.5rem;">
+  {% for post in collections.blog %}
+  <article class="post" style="padding:1.5rem;border:1px solid #222;border-radius:4px;transition:border-color 0.2s;">
+    <a href="{{ post.url | url }}" style="text-decoration:none;">
+      <h2 class="post-title" style="font-size:1.3rem;color:#fff;margin-bottom:0.5rem;">{{ post.data.title }}</h2>
+      {% if post.data.summary %}
+      <p class="post-excerpt" style="color:#888;font-size:0.95rem;line-height:1.6;">{{ post.data.summary }}</p>
+      {% endif %}
+      <p class="post-meta" style="margin-top:1rem;font-size:0.85rem;color:#555;">
+        {{ post.date | readableDate }}
+      </p>
+    </a>
+  </article>
+  {% endfor %}
+</div>
