@@ -175,11 +175,12 @@
 
     /* Learn Tab */
     .learn-container {
-      display: grid;
-      grid-template-rows: 1fr 1fr 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
       height: 100%;
-      align-content: start;
+      overflow-y: auto;
+      padding-bottom: 1rem;
     }
 
     .learn-section {
@@ -187,6 +188,51 @@
       border-radius: 8px;
       padding: 1rem;
       background: var(--surface);
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .notation-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      background: var(--surface);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .notation-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    .notation-card-music {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 140px;
+      overflow-x: auto;
+    }
+
+    .notation-card-sticking {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      text-align: center;
+      color: var(--text-muted);
     }
 
     .section-title {
@@ -765,11 +811,31 @@
     /* Responsive */
     @media (max-width: 768px) {
       .learn-container {
-        grid-template-rows: auto auto auto auto;
+        height: auto;
       }
 
       .learn-section {
         min-height: auto;
+      }
+
+      .notation-card {
+        width: 100%;
+        padding: 1rem;
+      }
+
+      .notation-card-music {
+        min-height: 120px;
+        padding: 0.75rem;
+      }
+
+      .visual-boxes {
+        flex-wrap: wrap;
+      }
+
+      .hand-box {
+        width: 32px;
+        height: 32px;
+        font-size: 0.65rem;
       }
     }
   </style>
@@ -805,7 +871,7 @@
       <div class="learn-container">
         <!-- Rudiment Selector -->
         <div class="learn-section">
-          <div class="section-title">Rudiment</div>
+          <div class="section-title">Select Rudiment</div>
           <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
             <select id="tierSelect" onchange="updateRudiment()" style="flex: 1; padding: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;">
               <option value="easy">Easy</option>
@@ -815,10 +881,15 @@
             </select>
             <select id="rudimentSelect" onchange="updateRudiment()" style="flex: 1; padding: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;"></select>
           </div>
-          <div class="notation-display">
-            <div class="rudiment-name" id="rudimentName">Single Stroke Roll</div>
-            <div class="sticking-pattern" id="stickingPattern">R L R L R L R L</div>
+        </div>
+
+        <!-- Notation Card (unified) -->
+        <div class="notation-card">
+          <div class="notation-card-title" id="notationCardTitle">Single Stroke Roll</div>
+          <div class="notation-card-music" id="notationCardMusic">
+            <svg id="learnSheetMusic" style="max-width: 100%;"></svg>
           </div>
+          <div class="notation-card-sticking" id="notationCardSticking">R L R L R L R L</div>
         </div>
 
         <!-- Visual Boxes -->
@@ -1101,10 +1172,75 @@
       document.getElementById('rudimentSelect').value = currentRudimentIndex;
       
       const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
-      document.getElementById('rudimentName').textContent = rudiment.name;
-      document.getElementById('stickingPattern').textContent = rudiment.sticking;
+      document.getElementById('notationCardTitle').textContent = rudiment.name;
+      document.getElementById('notationCardSticking').textContent = rudiment.sticking;
       
+      // Render sheet music in Learn tab
+      renderLearnSheetMusic(rudiment.sticking);
       renderVisualBoxes();
+    }
+
+    function renderLearnSheetMusic(stickingPattern) {
+      try {
+        if (typeof Vex === 'undefined') {
+          console.warn('VexFlow not ready yet');
+          return;
+        }
+        
+        const container = document.getElementById('notationCardMusic');
+        const svg = document.getElementById('learnSheetMusic');
+        svg.innerHTML = ''; // Clear previous
+        
+        const VF = Vex.Flow;
+        const width = Math.min(container.offsetWidth || 320, 320);
+        
+        const renderer = new VF.Renderer(svg, VF.Renderer.Backends.SVG);
+        renderer.resize(width, 120);
+        
+        const context = renderer.getContext();
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        context.setFillStyle(isDark ? '#fff' : '#000');
+        context.setStrokeStyle(isDark ? '#fff' : '#000');
+        
+        const stave = new VF.Stave(5, 15, width - 10);
+        stave.addClef('percussion');
+        stave.setContext(context).draw();
+        
+        const stickings = stickingPattern.split(' ');
+        const notes = [];
+        
+        stickings.forEach((stick) => {
+          const note = new VF.StemmableNote({
+            clef: 'percussion',
+            keys: ['b/4'],
+            duration: 'q',
+            align_center: true
+          });
+          
+          if (stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd') {
+            note.addModifier(new VF.Articulation('a>').setPosition(VF.Modifier.Position.ABOVE));
+          }
+          
+          notes.push(note);
+        });
+        
+        const voice = new VF.Voice({ num_beats: notes.length, beat_value: 4 });
+        voice.addTickables(notes);
+        
+        try {
+          const beams = VF.Beam.generateBeams(notes);
+          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
+          voice.draw(context, stave);
+          beams.forEach(beam => beam.setContext(context).draw());
+        } catch (e) {
+          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
+          voice.draw(context, stave);
+        }
+        
+        console.log('✓ Learn sheet music rendered');
+      } catch (e) {
+        console.error('Learn sheet music error:', e);
+      }
     }
 
     function renderVisualBoxes() {
