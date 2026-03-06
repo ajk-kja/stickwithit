@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
+  <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rudimentor | Stick With It</title>
+  <meta name="theme-color" content="#000000">
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #0a0a0a;
+      --border: #333;
+      --text: #fff;
+      --text-muted: #999;
+      --text-dim: #666;
+      --accent: #e63946;
+      --accent-hover: #000;
+      --grid-line: #222;
+    }
+
+    html[data-theme="light"] {
+      --bg: #fff;
+      --surface: #f5f5f5;
+      --border: #ddd;
+      --text: #000;
+      --text-muted: #333;
+      --text-dim: #888;
+      --accent: #e63946;
+      --accent-hover: #fff;
+      --grid-line: #eee;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-section img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .logo-section h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      background: var(--border);
+      border-radius: 11px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: var(--accent);
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: var(--text);
+      border-radius: 9px;
+      transition: left 0.3s ease;
+    }
+
+    .toggle-switch.active .toggle-slider {
+      left: 20px;
+    }
+
+    /* Tabs */
+    .tab-buttons {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-content {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Learn Tab */
+    .learn-container {
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+      height: 100%;
+      align-content: start;
+    }
+
+    .learn-section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background: var(--surface);
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Notation */
+    .notation-display {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .rudiment-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .sticking-pattern {
+      font-size: 0.95rem;
+      letter-spacing: 4px;
+      color: var(--text-muted);
+    }
+
+    /* Visual Boxes */
+    .visual-boxes {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      align-items: center;
+      min-height: 100px;
+      flex-wrap: wrap;
+    }
+
+    .hand-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: all 0.05s ease;
+      border: 2px solid transparent;
+    }
+
+    .hand-box.right {
+      background: rgba(230, 57, 70, 0.2);
+      color: #e63946;
+      border-color: #e63946;
+    }
+
+    .hand-box.left {
+      background: rgba(100, 150, 255, 0.2);
+      color: #6496ff;
+      border-color: #6496ff;
+    }
+
+    .hand-box.active.right {
+      background: #e63946;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .hand-box.active.left {
+      background: #6496ff;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .hand-box.accent {
+      font-weight: 900;
+      filter: brightness(1.2);
+    }
+
+    .hand-box.ghost {
+      opacity: 0.5;
+    }
+
+    /* Playback */
+    .playback-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .play-button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .play-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .slider-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .slider-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: none;
+    }
+
+    .slider-value {
+      font-size: 0.85rem;
+      min-width: 45px;
+      text-align: right;
+      color: var(--text-muted);
+    }
+
+    /* Grid Selector */
+    .grid-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .grid-button:hover {
+      border-color: var(--accent);
+      background: var(--border);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    html[data-theme="light"] .modal {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    .grid-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .grid-option {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .grid-option:hover {
+      border-color: var(--accent);
+    }
+
+    .grid-option input[type="radio"] {
+      cursor: pointer;
+    }
+
+    .grid-label {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Quiz Tab */
+    .quiz-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .difficulty-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .diff-btn {
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .diff-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .diff-badge {
+      font-size: 2rem;
+    }
+
+    .diff-progress {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Quiz Question */
+    .quiz-question {
+      display: none;
+    }
+
+    .quiz-question.active {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .question-header {
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .question-number {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .question-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 0.5rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 3px;
+    }
+
+    .question-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .answer-btn {
+      padding: 1rem;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .answer-btn:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .answer-btn.correct {
+      background: rgba(76, 175, 80, 0.2);
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+
+    .answer-btn.incorrect {
+      background: rgba(230, 57, 70, 0.2);
+      border-color: #e63946;
+      color: #e63946;
+    }
+
+    .quiz-footer {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .next-btn, .restart-btn {
+      flex: 1;
+      padding: 1rem;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .next-btn:hover, .restart-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .back-btn {
+      flex: 1;
+      padding: 1rem;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      border-color: var(--accent);
+    }
+
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .results-screen.active {
+      display: flex;
+    }
+
+    .results-score {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .results-message {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .results-breakdown {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: left;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .breakdown-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .learn-container {
+        grid-template-rows: auto auto auto auto;
+      }
+
+      .learn-section {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-section">
+      <img src="/assets/StickWithItBlack.png" alt="Stick With It">
+      <h1>Rudimentor</h1>
+    </div>
+    <div class="header-controls">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span style="font-size: 0.8rem; color: var(--text-dim);">☀️</span>
+        <button class="toggle-switch" id="themeToggle">
+          <div class="toggle-slider"></div>
+        </button>
+        <span style="font-size: 0.8rem; color: var(--text-dim);">🌙</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-buttons">
+    <button class="tab-btn active" onclick="switchTab('learn')">📚 Learn</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">🧠 Quiz</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Learn Tab -->
+    <div id="learn" class="tab-content active">
+      <div class="learn-container">
+        <!-- Rudiment Selector -->
+        <div class="learn-section">
+          <div class="section-title">Rudiment</div>
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <select id="tierSelect" onchange="updateRudiment()" style="flex: 1; padding: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+              <option value="expert">Expert</option>
+            </select>
+            <select id="rudimentSelect" onchange="updateRudiment()" style="flex: 1; padding: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;"></select>
+          </div>
+          <div class="notation-display">
+            <div class="rudiment-name" id="rudimentName">Single Stroke Roll</div>
+            <div class="sticking-pattern" id="stickingPattern">R L R L R L R L</div>
+          </div>
+        </div>
+
+        <!-- Visual Boxes -->
+        <div class="learn-section">
+          <div class="section-title">Hand Visualization</div>
+          <div class="visual-boxes" id="visualBoxes"></div>
+        </div>
+
+        <!-- Playback Controls -->
+        <div class="learn-section">
+          <div class="playback-controls">
+            <button class="play-button" id="playBtn" onclick="togglePlayback()">▶ Play</button>
+            
+            <div class="slider-group">
+              <div class="slider-label">BPM</div>
+              <div class="slider-wrapper">
+                <input type="range" id="bpmSlider" min="40" max="300" value="120" onchange="updateBPM()">
+                <span class="slider-value" id="bpmValue">120</span>
+              </div>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label">Swing</div>
+              <div class="slider-wrapper">
+                <input type="range" id="swingSlider" min="0" max="100" value="0" onchange="updateSwing()">
+                <span class="slider-value" id="swingValue">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="learn-section">
+          <button class="grid-button" onclick="openGridModal()">📊 Grid Accents (1, e, &, a)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Tab -->
+    <div id="quiz" class="tab-content">
+      <div class="quiz-container">
+        <!-- Difficulty Selection -->
+        <div id="difficultyScreen">
+          <div class="section-title" style="margin-bottom: 1.5rem;">Select Difficulty</div>
+          <div class="difficulty-buttons">
+            <button class="diff-btn" onclick="startQuiz('easy')">
+              <span class="diff-badge">🟢</span>
+              Easy
+              <span class="diff-progress" id="easyProgress">0/10</span>
+            </button>
+            <button class="diff-btn" onclick="startQuiz('medium')">
+              <span class="diff-badge">🟡</span>
+              Medium
+              <span class="diff-progress" id="mediumProgress">0/10</span>
+            </button>
+            <button class="diff-btn" onclick="startQuiz('hard')">
+              <span class="diff-badge">🔴</span>
+              Hard
+              <span class="diff-progress" id="hardProgress">0/10</span>
+            </button>
+            <button class="diff-btn" onclick="startQuiz('expert')">
+              <span class="diff-badge">⚫</span>
+              Expert
+              <span class="diff-progress" id="expertProgress">0/10</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Question -->
+        <div id="quizScreen" class="quiz-question">
+          <div class="question-header">
+            <div class="question-number" id="questionNumber">Question 1 of 10</div>
+            <div class="question-title" id="questionSticking">R L R L</div>
+            <div class="question-subtitle">What rudiment is this?</div>
+          </div>
+
+          <div class="answer-options" id="answerOptions"></div>
+
+          <div class="quiz-footer">
+            <button class="back-btn" onclick="backToDifficulty()">← Back</button>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next →</button>
+          </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="results-screen">
+          <div class="results-score" id="resultScore">8/10</div>
+          <div class="results-message" id="resultMessage">Great Job!</div>
+          <div class="results-breakdown">
+            <div class="breakdown-row">
+              <span>Correct:</span>
+              <span id="resultCorrect">8</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Incorrect:</span>
+              <span id="resultIncorrect">2</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Accuracy:</span>
+              <span id="resultAccuracy">80%</span>
+            </div>
+          </div>
+          <div class="quiz-footer" style="margin-top: 2rem;">
+            <button class="back-btn" onclick="backToDifficulty()">← Back</button>
+            <button class="restart-btn" onclick="retakeQuiz()">🔄 Retake</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid Modal -->
+  <div id="gridModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeGridModal()">✕</button>
+      <div class="modal-title">Grid Accent Position</div>
+      <div class="grid-options">
+        <label class="grid-option">
+          <input type="radio" name="gridAccent" value="1" checked onchange="updateGridAccent()">
+          <span class="grid-label">1 (Downbeat)</span>
+        </label>
+        <label class="grid-option">
+          <input type="radio" name="gridAccent" value="e" onchange="updateGridAccent()">
+          <span class="grid-label">e (Off-beat 1)</span>
+        </label>
+        <label class="grid-option">
+          <input type="radio" name="gridAccent" value="&" onchange="updateGridAccent()">
+          <span class="grid-label">& (Off-beat 2)</span>
+        </label>
+        <label class="grid-option">
+          <input type="radio" name="gridAccent" value="a" onchange="updateGridAccent()">
+          <span class="grid-label">a (Off-beat 3)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============ DATA ============
+    const RUDIMENTS = {
+      easy: [
+        { name: 'Single Stroke Roll', sticking: 'R L R L R L R L', notes: [1, 0, 1, 0, 1, 0, 1, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Double Stroke Roll', sticking: 'R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Paradiddle', sticking: 'R L R R L R L L', notes: [1, 0, 1, 1, 0, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Flam', sticking: 'fR L fL R', notes: [0.2, 1, 0, 0.2, 1], dynamics: [0.4, 1.0, 0.8, 0.4, 1.0] },
+        { name: 'Drag', sticking: 'dR L dL R', notes: [0.2, 0.2, 1, 0, 0.2], dynamics: [0.4, 0.4, 1.0, 0.8, 0.4] }
+      ],
+      medium: [
+        { name: 'Inverted Paradiddle', sticking: 'L R L L R L R R', notes: [0, 1, 0, 0, 1, 0, 1, 1], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Swiss Triplet', sticking: 'R L R L L R R', notes: [1, 0, 1, 0, 0, 1, 1], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Six Stroke Roll', sticking: 'R R L L R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Nine Stroke Roll', sticking: 'R R L L R R L L R', notes: [1, 1, 0, 0, 1, 1, 0, 0, 1], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 1.0] },
+        { name: 'Fifteen Stroke Roll', sticking: 'R R L L R R L L R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] }
+      ],
+      hard: [
+        { name: 'Ratamacue', sticking: 'R L R L R R L R L R L L', notes: [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
+        { name: 'Flam Tap', sticking: 'fR L fL R fR L fL R', notes: [0.2, 1, 0, 0.2, 1, 0.2, 1, 0.2, 1], dynamics: [0.4, 0.8, 0.8, 0.4, 0.8, 0.4, 0.8, 0.4, 0.8] },
+        { name: 'Flamacue', sticking: 'fR L R L fL R L R', notes: [0.2, 1, 0, 1, 0, 0.2, 1, 0, 1], dynamics: [0.4, 0.8, 0.8, 0.8, 0.8, 0.4, 0.8, 0.8, 0.8] },
+        { name: 'Pataflafla', sticking: 'R L R L R L R L', notes: [1, 0, 1, 0, 1, 0, 1, 0], dynamics: [1.0, 0.6, 1.0, 0.6, 1.0, 0.6, 1.0, 0.6] },
+        { name: 'Diddle', sticking: 'R R L L', notes: [1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8] }
+      ],
+      expert: [
+        { name: 'Open Roll', sticking: 'R L R L R L R L', notes: [1, 0, 1, 0, 1, 0, 1, 0], dynamics: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0] },
+        { name: 'Closed Roll', sticking: 'R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7] },
+        { name: 'Drag Paradiddle', sticking: 'dR R L dL L R', notes: [0.3, 0.3, 1, 0, 0.3, 0.3, 1], dynamics: [0.5, 0.5, 1.0, 0.8, 0.5, 0.5, 1.0] },
+        { name: 'Flam Paradiddle', sticking: 'fR L R R fL R L L', notes: [0.2, 1, 0, 1, 1, 0.2, 1, 0, 0], dynamics: [0.4, 0.8, 0.8, 0.8, 0.8, 0.4, 0.8, 0.8, 0.8] },
+        { name: 'Cheese Cake', sticking: 'R L R R L R L L', notes: [1, 0, 1, 1, 0, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] }
+      ]
+    };
+
+    // ============ STATE ============
+    let currentTier = 'easy';
+    let currentRudimentIndex = 0;
+    let isPlaying = false;
+    let currentBPM = 120;
+    let currentSwing = 0;
+    let gridAccent = '1';
+    let audioContext;
+    let playbackTimeout;
+
+    let quizState = {
+      difficulty: 'easy',
+      currentQuestion: 0,
+      score: 0,
+      answers: [],
+      questions: []
+    };
+
+    // ============ INITIALIZATION ============
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      populateRudiments();
+      updateRudiment();
+      initAudio();
+      loadQuizProgress();
+    });
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const toggle = document.getElementById('themeToggle');
+      if (savedTheme === 'light') {
+        toggle.classList.add('active');
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      document.getElementById('themeToggle').classList.toggle('active');
+    }
+
+    function initAudio() {
+      window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function populateRudiments() {
+      const select = document.getElementById('rudimentSelect');
+      const tier = currentTier;
+      select.innerHTML = '';
+      RUDIMENTS[tier].forEach((r, i) => {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = r.name;
+        select.appendChild(option);
+      });
+    }
+
+    // ============ LEARN TAB ============
+    function updateRudiment() {
+      currentTier = document.getElementById('tierSelect').value;
+      currentRudimentIndex = parseInt(document.getElementById('rudimentSelect').value) || 0;
+      populateRudiments();
+      document.getElementById('rudimentSelect').value = currentRudimentIndex;
+      
+      const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
+      document.getElementById('rudimentName').textContent = rudiment.name;
+      document.getElementById('stickingPattern').textContent = rudiment.sticking;
+      
+      renderVisualBoxes();
+    }
+
+    function renderVisualBoxes() {
+      const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
+      const container = document.getElementById('visualBoxes');
+      container.innerHTML = '';
+      
+      rudiment.sticking.split(' ').forEach((char, i) => {
+        const box = document.createElement('div');
+        const isRight = char.toUpperCase() === 'R';
+        const hand = isRight ? 'right' : 'left';
+        const isDynamic = rudiment.dynamics[i] < 0.9;
+        
+        box.className = `hand-box ${hand}`;
+        if (isDynamic) box.classList.add('accent');
+        box.textContent = char;
+        box.style.opacity = rudiment.dynamics[i];
+        container.appendChild(box);
+      });
+    }
+
+    function updateBPM() {
+      currentBPM = parseInt(document.getElementById('bpmSlider').value);
+      document.getElementById('bpmValue').textContent = currentBPM;
+    }
+
+    function updateSwing() {
+      currentSwing = parseInt(document.getElementById('swingSlider').value);
+      document.getElementById('swingValue').textContent = currentSwing + '%';
+    }
+
+    function togglePlayback() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        playRudiment();
+      }
+    }
+
+    function playRudiment() {
+      if (!audioContext) initAudio();
+      isPlaying = true;
+      document.getElementById('playBtn').textContent = '⏹ Stop';
+      
+      const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
+      const beatDuration = (60 / currentBPM) * 1000; // ms per beat
+      
+      rudiment.sticking.split(' ').forEach((char, i) => {
+        playbackTimeout = setTimeout(() => {
+          if (!isPlaying) return;
+          playNote(char === char.toUpperCase(), beatDuration);
+          animateBox(i);
+        }, i * beatDuration);
+      });
+      
+      playbackTimeout = setTimeout(stopPlayback, rudiment.sticking.split(' ').length * beatDuration);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      clearTimeout(playbackTimeout);
+      document.getElementById('playBtn').textContent = '▶ Play';
+    }
+
+    function playNote(isRight, duration) {
+      const ctx = window.audioContext;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.frequency.value = isRight ? 400 : 300; // Different pitch for L/R
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
+    }
+
+    function animateBox(index) {
+      const boxes = document.querySelectorAll('.hand-box');
+      if (boxes[index]) {
+        boxes[index].classList.add('active');
+        setTimeout(() => boxes[index].classList.remove('active'), 100);
+      }
+    }
+
+    function openGridModal() {
+      document.getElementById('gridModal').classList.add('active');
+    }
+
+    function closeGridModal() {
+      document.getElementById('gridModal').classList.remove('active');
+    }
+
+    function updateGridAccent() {
+      gridAccent = document.querySelector('input[name="gridAccent"]:checked').value;
+    }
+
+    // ============ QUIZ TAB ============
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function startQuiz(difficulty) {
+      quizState.difficulty = difficulty;
+      quizState.currentQuestion = 0;
+      quizState.score = 0;
+      quizState.answers = [];
+      
+      // Build questions for this difficulty
+      quizState.questions = [];
+      const rudiments = RUDIMENTS[difficulty];
+      const allRudiments = Object.values(RUDIMENTS).flat();
+      
+      for (let i = 0; i < 10; i++) {
+        const correct = rudiments[i % rudiments.length];
+        const options = [correct];
+        
+        // Add 3 random incorrect options
+        while (options.length < 4) {
+          const random = allRudiments[Math.floor(Math.random() * allRudiments.length)];
+          if (!options.find(r => r.name === random.name)) {
+            options.push(random);
+          }
+        }
+        
+        // Shuffle options
+        options.sort(() => Math.random() - 0.5);
+        
+        quizState.questions.push({
+          sticking: correct.sticking,
+          correct: correct.name,
+          options: options.map(r => r.name)
+        });
+      }
+      
+      showQuizQuestion();
+      document.getElementById('difficultyScreen').style.display = 'none';
+      document.getElementById('quizScreen').classList.add('active');
+    }
+
+    function showQuizQuestion() {
+      const question = quizState.questions[quizState.currentQuestion];
+      document.getElementById('questionNumber').textContent = `Question ${quizState.currentQuestion + 1} of 10`;
+      document.getElementById('questionSticking').textContent = question.sticking;
+      
+      const options = document.getElementById('answerOptions');
+      options.innerHTML = '';
+      
+      question.options.forEach((option, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.textContent = option;
+        btn.onclick = () => selectAnswer(option, btn);
+        options.appendChild(btn);
+      });
+      
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+
+    function selectAnswer(selected, btnElement) {
+      const question = quizState.questions[quizState.currentQuestion];
+      const isCorrect = selected === question.correct;
+      
+      if (isCorrect) {
+        quizState.score++;
+        btnElement.classList.add('correct');
+      } else {
+        btnElement.classList.add('incorrect');
+        // Show correct answer
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+          if (btn.textContent === question.correct) {
+            btn.classList.add('correct');
+          }
+        });
+      }
+      
+      quizState.answers.push(selected);
+      
+      // Disable all buttons
+      document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = null);
+      
+      // Show next button
+      document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+      quizState.currentQuestion++;
+      
+      if (quizState.currentQuestion >= 10) {
+        showResults();
+      } else {
+        showQuizQuestion();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quizScreen').classList.remove('active');
+      document.getElementById('resultsScreen').classList.add('active');
+      
+      const score = quizState.score;
+      const accuracy = Math.round((score / 10) * 100);
+      
+      document.getElementById('resultScore').textContent = `${score}/10`;
+      document.getElementById('resultCorrect').textContent = score;
+      document.getElementById('resultIncorrect').textContent = 10 - score;
+      document.getElementById('resultAccuracy').textContent = accuracy + '%';
+      
+      if (score === 10) {
+        document.getElementById('resultMessage').textContent = 'Perfect! 🎉';
+      } else if (score >= 8) {
+        document.getElementById('resultMessage').textContent = 'Excellent! 🌟';
+      } else if (score >= 6) {
+        document.getElementById('resultMessage').textContent = 'Good Job! 👍';
+      } else {
+        document.getElementById('resultMessage').textContent = 'Keep Practicing! 💪';
+      }
+      
+      // Save progress
+      saveQuizProgress();
+    }
+
+    function backToDifficulty() {
+      document.getElementById('difficultyScreen').style.display = 'block';
+      document.getElementById('quizScreen').classList.remove('active');
+      document.getElementById('resultsScreen').classList.remove('active');
+    }
+
+    function retakeQuiz() {
+      startQuiz(quizState.difficulty);
+    }
+
+    function saveQuizProgress() {
+      const progress = JSON.parse(localStorage.getItem('quizProgress') || '{"easy":0,"medium":0,"hard":0,"expert":0}');
+      const best = progress[quizState.difficulty] || 0;
+      progress[quizState.difficulty] = Math.max(best, quizState.score);
+      localStorage.setItem('quizProgress', JSON.stringify(progress));
+      loadQuizProgress();
+    }
+
+    function loadQuizProgress() {
+      const progress = JSON.parse(localStorage.getItem('quizProgress') || '{"easy":0,"medium":0,"hard":0,"expert":0}');
+      document.getElementById('easyProgress').textContent = `${progress.easy || 0}/10`;
+      document.getElementById('mediumProgress').textContent = `${progress.medium || 0}/10`;
+      document.getElementById('hardProgress').textContent = `${progress.hard || 0}/10`;
+      document.getElementById('expertProgress').textContent = `${progress.expert || 0}/10`;
+    }
+
+    // Modal close on escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeGridModal();
+      }
+    });
+  </script>
+</body>
+</html>
