@@ -89,26 +89,6 @@
       align-items: center;
     }
 
-    .audio-status {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      font-family: 'Courier New', monospace;
-    }
-
-    .audio-status.ready {
-      border-color: #4caf50;
-      color: #4caf50;
-    }
-
-    .audio-status.suspended {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
     .theme-toggle {
       display: flex;
       align-items: center;
@@ -707,7 +687,6 @@
       <h1>Rudimentor</h1>
     </div>
     <div class="header-controls">
-      <div class="audio-status" id="audioStatus">🎙️ Init</div>
       <div class="theme-toggle" onclick="toggleTheme()">
         <span style="font-size: 0.8rem; color: var(--text-dim);">☀️</span>
         <button class="toggle-switch" id="themeToggle">
@@ -962,50 +941,24 @@
     function initAudio() {
       if (!window.audioContext) {
         window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        console.log('✓ AudioContext created:', window.audioContext.state);
+        console.log('✓ AudioContext created');
       }
-      updateAudioStatus();
-      // On iOS, resume context on user interaction
+    }
+
+    function ensureAudioRunning() {
+      if (!window.audioContext) initAudio();
+      
       if (window.audioContext.state === 'suspended') {
-        window.audioContext.resume().then(() => {
+        return window.audioContext.resume().then(() => {
           console.log('✓ AudioContext resumed');
-          updateAudioStatus();
+          return true;
         }).catch(e => {
           console.error('✗ Failed to resume AudioContext:', e);
+          return false;
         });
       }
+      return Promise.resolve(true);
     }
-
-    function updateAudioStatus() {
-      const status = document.getElementById('audioStatus');
-      if (!window.audioContext) {
-        status.textContent = '🎙️ No Audio';
-        status.className = 'audio-status';
-        return;
-      }
-      
-      const state = window.audioContext.state;
-      if (state === 'running') {
-        status.textContent = '🔊 Ready';
-        status.className = 'audio-status ready';
-      } else if (state === 'suspended') {
-        status.textContent = '⏸️ Tap to Enable';
-        status.className = 'audio-status suspended';
-      } else {
-        status.textContent = '⚠️ ' + state;
-        status.className = 'audio-status';
-      }
-    }
-
-    // Resume audio on any touch (iOS requirement)
-    document.addEventListener('touchstart', () => {
-      if (window.audioContext && window.audioContext.state === 'suspended') {
-        window.audioContext.resume().then(() => {
-          console.log('✓ AudioContext resumed via touch');
-          updateAudioStatus();
-        });
-      }
-    }, { once: true });
 
     function populateRudiments() {
       const select = document.getElementById('rudimentSelect');
@@ -1071,17 +1024,10 @@
     }
 
     function playRudiment() {
-      if (!audioContext) initAudio();
-      
-      // Ensure context is resumed (important for iOS)
-      if (window.audioContext && window.audioContext.state === 'suspended') {
-        window.audioContext.resume().then(() => {
-          console.log('✓ AudioContext resumed');
-          startPlayback();
-        });
-      } else {
+      // Ensure audio is ready (handles iOS audio context)
+      ensureAudioRunning().then((success) => {
         startPlayback();
-      }
+      });
     }
 
     function startPlayback() {
@@ -1113,12 +1059,6 @@
     function playNote(isRight, duration) {
       try {
         const ctx = window.audioContext;
-        
-        // Ensure context is running
-        if (ctx.state === 'suspended') {
-          ctx.resume().catch(e => console.error('Resume failed:', e));
-          return; // Will play on next interaction
-        }
         
         // Create nodes
         const osc = ctx.createOscillator();
