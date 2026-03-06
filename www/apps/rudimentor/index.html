@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rudimentor | Stick With It</title>
   <meta name="theme-color" content="#000000">
-  <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.min.js"></script>
+
   <style>
     :root {
       --bg: #000;
@@ -633,8 +633,8 @@
     .question-nav {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
+      justify-content: space-between;
+      gap: 1rem;
       padding: 1rem;
       margin-bottom: 1rem;
       border-bottom: 1px solid var(--border);
@@ -653,6 +653,7 @@
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
+      flex-shrink: 0;
     }
 
     .nav-arrow:hover {
@@ -665,39 +666,24 @@
       cursor: not-allowed;
     }
 
-    .bubble-indicators {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      max-width: 300px;
+    .question-counter {
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
     }
 
-    .bubble {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--border);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
+    .counter-display {
+      font-size: 0.85rem;
       color: var(--text-dim);
-      transition: all 0.2s ease;
-      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .bubble.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
+    .counter-value {
+      font-size: 1.5rem;
       font-weight: 700;
-      transform: scale(1.1);
-    }
-
-    .bubble:hover {
-      border-color: var(--accent);
+      color: var(--accent);
+      margin-top: 0.25rem;
     }
 
     .quiz-footer {
@@ -746,19 +732,14 @@
       border-radius: 8px;
       padding: 1rem;
       margin: 1rem 0;
-      min-height: 150px;
+      min-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow-x: auto;
     }
 
-    .vexflow-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    svg {
+    .sheet-music svg {
       max-width: 100%;
       height: auto;
     }
@@ -968,7 +949,10 @@
           <!-- Question Navigation -->
           <div class="question-nav">
             <button class="nav-arrow" id="prevBtn" onclick="prevQuestion()">←</button>
-            <div class="bubble-indicators" id="bubbleIndicators"></div>
+            <div class="question-counter">
+              <div class="counter-display">Question</div>
+              <div class="counter-value" id="counterValue">1 / 10</div>
+            </div>
             <button class="nav-arrow" id="nextBtn" onclick="nextQuestion()">→</button>
           </div>
 
@@ -1182,65 +1166,102 @@
 
     function renderLearnSheetMusic(stickingPattern) {
       try {
-        if (typeof Vex === 'undefined') {
-          console.warn('VexFlow not ready yet');
-          return;
-        }
-        
-        const container = document.getElementById('notationCardMusic');
         const svg = document.getElementById('learnSheetMusic');
-        svg.innerHTML = ''; // Clear previous
+        if (!svg) return;
         
-        const VF = Vex.Flow;
-        const width = Math.min(container.offsetWidth || 320, 320);
-        
-        const renderer = new VF.Renderer(svg, VF.Renderer.Backends.SVG);
-        renderer.resize(width, 120);
-        
-        const context = renderer.getContext();
-        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-        context.setFillStyle(isDark ? '#fff' : '#000');
-        context.setStrokeStyle(isDark ? '#fff' : '#000');
-        
-        const stave = new VF.Stave(5, 15, width - 10);
-        stave.addClef('percussion');
-        stave.setContext(context).draw();
-        
-        const stickings = stickingPattern.split(' ');
-        const notes = [];
-        
-        stickings.forEach((stick) => {
-          const note = new VF.StemmableNote({
-            clef: 'percussion',
-            keys: ['b/4'],
-            duration: 'q',
-            align_center: true
-          });
-          
-          if (stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd') {
-            note.addModifier(new VF.Articulation('a>').setPosition(VF.Modifier.Position.ABOVE));
-          }
-          
-          notes.push(note);
-        });
-        
-        const voice = new VF.Voice({ num_beats: notes.length, beat_value: 4 });
-        voice.addTickables(notes);
-        
-        try {
-          const beams = VF.Beam.generateBeams(notes);
-          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
-          voice.draw(context, stave);
-          beams.forEach(beam => beam.setContext(context).draw());
-        } catch (e) {
-          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
-          voice.draw(context, stave);
-        }
-        
+        renderPercussionNotation(svg, stickingPattern);
         console.log('✓ Learn sheet music rendered');
       } catch (e) {
         console.error('Learn sheet music error:', e);
       }
+    }
+
+    function renderPercussionNotation(svgElement, stickingPattern) {
+      // Clear SVG
+      svgElement.innerHTML = '';
+      
+      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+      const color = isDark ? '#fff' : '#000';
+      const stickings = stickingPattern.split(' ');
+      
+      const padding = 20;
+      const staffLineCount = 5;
+      const lineSpacing = 12;
+      const noteWidth = 30;
+      const totalWidth = stickings.length * noteWidth + padding * 2;
+      const staffTop = 20;
+      
+      // Set SVG dimensions
+      svgElement.setAttribute('width', totalWidth);
+      svgElement.setAttribute('height', 100);
+      svgElement.setAttribute('viewBox', `0 0 ${totalWidth} 100`);
+      
+      // Draw staff lines
+      for (let i = 0; i < staffLineCount; i++) {
+        const y = staffTop + i * lineSpacing;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', padding);
+        line.setAttribute('y1', y);
+        line.setAttribute('x2', totalWidth - padding);
+        line.setAttribute('y2', y);
+        line.setAttribute('stroke', color);
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('opacity', '0.5');
+        svgElement.appendChild(line);
+      }
+      
+      // Middle line y-position (for notes)
+      const middleLineY = staffTop + 2 * lineSpacing;
+      
+      // Draw notes and sticking
+      stickings.forEach((stick, idx) => {
+        const noteX = padding + idx * noteWidth + noteWidth / 2;
+        const isRight = stick.toUpperCase() === 'R';
+        const isAccent = stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd';
+        
+        // Note head (circle on middle line)
+        const notehead = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        notehead.setAttribute('cx', noteX);
+        notehead.setAttribute('cy', middleLineY);
+        notehead.setAttribute('r', '6');
+        notehead.setAttribute('fill', color);
+        svgElement.appendChild(notehead);
+        
+        // Stem
+        const stemY1 = middleLineY - 20;
+        const stem = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        stem.setAttribute('x1', noteX + 6);
+        stem.setAttribute('y1', middleLineY);
+        stem.setAttribute('x2', noteX + 6);
+        stem.setAttribute('y2', stemY1);
+        stem.setAttribute('stroke', color);
+        stem.setAttribute('stroke-width', '1.5');
+        svgElement.appendChild(stem);
+        
+        // Hand indicator (R/L) above/below
+        const labelY = isRight ? stemY1 - 5 : middleLineY + 15;
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', noteX);
+        label.setAttribute('y', labelY);
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('font-size', '10');
+        label.setAttribute('font-weight', isAccent ? '700' : '500');
+        label.setAttribute('fill', color);
+        label.textContent = stick.toUpperCase();
+        svgElement.appendChild(label);
+        
+        // Accent marker if needed
+        if (isAccent) {
+          const accent = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          accent.setAttribute('x', noteX);
+          accent.setAttribute('y', stemY1 - 8);
+          accent.setAttribute('text-anchor', 'middle');
+          accent.setAttribute('font-size', '14');
+          accent.setAttribute('fill', isDark ? '#e63946' : '#e63946');
+          accent.textContent = '>';
+          svgElement.appendChild(accent);
+        }
+      });
     }
 
     function renderVisualBoxes() {
@@ -1436,24 +1457,14 @@
       
       document.getElementById('questionNumber').textContent = `Question ${current + 1} of 10`;
       document.getElementById('questionSticking').textContent = question.sticking;
+      document.getElementById('counterValue').textContent = `${current + 1} / 10`;
       
       // Update nav buttons
       document.getElementById('prevBtn').disabled = current === 0;
       document.getElementById('nextBtn').disabled = current === 9;
       
-      // Update bubble indicators
-      const bubblesContainer = document.getElementById('bubbleIndicators');
-      bubblesContainer.innerHTML = '';
-      for (let i = 0; i < 10; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble' + (i === current ? ' active' : '');
-        bubble.textContent = i + 1;
-        bubble.onclick = () => goToQuestion(i);
-        bubblesContainer.appendChild(bubble);
-      }
-      
       // Render sheet music
-      renderSheetMusic(question.sticking);
+      renderQuizSheetMusic(question.sticking);
       
       const options = document.getElementById('answerOptions');
       options.innerHTML = '';
@@ -1467,75 +1478,18 @@
       });
     }
 
-    function renderSheetMusic(stickingPattern) {
+    function renderQuizSheetMusic(stickingPattern) {
       const container = document.getElementById('sheetMusic');
       if (!container) return;
       
       container.innerHTML = '';
       
-      try {
-        // Check if Vex is loaded
-        if (typeof Vex === 'undefined') {
-          console.warn('VexFlow not loaded yet');
-          container.innerHTML = '<div style="font-family: monospace; text-align: center; padding: 1rem;">🎵 ' + stickingPattern + '</div>';
-          return;
-        }
-        
-        const VF = Vex.Flow;
-        const width = Math.min(container.offsetWidth || 350, 350);
-        const renderer = new VF.Renderer(container, VF.Renderer.Backends.SVG);
-        renderer.resize(width, 140);
-        
-        const context = renderer.getContext();
-        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-        context.setFillStyle(isDark ? '#fff' : '#000');
-        context.setStrokeStyle(isDark ? '#fff' : '#000');
-        
-        const stave = new VF.Stave(5, 25, width - 10);
-        stave.addClef('percussion');
-        stave.setContext(context).draw();
-        
-        const stickings = stickingPattern.split(' ');
-        const notes = [];
-        
-        stickings.forEach((stick) => {
-          const note = new VF.StemmableNote({
-            clef: 'percussion',
-            keys: ['b/4'],
-            duration: 'q',
-            align_center: true
-          });
-          
-          // Add accent for uppercase (not f or d which are grace notes)
-          if (stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd') {
-            note.addModifier(new VF.Articulation('a>').setPosition(VF.Modifier.Position.ABOVE));
-          }
-          
-          notes.push(note);
-        });
-        
-        const voice = new VF.Voice({ num_beats: notes.length, beat_value: 4 });
-        voice.addTickables(notes);
-        
-        // Beam if possible
-        try {
-          const beams = VF.Beam.generateBeams(notes);
-          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
-          voice.draw(context, stave);
-          beams.forEach(beam => beam.setContext(context).draw());
-        } catch (beamErr) {
-          // If beaming fails, just draw without beams
-          new VF.Formatter().joinVoices([voice]).format([voice], width - 10);
-          voice.draw(context, stave);
-        }
-        
-        console.log('✓ VexFlow sheet music rendered for:', stickingPattern);
-      } catch (e) {
-        console.error('Sheet music error:', e);
-        // Fallback to text
-        container.innerHTML = '<div style="font-family: monospace; text-align: center; padding: 1rem; font-size: 1rem;">🎵 ' + stickingPattern + '</div>';
-      }
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      container.appendChild(svg);
+      renderPercussionNotation(svg, stickingPattern);
     }
+
+
 
     function goToQuestion(idx) {
       quizState.currentQuestion = idx;
