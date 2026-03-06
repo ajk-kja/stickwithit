@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rudimentor | Stick With It</title>
   <meta name="theme-color" content="#000000">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/4.1.0/vexflow.min.js"></script>
   <style>
     :root {
       --bg: #000;
@@ -583,13 +584,99 @@
       color: #e63946;
     }
 
+    .question-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-arrow {
+      width: 40px;
+      height: 40px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .nav-arrow:hover {
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .bubble-indicators {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 300px;
+    }
+
+    .bubble {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .bubble.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 700;
+      transform: scale(1.1);
+    }
+
+    .bubble:hover {
+      border-color: var(--accent);
+    }
+
     .quiz-footer {
       display: flex;
       gap: 1rem;
-      margin-top: 1rem;
+      margin-top: 2rem;
     }
 
-    .next-btn, .restart-btn {
+    .exit-btn {
+      padding: 1rem 2rem;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .exit-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .restart-btn {
       flex: 1;
       padding: 1rem;
       background: var(--accent);
@@ -601,25 +688,33 @@
       transition: all 0.2s ease;
     }
 
-    .next-btn:hover, .restart-btn:hover {
+    .restart-btn:hover {
       transform: translateY(-2px);
       filter: brightness(1.1);
     }
 
-    .back-btn {
-      flex: 1;
-      padding: 1rem;
+    /* Sheet music container */
+    .sheet-music {
       background: var(--surface);
-      color: var(--text);
       border: 1px solid var(--border);
       border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      padding: 1rem;
+      margin: 1rem 0;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .back-btn:hover {
-      border-color: var(--accent);
+    .vexflow-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
     }
 
     .results-screen {
@@ -796,15 +891,29 @@
         <div id="quizScreen" class="quiz-question">
           <div class="question-header">
             <div class="question-number" id="questionNumber">Question 1 of 10</div>
-            <div class="question-title" id="questionSticking">R L R L</div>
-            <div class="question-subtitle">What rudiment is this?</div>
+            <div class="question-title">What rudiment is this?</div>
+          </div>
+
+          <!-- Question Navigation -->
+          <div class="question-nav">
+            <button class="nav-arrow" id="prevBtn" onclick="prevQuestion()">←</button>
+            <div class="bubble-indicators" id="bubbleIndicators"></div>
+            <button class="nav-arrow" id="nextBtn" onclick="nextQuestion()">→</button>
+          </div>
+
+          <!-- Sheet Music -->
+          <div class="sheet-music" id="sheetMusic"></div>
+
+          <!-- Sticking Pattern -->
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">Sticking</div>
+            <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; letter-spacing: 3px; color: var(--text);" id="questionSticking">R L R L</div>
           </div>
 
           <div class="answer-options" id="answerOptions"></div>
 
           <div class="quiz-footer">
-            <button class="back-btn" onclick="backToDifficulty()">← Back</button>
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next →</button>
+            <button class="exit-btn" onclick="backToDifficulty()">Exit Quiz</button>
           </div>
         </div>
 
@@ -1187,8 +1296,28 @@
 
     function showQuizQuestion() {
       const question = quizState.questions[quizState.currentQuestion];
-      document.getElementById('questionNumber').textContent = `Question ${quizState.currentQuestion + 1} of 10`;
+      const current = quizState.currentQuestion;
+      
+      document.getElementById('questionNumber').textContent = `Question ${current + 1} of 10`;
       document.getElementById('questionSticking').textContent = question.sticking;
+      
+      // Update nav buttons
+      document.getElementById('prevBtn').disabled = current === 0;
+      document.getElementById('nextBtn').disabled = current === 9;
+      
+      // Update bubble indicators
+      const bubblesContainer = document.getElementById('bubbleIndicators');
+      bubblesContainer.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble' + (i === current ? ' active' : '');
+        bubble.textContent = i + 1;
+        bubble.onclick = () => goToQuestion(i);
+        bubblesContainer.appendChild(bubble);
+      }
+      
+      // Render sheet music
+      renderSheetMusic(question.sticking);
       
       const options = document.getElementById('answerOptions');
       options.innerHTML = '';
@@ -1200,8 +1329,70 @@
         btn.onclick = () => selectAnswer(option, btn);
         options.appendChild(btn);
       });
+    }
+
+    function renderSheetMusic(stickingPattern) {
+      const container = document.getElementById('sheetMusic');
+      container.innerHTML = '';
       
-      document.getElementById('nextBtn').style.display = 'none';
+      try {
+        const VF = Vex.Flow;
+        const renderer = new VF.Renderer(container, VF.Renderer.Backends.SVG);
+        const width = Math.min(container.offsetWidth || 400, 400);
+        renderer.resize(width, 150);
+        
+        const context = renderer.getContext();
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        context.setFillStyle(isDark ? '#fff' : '#000');
+        context.setStrokeStyle(isDark ? '#fff' : '#000');
+        
+        const stave = new VF.Stave(10, 30, width - 20);
+        stave.addClef('percussion');
+        stave.setContext(context).draw();
+        
+        const stickings = stickingPattern.split(' ');
+        const notes = [];
+        
+        stickings.forEach((stick) => {
+          const note = new VF.StemmableNote({
+            clef: 'percussion',
+            keys: ['b/4'],
+            duration: 'q',
+            align_center: true
+          });
+          
+          if (stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd') {
+            note.addModifier(new VF.Articulation('a>').setPosition(VF.Modifier.Position.ABOVE));
+          }
+          
+          notes.push(note);
+        });
+        
+        const beams = VF.Beam.generateBeams(notes);
+        const voice = new VF.Voice({ num_beats: notes.length, beat_value: 4 });
+        voice.addTickables(notes);
+        
+        new VF.Formatter().joinVoices([voice]).format([voice], width - 20);
+        voice.draw(context, stave);
+        beams.forEach(beam => beam.setContext(context).draw());
+        
+        console.log('✓ Sheet music rendered');
+      } catch (e) {
+        console.error('Sheet music error:', e);
+        container.innerHTML = '<div style="font-family: monospace; text-align: center; padding: 1rem;">🎵 ' + stickingPattern + '</div>';
+      }
+    }
+
+    function goToQuestion(idx) {
+      quizState.currentQuestion = idx;
+      showQuizQuestion();
+    }
+
+    function prevQuestion() {
+      if (quizState.currentQuestion > 0) {
+        quizState.currentQuestion--;
+        showQuizQuestion();
+      }
     }
 
     function selectAnswer(selected, btnElement) {
