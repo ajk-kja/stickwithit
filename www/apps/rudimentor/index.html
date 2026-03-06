@@ -943,6 +943,18 @@
         window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         console.log('✓ AudioContext created');
       }
+      
+      // Initialize stereo channel merger once
+      if (!window.leftChannel) {
+        const ctx = window.audioContext;
+        window.merger = ctx.createChannelMerger(2);
+        window.merger.connect(ctx.destination);
+        window.leftChannel = ctx.createGain();
+        window.rightChannel = ctx.createGain();
+        window.leftChannel.connect(window.merger, 0, 0);   // Left ch input → Left output
+        window.rightChannel.connect(window.merger, 0, 1);  // Right ch input → Right output
+        console.log('✓ Stereo channels initialized');
+      }
     }
 
     function ensureAudioRunning() {
@@ -1058,6 +1070,8 @@
 
     function playNote(isRight, duration) {
       try {
+        initAudio(); // Ensure channels are set up
+        
         const ctx = window.audioContext;
         const now = ctx.currentTime;
         
@@ -1069,13 +1083,11 @@
           freqBase * 2.5      // 5th harmonic (adds metallic quality)
         ];
         
-        // Create stereo panning with separate gains for each channel
-        const panner = ctx.createStereoPanner();
-        panner.pan.value = isRight ? 0.8 : -0.8; // Full stereo separation
+        // Route to LEFT or RIGHT channel only (true isolation)
+        const channelGain = isRight ? window.rightChannel : window.leftChannel;
         
         const masterGain = ctx.createGain();
-        masterGain.connect(panner);
-        panner.connect(ctx.destination);
+        masterGain.connect(channelGain);
         
         // Attack-decay-release envelope (smooth, no popping)
         masterGain.gain.setValueAtTime(0, now);
@@ -1100,7 +1112,7 @@
           osc.stop(now + 0.25); // Match release time
         });
         
-        console.log('Cowbell:', isRight ? 'R (RIGHT)' : 'L (LEFT)', '| Base:', freqBase + 'Hz');
+        console.log('Cowbell:', isRight ? 'R (RIGHT CHANNEL ONLY)' : 'L (LEFT CHANNEL ONLY)', '| Base:', freqBase + 'Hz');
       } catch (e) {
         console.error('Audio playback error:', e);
       }
