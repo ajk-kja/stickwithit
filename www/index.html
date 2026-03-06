@@ -7,11 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stick With It | Drummers Unite!</title>
     <style>
+        :root {
+            --bg: #000;
+            --surface: #111;
+            --border: #333;
+            --text: #fff;
+            --text-muted: #ccc;
+            --text-dim: #666;
+            --accent: #e63946;
+            --accent-hover: #000;
+            --border-top: #222;
+        }
+
+        html[data-theme="light"] {
+            --bg: #fff;
+            --surface: #f5f5f5;
+            --border: #ddd;
+            --text: #000;
+            --text-muted: #333;
+            --text-dim: #888;
+            --accent: #e63946;
+            --accent-hover: #fff;
+            --border-top: #eee;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             min-height: 100vh;
             display: flex;
@@ -19,44 +44,98 @@
             align-items: center;
             justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;
-            color: #fff;
+            background: var(--bg);
+            color: var(--text);
             padding: 2rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         .container {
             max-width: 600px;
             text-align: center;
         }
+
+        .theme-toggle {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toggle-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-switch.active {
+            background: var(--accent);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: var(--text);
+            border-radius: 12px;
+            transition: left 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 24px;
+        }
+
         .logo {
             width: 120px;
             height: auto;
             margin-bottom: 1.5rem;
         }
+
         h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            color: #fff;
+            color: var(--text);
             font-weight: 700;
             letter-spacing: 2px;
         }
+
         .tagline {
             font-size: 1.1rem;
-            color: #e63946;
+            color: var(--accent);
             margin-bottom: 2rem;
             font-weight: 500;
         }
+
         .welcome {
             font-size: 1rem;
-            color: #ccc;
+            color: var(--text-muted);
             margin-bottom: 0.5rem;
         }
+
         .section-title {
             font-size: 0.85rem;
-            color: #666;
+            color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 3px;
             margin: 2.5rem 0 1rem;
         }
+
         .social-links {
             display: flex;
             flex-wrap: wrap;
@@ -64,12 +143,13 @@
             gap: 1rem;
             margin-top: 1rem;
         }
+
         .social-links a {
             padding: 0.75rem 1.5rem;
             background: transparent;
-            border: 2px solid #e63946;
+            border: 2px solid var(--accent);
             border-radius: 4px;
-            color: #e63946;
+            color: var(--accent);
             text-decoration: none;
             font-weight: 600;
             text-transform: uppercase;
@@ -77,36 +157,42 @@
             letter-spacing: 1px;
             transition: all 0.2s ease;
         }
+
         .social-links a:hover {
-            background: #e63946;
-            color: #000;
+            background: var(--accent);
+            color: var(--accent-hover);
         }
+
         .apps {
             margin-top: 3rem;
             padding-top: 2rem;
-            border-top: 1px solid #222;
+            border-top: 1px solid var(--border-top);
         }
+
         .app-button {
             display: inline-block;
             padding: 1.25rem 3rem;
-            background: #111;
-            border: 1px solid #333;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            color: #fff;
+            color: var(--text);
             text-decoration: none;
             font-size: 1.1rem;
             font-weight: 500;
             transition: all 0.2s ease;
         }
+
         .app-button:hover {
-            background: #1a1a1a;
-            border-color: #e63946;
+            background: var(--border);
+            border-color: var(--accent);
             transform: translateY(-2px);
         }
+
         .app-button .emoji {
             font-size: 1.4rem;
             margin-right: 0.5rem;
         }
+
         .app-button.secret {
             width: 80px;
             height: 80px;
@@ -114,16 +200,25 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #1a1a1a;
-            border: 1px solid #333;
+            background: var(--surface);
+            border: 1px solid var(--border);
         }
+
         .app-button.secret:hover {
-            background: #222;
-            border-color: #333;
+            background: var(--border);
+            border-color: var(--border);
         }
     </style>
 </head>
 <body>
+    <div class="theme-toggle">
+        <span class="toggle-label">Dark</span>
+        <div class="toggle-switch" id="themeToggle">
+            <div class="toggle-slider"></div>
+        </div>
+        <span class="toggle-label">Light</span>
+    </div>
+
     <div class="container">
         <img src="/assets/StickWithItBlack.png" alt="Stick With It" class="logo">
         <h1>STICK WITH IT</h1>
@@ -152,7 +247,36 @@
             <a href="/apps/setlist-sprint/" class="app-button">
                 <span class="emoji">🔁</span> Gigstrella
             </a>
+            <br><br>
+            <a href="/apps/rudimentor/" class="app-button">
+                <span class="emoji">🥚</span> Rudimentor
+            </a>
         </div>
     </div>
+
+    <script>
+        // Initialize theme from localStorage or system preference
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        // Get saved theme or default to 'dark'
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        
+        // Set toggle state
+        if (savedTheme === 'light') {
+            themeToggle.classList.add('active');
+        }
+
+        // Handle theme toggle
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
