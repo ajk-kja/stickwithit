@@ -1072,8 +1072,8 @@
         }
         const merger = window.channelMerger;
         
-        // Distinct frequencies: Right hand (R) = 800Hz, Left hand (L) = 400Hz
-        osc.frequency.value = isRight ? 800 : 400;
+        // Piano notes: Left hand (L) = C1 (32.70Hz), Right hand (R) = C2 (65.41Hz)
+        osc.frequency.value = isRight ? 65.41 : 32.70;
         osc.type = 'sine';
         
         // Attack-decay envelope
@@ -1082,9 +1082,9 @@
         gain.gain.linearRampToValueAtTime(0.15, now + 0.01); // Quick attack
         gain.gain.exponentialRampToValueAtTime(0.02, now + 0.12); // Decay
         
-        // Light filter for natural sound
+        // Light filter for natural sound (adjusted for lower frequencies)
         filter.type = 'lowpass';
-        filter.frequency.value = 1000;
+        filter.frequency.value = 200;
         filter.Q.value = 1;
         
         // Connect chain: osc → filter → gain
@@ -1101,7 +1101,7 @@
         osc.start(now);
         osc.stop(now + 0.12);
         
-        console.log('Audio:', isRight ? 'R 800Hz→RIGHT' : 'L 400Hz→LEFT');
+        console.log('Audio:', isRight ? 'R C2 (65.41Hz)→RIGHT' : 'L C1 (32.70Hz)→LEFT');
       } catch (e) {
         console.error('Audio playback error:', e);
       }
