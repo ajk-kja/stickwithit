@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chopmeister Origins | Stick With It Blog</title>
+    <meta name="description" content="How Chopmeister translates the Pattern Generator workflow to the web with sharable URLs, velocity-aware voices, and daily lick experiments.">
+    <style>
+        :root { color-scheme: dark; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+            background: #050505;
+            color: #e2e2e2;
+            line-height: 1.75;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+        .shell { max-width: 760px; margin: 0 auto; }
+        a.back-link {
+            color: #ffbd59;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: clamp(2.1rem, 5vw, 3rem); margin-bottom: 0.4rem; color: #fff; }
+        .meta { color: #8b8b8b; margin-bottom: 2.4rem; }
+        p { margin-bottom: 1.3rem; }
+        blockquote {
+            border-left: 4px solid #ffbd59;
+            padding-left: 1.2rem;
+            margin: 1.5rem 0;
+            color: #f6f0e4;
+            font-size: 1.1rem;
+        }
+        h2 { font-size: 1.35rem; margin: 2.4rem 0 0.9rem; color: #ffbd59; }
+        ul { margin: 0.5rem 0 0 1.2rem; color: #cfcfcf; }
+        .grid {
+            display: grid;
+            gap: 1rem;
+        }
+        @media (min-width: 600px) {
+            .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        .card {
+            border: 1px solid #1d1d1d;
+            border-radius: 12px;
+            padding: 1.1rem 1.2rem;
+            background: #0b0b0b;
+        }
+        .card span { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+        .keywords {
+            margin-top: 3rem;
+            padding: 1.2rem;
+            border: 1px dashed #3c3c3c;
+            font-size: 0.95rem;
+            color: #b9b9b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <a class="back-link" href="/blog/">&#8592; Back to Blog</a>
+        <h1>Chopmeister and the Pattern Generator DNA</h1>
+        <p class="meta">Published February 24, 2026 · Build log</p>
+        <p>
+            Chopmeister started as a Sunday experiment after revisiting the Android app <em>Pattern Generator</em>. That mobile workflow—randomized cells, instant playback, no clutter—set the tone, but now it lives as a mobile-first web page so you can open it from a text thread without downloading yet another app. Shareable URLs still let drummers trade motifs without side-loading APKs, only now the voice is calmer and less self-aware.
+        </p>
+
+        <blockquote>
+            Keep the grid playful, keep the export frictionless, and keep the ego out of it. Let the groove be the hero.
+        </blockquote>
+
+        <h2>How it shows up in rehearsal</h2>
+        <p>
+            A random chop loads the moment the page opens, so rehearsal brains get an instant prompt. Tap the <strong>Drums</strong> button to spin a new idea, press <strong>Pattern</strong> to swap RLK orchestrations, and use the tempo plus/minus and note-count buttons to stretch or shrink the phrase without diving into menus. Now you don't have to throw change on the floor to come up with a cool linear drum fill.
+        </p>
+
+        <h2>What carried over from Pattern Generator</h2>
+        <ul>
+            <li><strong>Thumb-first writing:</strong> The four-lane matrix stays intact so you can sketch licks with your phone hand while the other keeps time.</li>
+            <li><strong>Instant auditioning:</strong> Every toggle retriggers the loop with no modal dialogs or save prompts.</li>
+        </ul>
+
+        <h2>What changed for the web</h2>
+        <p>
+            The Android experience assumed a single user. The web version leans into collaboration and quick sharing, so every tweak is visible and sendable from a single tab.
+        </p>
+        <ul>
+            <li><strong>Shareable URLs:</strong> Each configuration serializes into the link, meaning a 16-step chop can be dropped into Discord with zero uploads.</li>
+            <li><strong>Mobile layout:</strong> Buttons are spaced for thumbs so you can run the grid mid-commute without a stylus or the butt of a stick.</li>
+            <li><strong>Tempo & note controls:</strong> Dedicated buttons adjust BPM and the number of notes so you can stretch or trim an idea before sending it to the band.</li>
+        </ul>
+
+        <h2>Rig notes</h2>
+        <div class="grid">
+            <div class="card">
+                <span>🥁</span>
+                <strong>Five-voice kit</strong>
+                Kick, snare, hats, tom, and a ghost-note lane keep linear ideas honest while giving you a quick dynamics check before you record.
+            </div>
+            <div class="card">
+                <span>🎚️</span>
+                <strong>Button rig</strong>
+                Drums and Pattern buttons sit next to tempo and note-count controls, so the whole stack stays under your thumb no matter where you practice.
+            </div>
+        </div>
+
+        <div class="keywords">
+            <strong>Search focus:</strong> Chopmeister drum app, Pattern Generator alternative, web-based lick generator, shareable drum grids, Stick With It practice updates.
+        </div>
+    </div>
+</body>
+</html>

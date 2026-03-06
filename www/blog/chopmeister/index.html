@@ -1,269 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256" />
-  <link rel="shortcut icon" href="/assets/StickWithItBlack.png" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <title>Chopmeister: Instant Linear Licks | Stick With It Blog</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      min-height: 100vh;
-      font-family: 'Georgia', serif;
-      background: #0a0a0a;
-      color: #e0e0e0;
-      line-height: 1.8;
-      overflow-x: hidden;
-    }
-    .rain {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.3;
-    }
-    .rain-drop {
-      position: absolute;
-      width: 1px;
-      height: 20px;
-      background: linear-gradient(transparent, rgba(255,255,255,0.4));
-      animation: fall linear infinite;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
-    }
-    .lightning {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0);
-      pointer-events: none;
-      z-index: 2;
-      transition: background 0.1s;
-    }
-    .lightning.flash {
-      background: rgba(255, 255, 255, 0.15);
-    }
-    .dino-container {
-      position: fixed;
-      bottom: 0;
-      right: 5%;
-      width: 300px;
-      height: 250px;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0;
-      transition: opacity 0.05s;
-    }
-    .dino-container.visible { opacity: 1; }
-    .dino {
-      width: 100%;
-      height: 100%;
-      background: #1a1a1a;
-      clip-path: polygon(85% 100%,85% 85%,80% 85%,80% 100%,60% 100%,60% 80%,55% 80%,55% 100%,40% 100%,35% 70%,30% 65%,25% 60%,15% 55%,10% 50%,5% 45%,0% 40%,5% 35%,15% 30%,20% 32%,25% 35%,22% 40%,25% 42%,30% 45%,35% 50%,40% 55%,50% 60%,60% 62%,75% 65%,90% 70%,95% 75%,100% 80%,95% 85%,90% 100%);
-    }
-    .palm-left, .palm-right {
-      position: fixed;
-      bottom: 0;
-      width: 150px;
-      height: 300px;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0;
-      transition: opacity 0.05s;
-    }
-    .palm-left.visible, .palm-right.visible { opacity: 1; }
-    .palm-left { left: 2%; }
-    .palm-right { right: 25%; }
-    .palm-trunk {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      height: 200px;
-      background: #1a1a1a;
-      border-radius: 5px;
-    }
-    .palm-frond {
-      position: absolute;
-      top: 50px;
-      width: 80px;
-      height: 15px;
-      background: #1a1a1a;
-      border-radius: 50% 50% 0 0;
-      transform-origin: right center;
-    }
-    .palm-frond:nth-child(1) { left: 10%; transform: rotate(-60deg); }
-    .palm-frond:nth-child(2) { left: 20%; transform: rotate(-30deg); }
-    .palm-frond:nth-child(3) { left: 40%; transform: rotate(0deg); }
-    .palm-frond:nth-child(4) { right: 20%; transform: rotate(30deg); transform-origin: left center; }
-    .palm-frond:nth-child(5) { right: 10%; transform: rotate(60deg); transform-origin: left center; }
-    .content {
-      position: relative;
-      z-index: 10;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem;
-    }
-    .back-link {
-      display: inline-block;
-      color: #e63946;
-      text-decoration: none;
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .back-link:hover { text-decoration: underline; }
-    h1 {
-      font-size: 2.5rem;
-      color: #fff;
-      margin-bottom: 0.5rem;
-      font-weight: 400;
-    }
-    .date {
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 3rem;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .article p, .article ul, .article ol, .article h2, .article h3 {
-      margin-bottom: 1.5rem;
-      font-size: 1.1rem;
-    }
-    .article p:first-of-type::first-letter {
-      font-size: 3.5rem;
-      float: left;
-      line-height: 1;
-      margin-right: 0.5rem;
-      color: #e63946;
-      font-weight: bold;
-    }
-    .article ul { margin-left: 1.5rem; }
-    .article li { margin-bottom: 0.75rem; }
-    .scanlines {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 100;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
-      opacity: 0.3;
-    }
-    @media (max-width: 600px) {
-      h1 { font-size: 1.8rem; }
-      .article p { font-size: 1rem; }
-      .dino-container { width: 150px; height: 125px; right: 2%; }
-      .palm-left, .palm-right { display: none; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chopmeister | Stick With It Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .rain-drop {
+            position: absolute;
+            width: 1px;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255,255,255,0.4));
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+
+        .lightning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            pointer-events: none;
+            z-index: 2;
+            transition: background 0.1s;
+        }
+
+        .lightning.flash {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dino-container {
+            position: fixed;
+            bottom: 0;
+            right: 5%;
+            width: 300px;
+            height: 250px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .dino-container.visible { opacity: 1; }
+
+        .dino {
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            clip-path: polygon(
+                85% 100%, 85% 85%, 80% 85%, 80% 100%,
+                60% 100%, 60% 80%, 55% 80%, 55% 100%,
+                40% 100%, 35% 70%, 30% 65%, 25% 60%,
+                15% 55%, 10% 50%, 5% 45%,
+                0% 40%, 5% 35%, 15% 30%, 20% 32%,
+                25% 35%, 22% 40%, 25% 42%,
+                30% 45%, 35% 50%, 40% 55%,
+                50% 60%, 60% 62%, 75% 65%, 90% 70%,
+                95% 75%, 100% 80%, 95% 85%, 90% 100%
+            );
+        }
+
+        .palm-left, .palm-right {
+            position: fixed;
+            bottom: 0;
+            width: 150px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .palm-left.visible, .palm-right.visible { opacity: 1; }
+        .palm-left { left: 2%; }
+        .palm-right { right: 25%; }
+
+        .palm-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 200px;
+            background: #1a1a1a;
+            border-radius: 5px;
+        }
+
+        .palm-frond {
+            position: absolute;
+            top: 50px;
+            width: 80px;
+            height: 15px;
+            background: #1a1a1a;
+            border-radius: 50% 50% 0 0;
+            transform-origin: right center;
+        }
+
+        .palm-frond:nth-child(1) { left: 10%; transform: rotate(-60deg); }
+        .palm-frond:nth-child(2) { left: 20%; transform: rotate(-30deg); }
+        .palm-frond:nth-child(3) { left: 40%; transform: rotate(0deg); }
+        .palm-frond:nth-child(4) { right: 20%; transform: rotate(30deg); transform-origin: left center; }
+        .palm-frond:nth-child(5) { right: 10%; transform: rotate(60deg); transform-origin: left center; }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #e63946;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .article p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .article p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            margin-right: 0.5rem;
+            color: #e63946;
+            font-weight: bold;
+        }
+
+        .highlight { color: #e63946; }
+
+        ul {
+            margin-top: 1.5rem;
+            margin-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            opacity: 0.3;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .article p { font-size: 1rem; }
+            .dino-container { width: 150px; height: 125px; right: 2%; }
+            .palm-left, .palm-right { display: none; }
+        }
+    </style>
 </head>
 <body>
-  <div class="rain" id="rain"></div>
-  <div class="lightning" id="lightning"></div>
-  <div class="dino-container" id="dino"><div class="dino"></div></div>
-  <div class="palm-left" id="palm-left">
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-trunk"></div>
-  </div>
-  <div class="palm-right" id="palm-right">
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-frond"></div>
-    <div class="palm-trunk"></div>
-  </div>
-  <div class="scanlines"></div>
+    <div class="rain" id="rain"></div>
+    <div class="lightning" id="lightning"></div>
+    <div class="dino-container" id="dino"><div class="dino"></div></div>
+    <div class="palm-left" id="palm-left">
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-trunk"></div>
+    </div>
+    <div class="palm-right" id="palm-right">
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-frond"></div>
+        <div class="palm-trunk"></div>
+    </div>
+    <div class="scanlines"></div>
 
-  <div class="content">
-    <a href="/blog/" class="back-link">← Back to Blog</a>
-    <h1>Chopmeister: Instant Linear Licks</h1>
-    
-    <p class="date">February 28, 2026</p>
-    
-    <article class="article">
-      <p>Chopmeister is a browser-based chop machine built for the moments before rehearsal when your brain wants inspiration but your hands don't have time to write it out. Open the page and you're already staring at a playable idea.</p>
-<p>It's tuned for mobile from the jump. The buttons are thumb-sized, the sliders are forgiving, and you never have to smash an iPad with the butt of a stick or download yet another native app just to brainstorm a fill.</p>
-<p>A random chop loads automatically. Tap the <strong>Drums</strong> button to spin another groove, or hit <strong>Pattern</strong> to reshuffle the sticking/voicing so the same rhythm lands on a new surface. It's a fast way to hear RLK/LKR inversions without opening a DAW.</p>
-<p>The tempo and note-count controls live at the bottom so you can slow things down, stretch the subdivision, or stack more attacks before committing it to muscle memory. Now you don't have to throw change on the floor to come up with a linear idea that feels fresh.</p>
-<h2>Rig Notes</h2>
-<ul>
-<li>Five expressive voices — kick, snare, hats, rack tom, and a ghost-note lane — keep the phrasing grounded while still letting you test dynamics.</li>
-<li>Mobile-first UI with big transport buttons means you can tweak chops with one thumb between takes or while listening back to rehearsal recordings.</li>
-<li>Launch it any time at <a href="https://www.stickwithit.xyz/apps/chopmeister/">stickwithit.xyz/apps/chopmeister</a>.</li>
-</ul>
+    <div class="content">
+        <a href="/blog/" class="back-link">← Back to Blog</a>
+        <h1>Chopmeister: Instant Linear Licks</h1>
+        <p class="date">Published on Stick With It</p>
 
-    </article>
-  </div>
+        <article class="article">
+            <p>Chopmeister is a chill way to spark ideas before rehearsal without unpacking the laptop. Load the site and it instantly hands you a playable RLK sketch so you can get sticks on pads instead of staring at a blank notebook.</p>
 
-  <script>
-    const rain = document.getElementById('rain');
-    for (let i = 0; i < 100; i++) {
-      const drop = document.createElement('div');
-      drop.className = 'rain-drop';
-      drop.style.left = Math.random() * 100 + '%';
-      drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
-      drop.style.animationDelay = Math.random() * 2 + 's';
-      rain.appendChild(drop);
-    }
+            <p>The layout is built for phones from the jump. Buttons are big, the controls respond to thumbs, and everything lives in the browser so you’re not downloading another app just to workshop fills.</p>
 
-    const lightning = document.getElementById('lightning');
-    const dino = document.getElementById('dino');
-    const palmLeft = document.getElementById('palm-left');
-    const palmRight = document.getElementById('palm-right');
+            <p>A fresh chop appears the second the page loads. Tap the <span class="highlight">Drums</span> button whenever you want another vibe, or hit <span class="highlight">Pattern</span> to shuffle where the sticking lands so the same rhythm moves across different voices. Tempo and note-count controls sit right below so you can slow the idea down, lengthen it, or trim it to a tight four-count.</p>
 
-    function toggleFlash() {
-      lightning.classList.add('flash');
-      dino.classList.add('visible');
-      palmLeft.classList.add('visible');
-      palmRight.classList.add('visible');
+            <p>That loop keeps reheating every time you press the buttons, meaning you can chase variations while the band is talking through form changes. Now you don’t have to dump change on the floor for inspiration; you just tap the interface and let it feed new stickings.</p>
 
-      setTimeout(() => {
-        lightning.classList.remove('flash');
-        dino.classList.remove('visible');
-        palmLeft.classList.remove('visible');
-        palmRight.classList.remove('visible');
-      }, 150);
+            <h2 style="margin-top:2rem; color:#e63946; font-size:1.4rem;">Rig Notes</h2>
+            <ul>
+                <li>Five core voices — kick, snare, hats, rack tom, and a ghost-note lane — keep the grooves musical while still checking your dynamics.</li>
+                <li>Mobile-friendly UI with oversized transport controls makes one-thumb tweaking possible between takes.</li>
+                <li>Save a unique URL for every chop so you can text it to the band or revisit it later.</li>
+            </ul>
 
-      if (Math.random() > 0.6) {
-        setTimeout(() => {
-          lightning.classList.add('flash');
-          dino.classList.add('visible');
-          palmLeft.classList.add('visible');
-          palmRight.classList.add('visible');
-          setTimeout(() => {
-            lightning.classList.remove('flash');
-            dino.classList.remove('visible');
-            palmLeft.classList.remove('visible');
-            palmRight.classList.remove('visible');
-          }, 100);
-        }, 200);
-      }
+            <p style="margin-top:1.5rem;">Launch it any time at <a href="https://www.stickwithit.xyz/apps/chopmeister/" style="color:#e63946;">stickwithit.xyz/apps/chopmeister</a>.</p>
+        </article>
+    </div>
 
-      setTimeout(toggleFlash, Math.random() * 12000 + 8000);
-    }
+    <script>
+        const rain = document.getElementById('rain');
+        for (let i = 0; i < 100; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            drop.style.animationDelay = Math.random() * 2 + 's';
+            rain.appendChild(drop);
+        }
 
-    setTimeout(toggleFlash, 3000);
-  </script>
+        const lightning = document.getElementById('lightning');
+        const dino = document.getElementById('dino');
+        const palmLeft = document.getElementById('palm-left');
+        const palmRight = document.getElementById('palm-right');
+
+        function triggerLightning() {
+            lightning.classList.add('flash');
+            dino.classList.add('visible');
+            palmLeft.classList.add('visible');
+            palmRight.classList.add('visible');
+
+            setTimeout(() => {
+                lightning.classList.remove('flash');
+                dino.classList.remove('visible');
+                palmLeft.classList.remove('visible');
+                palmRight.classList.remove('visible');
+            }, 150);
+
+            if (Math.random() > 0.6) {
+                setTimeout(() => {
+                    lightning.classList.add('flash');
+                    dino.classList.add('visible');
+                    palmLeft.classList.add('visible');
+                    palmRight.classList.add('visible');
+                    setTimeout(() => {
+                        lightning.classList.remove('flash');
+                        dino.classList.remove('visible');
+                        palmLeft.classList.remove('visible');
+                        palmRight.classList.remove('visible');
+                    }, 100);
+                }, 200);
+            }
+
+            setTimeout(triggerLightning, Math.random() * 12000 + 8000);
+        }
+
+        setTimeout(triggerLightning, 3000);
+    </script>
 </body>
 </html>
