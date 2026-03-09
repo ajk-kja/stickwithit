@@ -15,6 +15,6 @@ That obsession carried me into college biology labs, across noisy New York clubs
 
 Instead of walking away, I doubled down. I taught myself TouchDesigner so my kit could trigger LEDs and motion clips in real time. When the pandemic shut down venues, I turned my basement into a streaming studio and wired Twitch chat into the light rig so people at home could literally change the show. Every experiment—broken sticks, busted code, awkward cues—became another rep in staying ready.
 
-Stick With It is the next link in that chain. MetroGnome, Chopmeister, Gigstrella—they’re small tools pointed at the same mission: help drummers stay prepared, inspired, and connected no matter where they are. This blog is my way of documenting the journey so far, the lessons scraped together between rehearsals, and the people who kept me going.
+Stick With It is the next link in that chain. MetroGnome, Chopmeister, Gigasector ✂️—they’re small tools pointed at the same mission: help drummers stay prepared, inspired, and connected no matter where they are. This blog is my way of documenting the journey so far, the lessons scraped together between rehearsals, and the people who kept me going.
 
 If you’re fighting to keep your own momentum, I hope this corner of the internet gives you a nudge. Keep practicing. Keep building. Keep sticking with it.

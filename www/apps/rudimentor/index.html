@@ -1,1602 +1,1163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
-  <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rudimentor | Stick With It</title>
+  <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
+  <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
   <meta name="theme-color" content="#000000">
-
   <style>
     :root {
-      --bg: #000;
-      --surface: #0a0a0a;
-      --border: #333;
-      --text: #fff;
-      --text-muted: #999;
-      --text-dim: #666;
+      --bg: #020203;
+      --surface: #070708;
+      --surface-2: #0f0f13;
+      --border: #1a1a21;
+      --border-strong: #272730;
+      --text: #f5f5f7;
+      --muted: #8c8d98;
       --accent: #e63946;
-      --accent-hover: #000;
-      --grid-line: #222;
+      --accent-blue: #3c98ff;
+      --shadow: rgba(0, 0, 0, 0.65);
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    html[data-theme="light"] {
-      --bg: #fff;
-      --surface: #f5f5f5;
-      --border: #ddd;
-      --text: #000;
-      --text-muted: #333;
-      --text-dim: #888;
-      --accent: #e63946;
-      --accent-hover: #fff;
-      --grid-line: #eee;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      min-height: 100vh;
       background: var(--bg);
       color: var(--text);
-      transition: background-color 0.3s ease, color 0.3s ease;
       display: flex;
       flex-direction: column;
-    }
-
-    /* Header */
-    .header {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    .logo-section {
+    .app-shell {
+      width: min(720px, 100%);
+      margin: 0 auto;
+      padding: clamp(1rem, 4vw, 2.5rem);
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .logo-section img {
-      width: 32px;
-      height: 32px;
-    }
-
-    .logo-section h1 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .header-controls {
-      display: flex;
+      flex-direction: column;
       gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .app-shell {
+        padding: 1rem;
+      }
+    }
+
+    .header {
+      padding: 1rem 1.25rem 0.5rem;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
     }
 
-    .theme-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
+    .header a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
     }
 
-    .toggle-switch {
-      position: relative;
-      width: 40px;
-      height: 22px;
-      background: var(--border);
-      border-radius: 11px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .toggle-switch.active {
-      background: var(--accent);
-    }
-
-    .toggle-slider {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 18px;
-      height: 18px;
-      background: var(--text);
-      border-radius: 9px;
-      transition: left 0.3s ease;
-    }
-
-    .toggle-switch.active .toggle-slider {
-      left: 20px;
-    }
-
-    /* Tabs */
-    .tab-buttons {
-      display: flex;
-      gap: 0;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+    .tabs {
+      margin: 0 1.25rem 1.25rem;
+      background: var(--surface-2);
+      border-radius: 18px;
+      padding: 0.35rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: 1px solid var(--border);
     }
 
     .tab-btn {
-      flex: 1;
-      padding: 1rem;
-      background: transparent;
       border: none;
-      color: var(--text-muted);
-      font-size: 0.95rem;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.9rem;
       font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.65rem 0.75rem;
+      border-radius: 14px;
       cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s ease;
     }
 
     .tab-btn.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
+      background: #0f0f15;
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px var(--border-strong);
     }
 
-    /* Main Content */
-    .main {
+    .panel-wrapper {
       flex: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .tab-content {
+      padding: 0 1.25rem 1.5rem;
+      overflow-y: auto;
       display: none;
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
     }
 
-    .tab-content.active {
-      display: flex;
-      flex-direction: column;
-    }
+    .panel-wrapper.active { display: block; }
 
-    /* Learn Tab */
-    .learn-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      height: 100%;
-      overflow-y: auto;
-      padding-bottom: 1rem;
-    }
-
-    .learn-section {
+    .stack-card {
+      background: var(--surface-2);
+      border-radius: 22px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      background: var(--surface);
-      width: 100%;
-      overflow-x: hidden;
-    }
-
-    .notation-card {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-      background: var(--surface);
-      width: 100%;
+      padding: 1.1rem;
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
 
-    .notation-card-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-align: center;
-    }
-
-    .notation-card-music {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1rem;
+    .selector-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 140px;
-      overflow-x: auto;
-    }
-
-    .notation-card-sticking {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1rem;
-      font-family: 'Courier New', monospace;
-      font-size: 1.1rem;
-      letter-spacing: 4px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .section-title {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 0.75rem;
-    }
-
-    /* Notation */
-    .notation-display {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 1.1rem;
-      min-height: 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .rudiment-name {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--accent);
-    }
-
-    .sticking-pattern {
-      font-size: 0.95rem;
-      letter-spacing: 4px;
-      color: var(--text-muted);
-    }
-
-    /* Visual Boxes */
-    .visual-boxes {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-      align-items: center;
-      min-height: 100px;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
-    .hand-box {
-      width: 40px;
-      height: 40px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.75rem;
-      transition: all 0.05s ease;
-      border: 2px solid transparent;
-    }
-
-    .hand-box.right {
-      background: rgba(230, 57, 70, 0.2);
-      color: #e63946;
-      border-color: #e63946;
-    }
-
-    .hand-box.left {
-      background: rgba(100, 150, 255, 0.2);
-      color: #6496ff;
-      border-color: #6496ff;
-    }
-
-    .hand-box.active.right {
-      background: #e63946;
-      color: #fff;
-      transform: scale(1.1);
-    }
-
-    .hand-box.active.left {
-      background: #6496ff;
-      color: #fff;
-      transform: scale(1.1);
-    }
-
-    .hand-box.accent {
-      font-weight: 900;
-      filter: brightness(1.2);
-    }
-
-    .hand-box.ghost {
-      opacity: 0.5;
-    }
-
-    /* Playback */
-    .playback-controls {
+    .selector {
+      flex: 1;
+      min-width: 140px;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.35rem;
     }
 
-    .play-button {
+    .selector label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    select {
       width: 100%;
-      padding: 1rem;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      border-radius: 14px;
+      border: 1px solid var(--border-strong);
+      background: #0f0f15;
+      color: var(--text);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.95rem;
     }
 
-    .play-button:hover {
-      transform: translateY(-2px);
+    .sheet-card {
+      border-radius: 20px;
+      border: 1px solid var(--border-strong);
+      background: #08080b;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .sheet-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .tier-pill {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .rudiment-name {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+
+    .sheet-canvas {
+      width: 100%;
+      height: 150px;
+      position: relative;
+    }
+
+    .sheet-canvas svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .sticking-track {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .sticking-cell {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.4rem;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      position: relative;
+    }
+
+    .sticking-cell.hand-right {
+      background: rgba(230, 57, 70, 0.2);
+      border-color: rgba(230, 57, 70, 0.45);
+      color: var(--accent);
+    }
+
+    .sticking-cell.hand-left {
+      background: rgba(60, 152, 255, 0.18);
+      border-color: rgba(60, 152, 255, 0.4);
+      color: var(--accent-blue);
+    }
+
+    .sticking-cell.active {
+      box-shadow: 0 0 12px rgba(255,255,255,0.3);
+      transform: scale(1.02);
+    }
+
+    .sticking-cell.accented {
+      background: linear-gradient(135deg, #ffffff, rgba(245, 245, 247, 0.8));
+      border-color: #ffffff;
+      color: #0b0b0e;
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2), 0 0 12px rgba(230, 57, 70, 0.35);
+    }
+
+    .sheet-note {
+      transition: transform 0.2s ease;
+    }
+
+    .sheet-note .vf-notehead path {
+      transition: fill 0.2s ease, filter 0.2s ease;
+    }
+
+    .sheet-note.active .vf-notehead path {
+      fill: #f5f5f7;
+    }
+
+    .sheet-note.accented .vf-notehead path {
+      fill: var(--accent);
+      filter: drop-shadow(0 0 10px rgba(230, 57, 70, 0.5));
+    }
+
+    .sheet-note.accented {
+      transform: scale(1.05);
+    }
+
+    .sticking-cell .ghost {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 0.55rem;
+      color: var(--muted);
+    }
+
+    .play-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--border-strong);
+      background: radial-gradient(circle at 30% 30%, rgba(230, 57, 70, 0.8), var(--accent));
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      align-self: center;
+      cursor: pointer;
+      box-shadow: 0 18px 40px rgba(230, 57, 70, 0.35);
+    }
+
+    .play-btn.playing {
       filter: brightness(1.1);
     }
 
-    .slider-group {
+    .slider-block {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .slider-label {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .slider-wrapper {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     input[type="range"] {
-      flex: 1;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--border);
-      outline: none;
       -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #1d1d22;
+      outline: none;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(230,57,70,0.25);
       cursor: pointer;
     }
 
-    input[type="range"]::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: pointer;
-      border: none;
-    }
-
-    .slider-value {
-      font-size: 0.85rem;
-      min-width: 45px;
-      text-align: right;
-      color: var(--text-muted);
-    }
-
-    /* Grid Selector */
-    .grid-button {
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .grid-button:hover {
-      border-color: var(--accent);
-      background: var(--border);
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    html[data-theme="light"] .modal {
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    .modal.active {
+    .switch-row {
       display: flex;
+      gap: 0.75rem;
     }
 
-    .modal-content {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2rem;
-      max-width: 400px;
-      max-height: 80vh;
-      overflow-y: auto;
+    .switch {
+      flex: 1;
+      border-radius: 16px;
+      border: 1px solid var(--border-strong);
+      background: #0f0f15;
+      color: var(--muted);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
     }
 
-    .modal-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: var(--accent);
+    .switch.active {
+      border-color: var(--accent);
+      color: var(--text);
     }
 
-    .grid-options {
+    .grid-block {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-    }
-
-    .grid-option {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .grid-option:hover {
-      border-color: var(--accent);
-    }
-
-    .grid-option input[type="radio"] {
-      cursor: pointer;
+      gap: 0.45rem;
     }
 
     .grid-label {
-      font-weight: 600;
-      color: var(--text);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
-    .modal-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      width: 40px;
-      height: 40px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    /* Quiz Tab */
-    .quiz-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .difficulty-buttons {
+    .grid-accent {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    .grid-btn {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #101017;
+      color: var(--text);
+      padding: 0.6rem 0;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+    }
+
+    .grid-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .grid-btn.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .quiz-card {
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
     }
 
-    .diff-btn {
-      padding: 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .quiz-header {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .diff-btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
+    .chip-row {
+      display: flex;
+      gap: 0.4rem;
     }
 
-    .diff-badge {
-      font-size: 2rem;
-    }
-
-    .diff-progress {
+    .chip {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #0f0f15;
+      color: var(--muted);
       font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-    }
-
-    /* Quiz Question */
-    .quiz-question {
-      display: none;
-    }
-
-    .quiz-question.active {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .question-header {
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-
-    .question-number {
-      font-size: 0.85rem;
-      color: var(--text-dim);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      cursor: pointer;
     }
 
-    .question-title {
-      font-size: 1.3rem;
-      font-weight: 700;
+    .chip.active {
+      border-color: var(--accent);
       color: var(--text);
-      margin-top: 0.5rem;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 3px;
     }
 
-    .question-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.5rem;
     }
 
-    .answer-options {
+    .score-tile {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #101017;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .score-tile span {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .score-tile strong {
+      display: block;
+      font-size: 1.8rem;
+      margin-top: 0.2rem;
+    }
+
+    .quiz-sheet {
+      border-radius: 20px;
+      border: 1px solid var(--border-strong);
+      background: #08080b;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
-    .answer-btn {
-      padding: 1rem;
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: left;
-    }
-
-    .answer-btn:hover {
-      border-color: var(--accent);
-      transform: translateX(4px);
-    }
-
-    .answer-btn.correct {
-      background: rgba(76, 175, 80, 0.2);
-      border-color: #4caf50;
-      color: #4caf50;
-    }
-
-    .answer-btn.incorrect {
-      background: rgba(230, 57, 70, 0.2);
-      border-color: #e63946;
-      color: #e63946;
-    }
-
-    .question-nav {
+    .quiz-sheet-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
+      gap: 0.75rem;
     }
 
-    .nav-arrow {
-      width: 40px;
-      height: 40px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text);
-      cursor: pointer;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .nav-arrow:hover {
-      border-color: var(--accent);
-      transform: scale(1.05);
-    }
-
-    .nav-arrow:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .question-counter {
-      text-align: center;
-      flex: 1;
-      min-width: 100px;
-    }
-
-    .counter-display {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .counter-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-top: 0.25rem;
-    }
-
-    .quiz-footer {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .exit-btn {
-      padding: 1rem 2rem;
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .exit-btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .restart-btn {
-      flex: 1;
-      padding: 1rem;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .restart-btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.1);
-    }
-
-    /* Sheet music container */
-    .sheet-music {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 1rem 0;
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow-x: auto;
-    }
-
-    .sheet-music svg {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .results-screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      text-align: center;
-    }
-
-    .results-screen.active {
-      display: flex;
-    }
-
-    .results-score {
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .results-message {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .results-breakdown {
+    .quiz-sheet-canvas {
       width: 100%;
-      background: var(--surface);
+      height: 120px;
+    }
+
+    .ghost-btn {
+      flex: 0 0 auto;
+      min-width: 96px;
+      border-radius: 14px;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: left;
+      background: transparent;
+      color: var(--text);
     }
 
-    .breakdown-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--border);
+    .quiz-feedback {
+      min-height: 1.2rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
     }
 
-    .breakdown-row:last-child {
-      border-bottom: none;
+    .quiz-feedback.active.success {
+      color: #7dd87d;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .learn-container {
-        height: auto;
-      }
+    .quiz-feedback.active.error {
+      color: #ff7373;
+    }
 
-      .learn-section {
-        min-height: auto;
-      }
+    .quiz-choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.65rem;
+    }
 
-      .notation-card {
-        width: 100%;
-        padding: 1rem;
-      }
+    .quiz-choice {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #0f0f15;
+      color: var(--text);
+      padding: 0.75rem 0.9rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
 
-      .notation-card-music {
-        min-height: 120px;
-        padding: 0.75rem;
-      }
+    .quiz-choice.correct {
+      border-color: #7dd87d;
+      background: rgba(125, 216, 125, 0.15);
+    }
 
-      .visual-boxes {
-        flex-wrap: wrap;
-      }
-
-      .hand-box {
-        width: 32px;
-        height: 32px;
-        font-size: 0.65rem;
-      }
+    .quiz-choice.incorrect {
+      border-color: #ff7373;
+      background: rgba(255, 115, 115, 0.1);
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-section">
-      <img src="/assets/StickWithItBlack.png" alt="Stick With It">
-      <h1>Rudimentor</h1>
+  <div class="app-shell">
+    <div class="header">
+      <a href="/">← Stick With It</a>
+      <span>Rudimentor</span>
     </div>
-    <div class="header-controls">
-      <div class="theme-toggle" onclick="toggleTheme()">
-        <span style="font-size: 0.8rem; color: var(--text-dim);">☀️</span>
-        <button class="toggle-switch" id="themeToggle">
-          <div class="toggle-slider"></div>
-        </button>
-        <span style="font-size: 0.8rem; color: var(--text-dim);">🌙</span>
-      </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-view="mentor">Mentor</button>
+      <button class="tab-btn" data-view="quiz">Quiz</button>
     </div>
-  </div>
 
-  <!-- Tabs -->
-  <div class="tab-buttons">
-    <button class="tab-btn active" onclick="switchTab('learn')">📚 Learn</button>
-    <button class="tab-btn" onclick="switchTab('quiz')">🧠 Quiz</button>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main">
-    <!-- Learn Tab -->
-    <div id="learn" class="tab-content active">
-      <div class="learn-container">
-        <!-- Rudiment Selector -->
-        <div class="learn-section">
-          <div class="section-title">Select Rudiment</div>
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-            <select id="tierSelect" onchange="updateRudiment()" style="flex: 1; padding: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;">
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-              <option value="expert">Expert</option>
-            </select>
-            <select id="rudimentSelect" onchange="updateRudiment()" style="flex: 1; padding: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;"></select>
+    <section class="panel-wrapper active" data-panel="mentor">
+      <div class="stack-card">
+        <div class="selector-row">
+          <div class="selector">
+            <label for="tierSelect">Difficulty</label>
+            <select id="tierSelect"></select>
+          </div>
+          <div class="selector">
+            <label for="rudimentSelect">Rudiment</label>
+            <select id="rudimentSelect"></select>
           </div>
         </div>
-
-        <!-- Notation Card (unified) -->
-        <div class="notation-card">
-          <div class="notation-card-title" id="notationCardTitle">Single Stroke Roll</div>
-          <div class="notation-card-music" id="notationCardMusic">
-            <svg id="learnSheetMusic" style="max-width: 100%;"></svg>
+        <div class="sheet-card">
+          <div class="sheet-meta">
+            <span class="tier-pill" id="tierLabel">Easy</span>
+            <h2 class="rudiment-name" id="rudimentName">Single Stroke Roll</h2>
           </div>
-          <div class="notation-card-sticking" id="notationCardSticking">R L R L R L R L</div>
+          <div class="sheet-canvas" id="sheetCanvas"></div>
         </div>
-
-        <!-- Visual Boxes -->
-        <div class="learn-section">
-          <div class="section-title">Hand Visualization</div>
-          <div class="visual-boxes" id="visualBoxes"></div>
-        </div>
-
-        <!-- Playback Controls -->
-        <div class="learn-section">
-          <div class="playback-controls">
-            <button class="play-button" id="playBtn" onclick="togglePlayback()">▶ Play</button>
-            
-            <div class="slider-group">
-              <div class="slider-label">BPM</div>
-              <div class="slider-wrapper">
-                <input type="range" id="bpmSlider" min="40" max="300" value="120" onchange="updateBPM()">
-                <span class="slider-value" id="bpmValue">120</span>
-              </div>
-            </div>
-
-            <div class="slider-group">
-              <div class="slider-label">Swing</div>
-              <div class="slider-wrapper">
-                <input type="range" id="swingSlider" min="0" max="100" value="0" onchange="updateSwing()">
-                <span class="slider-value" id="swingValue">0%</span>
-              </div>
-            </div>
+        <div class="sticking-track" id="stickingTrack"></div>
+        <button class="play-btn" id="playBtn">Play</button>
+        <div class="slider-block">
+          <div class="slider-label">
+            <span>Tempo</span>
+            <span id="tempoValue">120 BPM</span>
           </div>
+          <input type="range" id="tempoSlider" min="50" max="220" value="120">
         </div>
-
-        <!-- Grid -->
-        <div class="learn-section">
-          <button class="grid-button" onclick="openGridModal()">📊 Grid Accents (1, e, &, a)</button>
+        <div class="slider-block">
+          <div class="slider-label">
+            <span>Swing</span>
+            <span id="swingValue">0%</span>
+          </div>
+          <input type="range" id="swingSlider" min="0" max="60" value="0">
+        </div>
+        <div class="switch-row">
+          <button class="switch active" data-toggle="metronome">Metronome</button>
+          <button class="switch" data-toggle="grid">Grid Mode</button>
+        </div>
+        <div class="grid-block">
+          <div class="grid-label">Accents</div>
+          <div class="grid-accent" id="gridAccentRow"></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Quiz Tab -->
-    <div id="quiz" class="tab-content">
-      <div class="quiz-container">
-        <!-- Difficulty Selection -->
-        <div id="difficultyScreen">
-          <div class="section-title" style="margin-bottom: 1.5rem;">Select Difficulty</div>
-          <div class="difficulty-buttons">
-            <button class="diff-btn" onclick="startQuiz('easy')">
-              <span class="diff-badge">🟢</span>
-              Easy
-              <span class="diff-progress" id="easyProgress">0/10</span>
-            </button>
-            <button class="diff-btn" onclick="startQuiz('medium')">
-              <span class="diff-badge">🟡</span>
-              Medium
-              <span class="diff-progress" id="mediumProgress">0/10</span>
-            </button>
-            <button class="diff-btn" onclick="startQuiz('hard')">
-              <span class="diff-badge">🔴</span>
-              Hard
-              <span class="diff-progress" id="hardProgress">0/10</span>
-            </button>
-            <button class="diff-btn" onclick="startQuiz('expert')">
-              <span class="diff-badge">⚫</span>
-              Expert
-              <span class="diff-progress" id="expertProgress">0/10</span>
-            </button>
+    <section class="panel-wrapper" data-panel="quiz">
+      <div class="stack-card quiz-card">
+        <div class="quiz-header">
+          <div>
+            <div class="grid-label">Quiz Breakdown</div>
+            <h3 style="margin:0">Name that rudiment</h3>
+          </div>
+          <div class="chip-row" id="quizTierRow"></div>
+        </div>
+        <div class="score-grid">
+          <div class="score-tile">
+            <span>Score</span>
+            <strong id="quizScore">0</strong>
+          </div>
+          <div class="score-tile">
+            <span>Rounds</span>
+            <strong id="quizRounds">0</strong>
+          </div>
+          <div class="score-tile">
+            <span>Streak</span>
+            <strong id="quizStreak">0</strong>
           </div>
         </div>
-
-        <!-- Quiz Question -->
-        <div id="quizScreen" class="quiz-question">
-          <div class="question-header">
-            <div class="question-number" id="questionNumber">Question 1 of 10</div>
-            <div class="question-title">What rudiment is this?</div>
+        <div class="quiz-sheet">
+          <div class="quiz-sheet-header">
+            <div class="grid-label">Identify the rudiment</div>
+            <button class="ghost-btn" id="skipBtn">Skip</button>
           </div>
-
-          <!-- Question Navigation -->
-          <div class="question-nav">
-            <button class="nav-arrow" id="prevBtn" onclick="prevQuestion()">←</button>
-            <div class="question-counter">
-              <div class="counter-display">Question</div>
-              <div class="counter-value" id="counterValue">1 / 10</div>
-            </div>
-            <button class="nav-arrow" id="nextBtn" onclick="nextQuestion()">→</button>
-          </div>
-
-          <!-- Sheet Music -->
-          <div class="sheet-music" id="sheetMusic"></div>
-
-          <!-- Sticking Pattern -->
-          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-            <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">Sticking</div>
-            <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; letter-spacing: 3px; color: var(--text);" id="questionSticking">R L R L</div>
-          </div>
-
-          <div class="answer-options" id="answerOptions"></div>
-
-          <div class="quiz-footer">
-            <button class="exit-btn" onclick="backToDifficulty()">Exit Quiz</button>
-          </div>
+          <div class="sheet-canvas quiz-sheet-canvas" id="quizSheet"></div>
         </div>
-
-        <!-- Results Screen -->
-        <div id="resultsScreen" class="results-screen">
-          <div class="results-score" id="resultScore">8/10</div>
-          <div class="results-message" id="resultMessage">Great Job!</div>
-          <div class="results-breakdown">
-            <div class="breakdown-row">
-              <span>Correct:</span>
-              <span id="resultCorrect">8</span>
-            </div>
-            <div class="breakdown-row">
-              <span>Incorrect:</span>
-              <span id="resultIncorrect">2</span>
-            </div>
-            <div class="breakdown-row">
-              <span>Accuracy:</span>
-              <span id="resultAccuracy">80%</span>
-            </div>
-          </div>
-          <div class="quiz-footer" style="margin-top: 2rem;">
-            <button class="back-btn" onclick="backToDifficulty()">← Back</button>
-            <button class="restart-btn" onclick="retakeQuiz()">🔄 Retake</button>
-          </div>
-        </div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div class="quiz-choices" id="quizChoices"></div>
       </div>
-    </div>
+    </section>
   </div>
 
-  <!-- Grid Modal -->
-  <div id="gridModal" class="modal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeGridModal()">✕</button>
-      <div class="modal-title">Grid Accent Position</div>
-      <div class="grid-options">
-        <label class="grid-option">
-          <input type="radio" name="gridAccent" value="1" checked onchange="updateGridAccent()">
-          <span class="grid-label">1 (Downbeat)</span>
-        </label>
-        <label class="grid-option">
-          <input type="radio" name="gridAccent" value="e" onchange="updateGridAccent()">
-          <span class="grid-label">e (Off-beat 1)</span>
-        </label>
-        <label class="grid-option">
-          <input type="radio" name="gridAccent" value="&" onchange="updateGridAccent()">
-          <span class="grid-label">& (Off-beat 2)</span>
-        </label>
-        <label class="grid-option">
-          <input type="radio" name="gridAccent" value="a" onchange="updateGridAccent()">
-          <span class="grid-label">a (Off-beat 3)</span>
-        </label>
-      </div>
-    </div>
-  </div>
-
+  <script src="https://unpkg.com/vexflow@4.1.0/build/vexflow-min.js"></script>
   <script>
-    // ============ DATA ============
-    const RUDIMENTS = {
-      easy: [
-        { name: 'Single Stroke Roll', sticking: 'R L R L R L R L', notes: [1, 0, 1, 0, 1, 0, 1, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Double Stroke Roll', sticking: 'R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Paradiddle', sticking: 'R L R R L R L L', notes: [1, 0, 1, 1, 0, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Flam', sticking: 'fR L fL R', notes: [0.2, 1, 0, 0.2, 1], dynamics: [0.4, 1.0, 0.8, 0.4, 1.0] },
-        { name: 'Drag', sticking: 'dR L dL R', notes: [0.2, 0.2, 1, 0, 0.2], dynamics: [0.4, 0.4, 1.0, 0.8, 0.4] }
-      ],
-      medium: [
-        { name: 'Inverted Paradiddle', sticking: 'L R L L R L R R', notes: [0, 1, 0, 0, 1, 0, 1, 1], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Swiss Triplet', sticking: 'R L R L L R R', notes: [1, 0, 1, 0, 0, 1, 1], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Six Stroke Roll', sticking: 'R R L L R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Nine Stroke Roll', sticking: 'R R L L R R L L R', notes: [1, 1, 0, 0, 1, 1, 0, 0, 1], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 1.0] },
-        { name: 'Fifteen Stroke Roll', sticking: 'R R L L R R L L R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] }
-      ],
-      hard: [
-        { name: 'Ratamacue', sticking: 'R L R L R R L R L R L L', notes: [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] },
-        { name: 'Flam Tap', sticking: 'fR L fL R fR L fL R', notes: [0.2, 1, 0, 0.2, 1, 0.2, 1, 0.2, 1], dynamics: [0.4, 0.8, 0.8, 0.4, 0.8, 0.4, 0.8, 0.4, 0.8] },
-        { name: 'Flamacue', sticking: 'fR L R L fL R L R', notes: [0.2, 1, 0, 1, 0, 0.2, 1, 0, 1], dynamics: [0.4, 0.8, 0.8, 0.8, 0.8, 0.4, 0.8, 0.8, 0.8] },
-        { name: 'Pataflafla', sticking: 'R L R L R L R L', notes: [1, 0, 1, 0, 1, 0, 1, 0], dynamics: [1.0, 0.6, 1.0, 0.6, 1.0, 0.6, 1.0, 0.6] },
-        { name: 'Diddle', sticking: 'R R L L', notes: [1, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8] }
-      ],
-      expert: [
-        { name: 'Open Roll', sticking: 'R L R L R L R L', notes: [1, 0, 1, 0, 1, 0, 1, 0], dynamics: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0] },
-        { name: 'Closed Roll', sticking: 'R R L L R R L L', notes: [1, 1, 0, 0, 1, 1, 0, 0], dynamics: [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7] },
-        { name: 'Drag Paradiddle', sticking: 'dR R L dL L R', notes: [0.3, 0.3, 1, 0, 0.3, 0.3, 1], dynamics: [0.5, 0.5, 1.0, 0.8, 0.5, 0.5, 1.0] },
-        { name: 'Flam Paradiddle', sticking: 'fR L R R fL R L L', notes: [0.2, 1, 0, 1, 1, 0.2, 1, 0, 0], dynamics: [0.4, 0.8, 0.8, 0.8, 0.8, 0.4, 0.8, 0.8, 0.8] },
-        { name: 'Cheese Cake', sticking: 'R L R R L R L L', notes: [1, 0, 1, 1, 0, 1, 0, 0], dynamics: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8] }
-      ]
+    const COUNT_LABELS = ['1', 'e', '&', 'a'];
+    const TIER_ORDER = ['easy', 'medium', 'hard'];
+    const TIER_LABELS = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+
+    const RUDIMENT_LIBRARY = [
+      { id: 'single-stroke-roll', name: 'Single Stroke Roll', tier: 'easy', sticking: ['R','L','R','L','R','L','R','L'] },
+      { id: 'single-stroke-four', name: 'Single Stroke Four', tier: 'easy', sticking: ['R','L','R','L'] },
+      { id: 'single-stroke-seven', name: 'Single Stroke Seven', tier: 'easy', sticking: ['R','L','R','L','R','L','R'] },
+      { id: 'multiple-bounce-roll', name: 'Multiple Bounce Roll', tier: 'easy', sticking: ['R','R','R','L','L','L','R','R'] },
+      { id: 'triple-stroke-roll', name: 'Triple Stroke Roll', tier: 'easy', sticking: ['R','R','R','L','L','L','R','R'] },
+      { id: 'double-stroke-open-roll', name: 'Double Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R','L','L'] },
+      { id: 'five-stroke-roll', name: 'Five Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R'] },
+      { id: 'six-stroke-roll', name: 'Six Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R'] },
+      { id: 'seven-stroke-roll', name: 'Seven Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R','L'] },
+      { id: 'nine-stroke-roll', name: 'Nine Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R','L','L','R'] },
+      { id: 'ten-stroke-roll', name: 'Ten Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R'] },
+      { id: 'eleven-stroke-roll', name: 'Eleven Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L'] },
+      { id: 'thirteen-stroke-roll', name: 'Thirteen Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L','L','R'] },
+      { id: 'fifteen-stroke-roll', name: 'Fifteen Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L','L','R','R','L'] },
+      { id: 'seventeen-stroke-roll', name: 'Seventeen Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L','L','R','R','L','L','R'] },
+      { id: 'single-paradiddle', name: 'Single Paradiddle', tier: 'easy', sticking: ['R','L','R','R','L','R','L','L'] },
+      { id: 'double-paradiddle', name: 'Double Paradiddle', tier: 'easy', sticking: ['R','L','R','L','R','R','L','R','L','R','L','L'] },
+      { id: 'triple-paradiddle', name: 'Triple Paradiddle', tier: 'medium', sticking: ['R','L','R','L','R','L','R','R','L','R','L','R','L','R','L','L'] },
+      { id: 'paradiddle-diddle', name: 'Paradiddle-Diddle', tier: 'medium', sticking: ['R','L','R','R','L','L','R','L','R','R','L','L'] },
+      { id: 'flam', name: 'Flam', tier: 'medium', sticking: ['fR','R','fL','L'] },
+      { id: 'flam-accent', name: 'Flam Accent', tier: 'medium', sticking: ['fR','L','R','fL','R','L'] },
+      { id: 'flam-tap', name: 'Flam Tap', tier: 'medium', sticking: ['fR','R','fL','L','fR','R','fL','L'] },
+      { id: 'flamacue', name: 'Flamacue', tier: 'medium', sticking: ['fR','L','R','L','fL','R','L','R'] },
+      { id: 'flam-paradiddle', name: 'Flam Paradiddle', tier: 'medium', sticking: ['fR','L','R','R','fL','R','L','L'] },
+      { id: 'single-flammed-mill', name: 'Single Flammed Mill', tier: 'hard', sticking: ['fR','R','L','R','fL','L','R','L'] },
+      { id: 'flam-paradiddle-diddle', name: 'Flam Paradiddle-Diddle', tier: 'hard', sticking: ['fR','L','R','R','L','L','fL','R','L','L','R','R'] },
+      { id: 'pataflafla', name: 'Pataflafla', tier: 'hard', sticking: ['fR','L','fL','R','fR','L','fL','R'] },
+      { id: 'swiss-army-triplet', name: 'Swiss Army Triplet', tier: 'hard', sticking: ['fR','R','L','fL','L','R'] },
+      { id: 'inverted-flam-tap', name: 'Inverted Flam Tap', tier: 'hard', sticking: ['R','fL','L','R','fR','R','L'] },
+      { id: 'flam-drag', name: 'Flam Drag', tier: 'hard', sticking: ['fR','L','dR','R','fL','R','dL','L'] },
+      { id: 'drag', name: 'Drag (Ruff)', tier: 'hard', sticking: ['dR','R','dL','L'] },
+      { id: 'single-drag-tap', name: 'Single Drag Tap', tier: 'hard', sticking: ['dR','R','L','dL','L','R'] },
+      { id: 'double-drag-tap', name: 'Double Drag Tap', tier: 'hard', sticking: ['dR','R','L','dL','L','R','dR','R','L','dL','L','R'] },
+      { id: 'lesson-25', name: 'Lesson 25', tier: 'hard', sticking: ['dR','L','R','R','dL','R','L','L'] },
+      { id: 'single-dragadiddle', name: 'Single Dragadiddle', tier: 'hard', sticking: ['dR','R','L','R','R','dL','L','R','L','L'] },
+      { id: 'drag-paradiddle-1', name: 'Drag Paradiddle #1', tier: 'hard', sticking: ['dR','R','L','R','R','dL','L','R','L','L'] },
+      { id: 'drag-paradiddle-2', name: 'Drag Paradiddle #2', tier: 'hard', sticking: ['dR','R','L','R','L','dL','L','R','R'] },
+      { id: 'single-ratamacue', name: 'Single Ratamacue', tier: 'hard', sticking: ['dR','R','L','R','R','dL','L','R','L','L'] },
+      { id: 'double-ratamacue', name: 'Double Ratamacue', tier: 'hard', sticking: ['dR','R','L','R','R','L','R','R','dL','L','R','L','L','R','L','L'] },
+      { id: 'triple-ratamacue', name: 'Triple Ratamacue', tier: 'hard', sticking: ['dR','R','L','R','R','L','R','R','L','R','R','dL','L','R','L','L','R','L','L','R','L','L'] }
+    ];
+
+    const NOTATION_PRESETS = {};
+
+    const state = {
+      tier: 'easy',
+      rudimentId: 'single-stroke-roll',
+      tempo: 120,
+      swing: 0,
+      playing: false,
+      metronome: true,
+      gridMode: false,
+      gridAccents: new Set(['1']),
+      stepTimer: null,
+      subdivisionIndex: 0,
+      sheetNotes: [],
+      quizTier: 'easy',
+      quizScore: 0,
+      quizRounds: 0,
+      quizStreak: 0,
+      quizPrompt: null,
+      quizChoices: [],
+      quizAnswered: false,
+      quizFeedback: '',
+      quizAdvanceTimer: null
     };
 
-    // ============ STATE ============
-    let currentTier = 'easy';
-    let currentRudimentIndex = 0;
-    let isPlaying = false;
-    let currentBPM = 120;
-    let currentSwing = 0;
-    let gridAccent = '1';
-    let audioContext;
-    let playbackTimeout;
-
-    let quizState = {
-      difficulty: 'easy',
-      currentQuestion: 0,
-      score: 0,
-      answers: [],
-      questions: []
+    const els = {
+      tabs: document.querySelectorAll('.tab-btn'),
+      panels: document.querySelectorAll('[data-panel]'),
+      tierSelect: document.getElementById('tierSelect'),
+      rudimentSelect: document.getElementById('rudimentSelect'),
+      tierLabel: document.getElementById('tierLabel'),
+      rudimentName: document.getElementById('rudimentName'),
+      sheetCanvas: document.getElementById('sheetCanvas'),
+      stickingTrack: document.getElementById('stickingTrack'),
+      playBtn: document.getElementById('playBtn'),
+      tempoSlider: document.getElementById('tempoSlider'),
+      swingSlider: document.getElementById('swingSlider'),
+      tempoValue: document.getElementById('tempoValue'),
+      swingValue: document.getElementById('swingValue'),
+      switches: document.querySelectorAll('.switch'),
+      gridAccentRow: document.getElementById('gridAccentRow'),
+      quizTierRow: document.getElementById('quizTierRow'),
+      quizScore: document.getElementById('quizScore'),
+      quizRounds: document.getElementById('quizRounds'),
+      quizStreak: document.getElementById('quizStreak'),
+      quizSheet: document.getElementById('quizSheet'),
+      quizChoices: document.getElementById('quizChoices'),
+      quizFeedback: document.getElementById('quizFeedback'),
+      skipBtn: document.getElementById('skipBtn')
     };
 
-    // ============ INITIALIZATION ============
-    window.addEventListener('DOMContentLoaded', () => {
-      initTheme();
-      populateRudiments();
-      updateRudiment();
-      initAudio();
-      loadQuizProgress();
-    });
+    let audioCtx = null;
 
-    function initTheme() {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      const toggle = document.getElementById('themeToggle');
-      if (savedTheme === 'light') {
-        toggle.classList.add('active');
-      }
+    function init() {
+      renderTierOptions();
+      renderRudimentOptions();
+      renderGridAccentButtons();
+      renderQuizTierChips();
+      nextQuizPrompt();
+      bindEvents();
+      updateMentorView();
     }
 
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      const newTheme = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      document.getElementById('themeToggle').classList.toggle('active');
-    }
-
-    function initAudio() {
-      if (!window.audioContext) {
-        window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        console.log('✓ AudioContext created');
-      }
-      
-      // Initialize stereo channel merger once
-      if (!window.leftChannel) {
-        const ctx = window.audioContext;
-        window.merger = ctx.createChannelMerger(2);
-        window.merger.connect(ctx.destination);
-        window.leftChannel = ctx.createGain();
-        window.rightChannel = ctx.createGain();
-        window.leftChannel.connect(window.merger, 0, 0);   // Left ch input → Left output
-        window.rightChannel.connect(window.merger, 0, 1);  // Right ch input → Right output
-        console.log('✓ Stereo channels initialized');
-      }
-    }
-
-    function ensureAudioRunning() {
-      if (!window.audioContext) initAudio();
-      
-      if (window.audioContext.state === 'suspended') {
-        return window.audioContext.resume().then(() => {
-          console.log('✓ AudioContext resumed');
-          return true;
-        }).catch(e => {
-          console.error('✗ Failed to resume AudioContext:', e);
-          return false;
+    function bindEvents() {
+      els.tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          state.view = tab.dataset.view;
+          els.tabs.forEach(btn => btn.classList.toggle('active', btn === tab));
+          els.panels.forEach(panel => {
+            panel.classList.toggle('active', panel.dataset.panel === state.view);
+          });
         });
-      }
-      return Promise.resolve(true);
-    }
+      });
 
-    function populateRudiments() {
-      const select = document.getElementById('rudimentSelect');
-      const tier = currentTier;
-      select.innerHTML = '';
-      RUDIMENTS[tier].forEach((r, i) => {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = r.name;
-        select.appendChild(option);
+      els.tierSelect.addEventListener('change', (e) => {
+        state.tier = e.target.value;
+        renderRudimentOptions();
+        updateMentorView();
+      });
+
+      els.rudimentSelect.addEventListener('change', (e) => {
+        state.rudimentId = e.target.value;
+        updateMentorView();
+      });
+
+      els.playBtn.addEventListener('click', togglePlayback);
+
+      els.tempoSlider.addEventListener('input', (e) => {
+        state.tempo = Number(e.target.value);
+        els.tempoValue.textContent = `${state.tempo} BPM`;
+      });
+
+      els.swingSlider.addEventListener('input', (e) => {
+        state.swing = Number(e.target.value);
+        els.swingValue.textContent = `${state.swing}%`;
+      });
+
+      els.switches.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.toggle;
+          if (key === 'metronome') {
+            state.metronome = !state.metronome;
+            btn.classList.toggle('active', state.metronome);
+          } else if (key === 'grid') {
+            state.gridMode = !state.gridMode;
+            btn.classList.toggle('active', state.gridMode);
+            updateGridAccentState();
+          }
+        });
+      });
+
+      els.gridAccentRow.addEventListener('click', (e) => {
+        const btn = e.target.closest('.grid-btn');
+        if (!btn || btn.classList.contains('disabled')) return;
+        const label = btn.dataset.count;
+        if (state.gridAccents.has(label)) {
+          state.gridAccents.delete(label);
+        } else {
+          state.gridAccents.add(label);
+        }
+        renderGridAccentButtons();
+      });
+
+      els.skipBtn.addEventListener('click', () => {
+        state.quizStreak = 0;
+        updateQuizScoreboard();
+        nextQuizPrompt();
       });
     }
 
-    // ============ LEARN TAB ============
-    function updateRudiment() {
-      currentTier = document.getElementById('tierSelect').value;
-      currentRudimentIndex = parseInt(document.getElementById('rudimentSelect').value) || 0;
-      populateRudiments();
-      document.getElementById('rudimentSelect').value = currentRudimentIndex;
-      
-      const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
-      document.getElementById('notationCardTitle').textContent = rudiment.name;
-      document.getElementById('notationCardSticking').textContent = rudiment.sticking;
-      
-      // Render sheet music in Learn tab
-      renderLearnSheetMusic(rudiment.sticking);
-      renderVisualBoxes();
+    function renderTierOptions() {
+      els.tierSelect.innerHTML = '';
+      TIER_ORDER.forEach(tier => {
+        const opt = document.createElement('option');
+        opt.value = tier;
+        opt.textContent = TIER_LABELS[tier];
+        if (tier === state.tier) opt.selected = true;
+        els.tierSelect.appendChild(opt);
+      });
     }
 
-    function renderLearnSheetMusic(stickingPattern) {
-      try {
-        const svg = document.getElementById('learnSheetMusic');
-        if (!svg) return;
-        
-        renderPercussionNotation(svg, stickingPattern);
-        console.log('✓ Learn sheet music rendered');
-      } catch (e) {
-        console.error('Learn sheet music error:', e);
+    function renderRudimentOptions() {
+      const options = getRudimentsByTier(state.tier);
+      if (!options.find(r => r.id === state.rudimentId)) {
+        state.rudimentId = options[0].id;
       }
+      els.rudimentSelect.innerHTML = '';
+      options.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = r.name;
+        if (r.id === state.rudimentId) opt.selected = true;
+        els.rudimentSelect.appendChild(opt);
+      });
     }
 
-    function renderPercussionNotation(svgElement, stickingPattern) {
-      // Clear SVG
-      svgElement.innerHTML = '';
-      
-      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-      const color = isDark ? '#fff' : '#000';
-      const stickings = stickingPattern.split(' ');
-      
-      const padding = 20;
-      const staffLineCount = 5;
-      const lineSpacing = 12;
-      const noteWidth = 30;
-      const totalWidth = stickings.length * noteWidth + padding * 2;
-      const staffTop = 20;
-      
-      // Set SVG dimensions
-      svgElement.setAttribute('width', totalWidth);
-      svgElement.setAttribute('height', 100);
-      svgElement.setAttribute('viewBox', `0 0 ${totalWidth} 100`);
-      
-      // Draw staff lines
-      for (let i = 0; i < staffLineCount; i++) {
-        const y = staffTop + i * lineSpacing;
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', padding);
-        line.setAttribute('y1', y);
-        line.setAttribute('x2', totalWidth - padding);
-        line.setAttribute('y2', y);
-        line.setAttribute('stroke', color);
-        line.setAttribute('stroke-width', '1');
-        line.setAttribute('opacity', '0.5');
-        svgElement.appendChild(line);
+    function updateMentorView() {
+      const rudiment = getCurrentRudiment();
+      if (!rudiment) return;
+      els.tierLabel.textContent = TIER_LABELS[rudiment.tier];
+      els.rudimentName.textContent = rudiment.name;
+      const notationMeta = getNotationMeta(rudiment.id);
+      renderSheet(rudiment.sticking, els.sheetCanvas, { trackNotes: true, notation: notationMeta });
+      renderStickingTrack(rudiment.sticking);
+    }
+
+    function getNotationMeta(rudimentId) {
+      return NOTATION_PRESETS[rudimentId] || { duration: '16' };
+    }
+
+    function renderSheet(pattern, target = els.sheetCanvas, options = {}) {
+      const container = target;
+      if (!container) return;
+      container.innerHTML = '';
+      const VF = window.Vex?.Flow;
+      if (!VF) {
+        container.textContent = 'Loading notation...';
+        if (options.trackNotes) {
+          state.sheetNotes = [];
+        }
+        return;
       }
-      
-      // Middle line y-position (for notes)
-      const middleLineY = staffTop + 2 * lineSpacing;
-      
-      // Draw notes and sticking
-      stickings.forEach((stick, idx) => {
-        const noteX = padding + idx * noteWidth + noteWidth / 2;
-        const isRight = stick.toUpperCase() === 'R';
-        const isAccent = stick === stick.toUpperCase() && stick !== 'f' && stick !== 'd';
-        
-        // Note head (circle on middle line)
-        const notehead = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        notehead.setAttribute('cx', noteX);
-        notehead.setAttribute('cy', middleLineY);
-        notehead.setAttribute('r', '6');
-        notehead.setAttribute('fill', color);
-        svgElement.appendChild(notehead);
-        
-        // Stem
-        const stemY1 = middleLineY - 20;
-        const stem = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        stem.setAttribute('x1', noteX + 6);
-        stem.setAttribute('y1', middleLineY);
-        stem.setAttribute('x2', noteX + 6);
-        stem.setAttribute('y2', stemY1);
-        stem.setAttribute('stroke', color);
-        stem.setAttribute('stroke-width', '1.5');
-        svgElement.appendChild(stem);
-        
-        // Hand indicator (R/L) above/below
-        const labelY = isRight ? stemY1 - 5 : middleLineY + 15;
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', noteX);
-        label.setAttribute('y', labelY);
-        label.setAttribute('text-anchor', 'middle');
-        label.setAttribute('font-size', '10');
-        label.setAttribute('font-weight', isAccent ? '700' : '500');
-        label.setAttribute('fill', color);
-        label.textContent = stick.toUpperCase();
-        svgElement.appendChild(label);
-        
-        // Accent marker if needed
-        if (isAccent) {
-          const accent = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          accent.setAttribute('x', noteX);
-          accent.setAttribute('y', stemY1 - 8);
-          accent.setAttribute('text-anchor', 'middle');
-          accent.setAttribute('font-size', '14');
-          accent.setAttribute('fill', isDark ? '#e63946' : '#e63946');
-          accent.textContent = '>';
-          svgElement.appendChild(accent);
+      const width = container.clientWidth || container.parentElement.clientWidth || 320;
+      const height = 150;
+      const renderer = new VF.Renderer(container, VF.Renderer.Backends.SVG);
+      renderer.resize(width, height);
+      const context = renderer.getContext();
+      context.setBackgroundFillStyle('transparent');
+
+      const stave = new VF.Stave(12, 18, width - 24);
+      stave.addClef('percussion');
+      stave.setContext(context).draw();
+
+      if (!pattern || !pattern.length) {
+        if (options.trackNotes) {
+          state.sheetNotes = [];
+        }
+        return;
+      }
+
+      const notation = options.notation || {};
+      const notes = pattern.map(symbol => createStaveNote(symbol, notation, options));
+      const voice = new VF.Voice({ num_beats: Math.max(1, Math.ceil(notes.length / 4)), beat_value: 4 }).setMode(VF.Voice.Mode.SOFT);
+      voice.addTickables(notes);
+      const beams = VF.Beam.generateBeams(notes, { beam_rests: false });
+
+      new VF.Formatter().joinVoices([voice]).format([voice], width - 80);
+      voice.draw(context, stave);
+      beams.forEach(beam => beam.setContext(context).draw());
+
+      const noteElements = [];
+      notes.forEach(note => {
+        const element = note.getElement();
+        if (element) {
+          element.classList.add('sheet-note');
+          noteElements.push(element);
         }
       });
+
+      if (options.trackNotes) {
+        state.sheetNotes = noteElements;
+      }
     }
 
-    function renderVisualBoxes() {
-      const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
-      const container = document.getElementById('visualBoxes');
-      container.innerHTML = '';
-      
-      rudiment.sticking.split(' ').forEach((char, i) => {
-        const box = document.createElement('div');
-        const isRight = char.toUpperCase() === 'R';
-        const hand = isRight ? 'right' : 'left';
-        const isDynamic = rudiment.dynamics[i] < 0.9;
-        
-        box.className = `hand-box ${hand}`;
-        if (isDynamic) box.classList.add('accent');
-        box.textContent = char;
-        box.style.opacity = rudiment.dynamics[i];
-        container.appendChild(box);
+    function createStaveNote(symbol, notation, opts = {}) {
+      const VF = window.Vex.Flow;
+      const duration = notation.duration || '16';
+      const note = new VF.StaveNote({
+        keys: ['c/5'],
+        duration,
+        clef: 'percussion',
+        stem_direction: 1
+      });
+
+      if (opts.showAnnotations !== false) {
+        const annotation = new VF.Annotation(formatSymbol(symbol))
+          .setFont('SF Pro Display', 12, 'bold')
+          .setJustification(VF.Annotation.Justify.CENTER)
+          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+        note.addAnnotation(0, annotation);
+      }
+
+      if (symbol.startsWith('f')) {
+        applyGraceNotes(note, 'flam');
+      }
+
+      if (symbol.startsWith('d')) {
+        applyGraceNotes(note, 'drag');
+      }
+
+      return note;
+    }
+
+    function applyGraceNotes(note, type) {
+      const VF = window.Vex.Flow;
+      if (type === 'flam') {
+        const grace = new VF.GraceNote({ keys: ['c/5'], duration: '16', slash: false });
+        note.addGraceGroup(new VF.GraceNoteGroup([grace], false));
+      } else if (type === 'drag') {
+        const graceNotes = [
+          new VF.GraceNote({ keys: ['c/5'], duration: '32', slash: true }),
+          new VF.GraceNote({ keys: ['c/5'], duration: '32', slash: true })
+        ];
+        note.addGraceGroup(new VF.GraceNoteGroup(graceNotes, false));
+      }
+    }
+
+    let stickingCells = [];
+
+    function renderStickingTrack(pattern) {
+      els.stickingTrack.innerHTML = '';
+      stickingCells = pattern.map(symbol => {
+        const cell = document.createElement('div');
+        const hand = symbol.toUpperCase().includes('R') ? 'hand-right' : 'hand-left';
+        cell.className = `sticking-cell ${hand}`;
+        cell.textContent = formatSymbol(symbol);
+        if (symbol.startsWith('f')) {
+          const flam = document.createElement('span');
+          flam.className = 'ghost';
+          flam.textContent = 'flam';
+          cell.appendChild(flam);
+        }
+        if (symbol.startsWith('d')) {
+          const drag = document.createElement('span');
+          drag.className = 'ghost';
+          drag.textContent = 'drag';
+          cell.appendChild(drag);
+        }
+        els.stickingTrack.appendChild(cell);
+        return cell;
       });
     }
 
-    function updateBPM() {
-      currentBPM = parseInt(document.getElementById('bpmSlider').value);
-      document.getElementById('bpmValue').textContent = currentBPM;
-    }
-
-    function updateSwing() {
-      currentSwing = parseInt(document.getElementById('swingSlider').value);
-      document.getElementById('swingValue').textContent = currentSwing + '%';
+    function formatSymbol(symbol) {
+      return symbol.toUpperCase().includes('R') ? 'R' : 'L';
     }
 
     function togglePlayback() {
-      if (isPlaying) {
-        stopPlayback();
+      state.playing = !state.playing;
+      els.playBtn.textContent = state.playing ? 'Stop' : 'Play';
+      els.playBtn.classList.toggle('playing', state.playing);
+      if (state.playing) {
+        startPulse();
       } else {
-        playRudiment();
+        stopPulse();
       }
     }
 
-    function playRudiment() {
-      // Ensure audio is ready (handles iOS audio context)
-      ensureAudioRunning().then((success) => {
-        startPlayback();
-      });
+    function startPulse() {
+      stopPulse();
+      state.subdivisionIndex = 0;
+      runStep(0);
     }
 
-    function startPlayback() {
-      isPlaying = true;
-      document.getElementById('playBtn').textContent = '⏹ Stop';
-      
-      const rudiment = RUDIMENTS[currentTier][currentRudimentIndex];
-      const beatDuration = (60 / currentBPM) * 1000; // ms per beat
-      
-      console.log('🎵 Playing:', rudiment.name, '| BPM:', currentBPM, '| Context:', window.audioContext?.state);
-      
-      rudiment.sticking.split(' ').forEach((char, i) => {
-        playbackTimeout = setTimeout(() => {
-          if (!isPlaying) return;
-          playNote(char === char.toUpperCase(), beatDuration);
-          animateBox(i);
-        }, i * beatDuration);
-      });
-      
-      playbackTimeout = setTimeout(stopPlayback, rudiment.sticking.split(' ').length * beatDuration);
+    function stopPulse() {
+      clearTimeout(state.stepTimer);
+      stickingCells.forEach(cell => cell.classList.remove('active', 'accented'));
+      state.sheetNotes.forEach(note => note.classList.remove('active', 'accented'));
+      state.subdivisionIndex = 0;
     }
 
-    function stopPlayback() {
-      isPlaying = false;
-      clearTimeout(playbackTimeout);
-      document.getElementById('playBtn').textContent = '▶ Play';
-    }
-
-    function playNote(isRight, duration) {
-      try {
-        initAudio(); // Ensure channels are set up
-        
-        const ctx = window.audioContext;
-        const now = ctx.currentTime;
-        
-        // Cowbell: multiple harmonics with metallic decay
-        const freqBase = isRight ? 523.25 : 261.63; // C5 or C4
-        const frequencies = [
-          freqBase,           // Fundamental
-          freqBase * 1.5,     // 3rd harmonic
-          freqBase * 2.5      // 5th harmonic (adds metallic quality)
-        ];
-        
-        // Route to LEFT or RIGHT channel only (true isolation)
-        const channelGain = isRight ? window.rightChannel : window.leftChannel;
-        
-        const masterGain = ctx.createGain();
-        masterGain.connect(channelGain);
-        
-        // Attack-decay-release envelope (smooth, no popping)
-        masterGain.gain.setValueAtTime(0, now);
-        masterGain.gain.linearRampToValueAtTime(0.12, now + 0.005); // Quick attack
-        masterGain.gain.exponentialRampToValueAtTime(0.04, now + 0.08); // Decay
-        masterGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25); // Long release (prevents popping)
-        
-        // Create harmonics for cowbell tone
-        frequencies.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          osc.frequency.value = freq;
-          osc.type = 'sine';
-          
-          // Each harmonic gets slightly different volume
-          const harmonicGain = ctx.createGain();
-          harmonicGain.gain.value = 1 / (idx + 1); // Reduce higher harmonics
-          
-          osc.connect(harmonicGain);
-          harmonicGain.connect(masterGain);
-          
-          osc.start(now);
-          osc.stop(now + 0.25); // Match release time
-        });
-        
-        console.log('Cowbell:', isRight ? 'R (RIGHT CHANNEL ONLY)' : 'L (LEFT CHANNEL ONLY)', '| Base:', freqBase + 'Hz');
-      } catch (e) {
-        console.error('Audio playback error:', e);
+    function runStep(idx) {
+      const rudiment = getCurrentRudiment();
+      if (!rudiment) return;
+      stickingCells.forEach(cell => cell.classList.remove('active', 'accented'));
+      state.sheetNotes.forEach(note => note.classList.remove('active', 'accented'));
+      const cell = stickingCells[idx];
+      const note = state.sheetNotes[idx];
+      const countIndex = state.subdivisionIndex;
+      const countLabel = COUNT_LABELS[countIndex % COUNT_LABELS.length];
+      const accent = state.gridMode && state.gridAccents.has(countLabel);
+      if (cell) {
+        cell.classList.add('active');
+        if (accent) cell.classList.add('accented');
       }
-    }
-
-    function animateBox(index) {
-      const boxes = document.querySelectorAll('.hand-box');
-      if (boxes[index]) {
-        boxes[index].classList.add('active');
-        setTimeout(() => boxes[index].classList.remove('active'), 100);
+      if (note) {
+        note.classList.add('active');
+        if (accent) note.classList.add('accented');
       }
+      if (state.metronome) tick(accent);
+      const duration = stepDuration(countIndex);
+      state.subdivisionIndex = (countIndex + 1) % COUNT_LABELS.length;
+      state.stepTimer = setTimeout(() => {
+        if (!state.playing) return;
+        const nextIndex = (idx + 1) % rudiment.sticking.length;
+        runStep(nextIndex);
+      }, duration);
     }
 
-    function openGridModal() {
-      document.getElementById('gridModal').classList.add('active');
+    function stepDuration(stepIndex) {
+      const sixteenth = (60 / state.tempo) * 1000 / 4;
+      if (state.swing === 0) return sixteenth;
+      const swingRatio = state.swing / 100 * 0.5;
+      const label = COUNT_LABELS[stepIndex % COUNT_LABELS.length];
+      const longBeat = label === '1' || label === '&';
+      return longBeat ? sixteenth * (1 + swingRatio) : sixteenth * (1 - swingRatio);
     }
 
-    function closeGridModal() {
-      document.getElementById('gridModal').classList.remove('active');
-    }
-
-    function updateGridAccent() {
-      gridAccent = document.querySelector('input[name="gridAccent"]:checked').value;
-    }
-
-    // ============ QUIZ TAB ============
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(tab).classList.add('active');
-      
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-
-    function startQuiz(difficulty) {
-      quizState.difficulty = difficulty;
-      quizState.currentQuestion = 0;
-      quizState.score = 0;
-      quizState.answers = [];
-      
-      // Build questions for this difficulty
-      quizState.questions = [];
-      const rudiments = RUDIMENTS[difficulty];
-      const allRudiments = Object.values(RUDIMENTS).flat();
-      
-      for (let i = 0; i < 10; i++) {
-        const correct = rudiments[i % rudiments.length];
-        const options = [correct];
-        
-        // Add 3 random incorrect options
-        while (options.length < 4) {
-          const random = allRudiments[Math.floor(Math.random() * allRudiments.length)];
-          if (!options.find(r => r.name === random.name)) {
-            options.push(random);
-          }
-        }
-        
-        // Shuffle options
-        options.sort(() => Math.random() - 0.5);
-        
-        quizState.questions.push({
-          sticking: correct.sticking,
-          correct: correct.name,
-          options: options.map(r => r.name)
-        });
+    function tick(accent = false) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-      
-      showQuizQuestion();
-      document.getElementById('difficultyScreen').style.display = 'none';
-      document.getElementById('quizScreen').classList.add('active');
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = accent ? 1400 : 900;
+      gain.gain.value = accent ? 0.25 : 0.12;
+      osc.connect(gain).connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+      osc.start(now);
+      osc.stop(now + 0.08);
     }
 
-    function showQuizQuestion() {
-      const question = quizState.questions[quizState.currentQuestion];
-      const current = quizState.currentQuestion;
-      
-      document.getElementById('questionNumber').textContent = `Question ${current + 1} of 10`;
-      document.getElementById('questionSticking').textContent = question.sticking;
-      document.getElementById('counterValue').textContent = `${current + 1} / 10`;
-      
-      // Update nav buttons
-      document.getElementById('prevBtn').disabled = current === 0;
-      document.getElementById('nextBtn').disabled = current === 9;
-      
-      // Render sheet music
-      renderQuizSheetMusic(question.sticking);
-      
-      const options = document.getElementById('answerOptions');
-      options.innerHTML = '';
-      
-      question.options.forEach((option, i) => {
+    function renderGridAccentButtons() {
+      els.gridAccentRow.innerHTML = '';
+      COUNT_LABELS.forEach(label => {
         const btn = document.createElement('button');
-        btn.className = 'answer-btn';
-        btn.textContent = option;
-        btn.onclick = () => selectAnswer(option, btn);
-        options.appendChild(btn);
+        btn.className = 'grid-btn';
+        const isActive = state.gridAccents.has(label);
+        if (isActive) btn.classList.add('active');
+        if (!state.gridMode) {
+          btn.classList.add('disabled');
+          btn.setAttribute('aria-disabled', 'true');
+        } else {
+          btn.removeAttribute('aria-disabled');
+        }
+        btn.setAttribute('aria-pressed', isActive);
+        btn.dataset.count = label;
+        btn.textContent = label;
+        els.gridAccentRow.appendChild(btn);
       });
     }
 
-    function renderQuizSheetMusic(stickingPattern) {
-      const container = document.getElementById('sheetMusic');
-      if (!container) return;
-      
-      container.innerHTML = '';
-      
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      container.appendChild(svg);
-      renderPercussionNotation(svg, stickingPattern);
+    function updateGridAccentState() {
+      renderGridAccentButtons();
     }
 
-
-
-    function goToQuestion(idx) {
-      quizState.currentQuestion = idx;
-      showQuizQuestion();
-    }
-
-    function prevQuestion() {
-      if (quizState.currentQuestion > 0) {
-        quizState.currentQuestion--;
-        showQuizQuestion();
-      }
-    }
-
-    function selectAnswer(selected, btnElement) {
-      const question = quizState.questions[quizState.currentQuestion];
-      const isCorrect = selected === question.correct;
-      
-      if (isCorrect) {
-        quizState.score++;
-        btnElement.classList.add('correct');
-      } else {
-        btnElement.classList.add('incorrect');
-        // Show correct answer
-        document.querySelectorAll('.answer-btn').forEach(btn => {
-          if (btn.textContent === question.correct) {
-            btn.classList.add('correct');
-          }
+    function renderQuizTierChips() {
+      els.quizTierRow.innerHTML = '';
+      TIER_ORDER.forEach(tier => {
+        const chip = document.createElement('button');
+        chip.className = 'chip';
+        if (tier === state.quizTier) chip.classList.add('active');
+        chip.textContent = TIER_LABELS[tier];
+        chip.addEventListener('click', () => {
+          state.quizTier = tier;
+          els.quizTierRow.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          state.quizStreak = 0;
+          nextQuizPrompt();
         });
-      }
-      
-      quizState.answers.push(selected);
-      
-      // Disable all buttons
-      document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = null);
-      
-      // Show next button
-      document.getElementById('nextBtn').style.display = 'block';
+        els.quizTierRow.appendChild(chip);
+      });
     }
 
-    function nextQuestion() {
-      quizState.currentQuestion++;
-      
-      if (quizState.currentQuestion >= 10) {
-        showResults();
+    function nextQuizPrompt() {
+      if (state.quizAdvanceTimer) {
+        clearTimeout(state.quizAdvanceTimer);
+        state.quizAdvanceTimer = null;
+      }
+      const pool = getRudimentsByTier(state.quizTier);
+      if (!pool.length) return;
+      state.quizPrompt = pool[Math.floor(Math.random() * pool.length)];
+      state.quizChoices = buildQuizChoices(pool, state.quizPrompt);
+      state.quizAnswered = false;
+      setQuizFeedback('');
+      state.quizRounds += 1;
+      updateQuizScoreboard();
+      renderQuizQuestion();
+      renderQuizChoices();
+    }
+
+    function buildQuizChoices(pool, answer) {
+      const incorrect = pool.filter(r => r.id !== answer.id);
+      const picks = [];
+      while (picks.length < 3 && incorrect.length) {
+        const idx = Math.floor(Math.random() * incorrect.length);
+        picks.push(incorrect.splice(idx, 1)[0]);
+      }
+      const options = [...picks, answer];
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    function renderQuizQuestion() {
+      if (!state.quizPrompt) return;
+      const notationMeta = getNotationMeta(state.quizPrompt.id);
+      renderSheet(state.quizPrompt.sticking, els.quizSheet, { notation: notationMeta, showAnnotations: false });
+    }
+
+    function renderQuizChoices() {
+      els.quizChoices.innerHTML = '';
+      state.quizChoices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-choice';
+        btn.textContent = choice.name;
+        btn.addEventListener('click', () => handleQuizChoice(choice.id, btn));
+        els.quizChoices.appendChild(btn);
+      });
+    }
+
+    function handleQuizChoice(choiceId, btn) {
+      if (!state.quizPrompt || state.quizAnswered) return;
+      if (choiceId === state.quizPrompt.id) {
+        state.quizScore += 1;
+        state.quizStreak += 1;
+        state.quizAnswered = true;
+        btn.classList.add('correct');
+        setQuizFeedback('Correct!');
+        updateQuizScoreboard();
+        if (state.quizAdvanceTimer) clearTimeout(state.quizAdvanceTimer);
+        state.quizAdvanceTimer = setTimeout(() => nextQuizPrompt(), 900);
       } else {
-        showQuizQuestion();
+        btn.classList.add('incorrect');
+        state.quizStreak = 0;
+        setQuizFeedback('Not quite. Try again.');
+        updateQuizScoreboard();
       }
     }
 
-    function showResults() {
-      document.getElementById('quizScreen').classList.remove('active');
-      document.getElementById('resultsScreen').classList.add('active');
-      
-      const score = quizState.score;
-      const accuracy = Math.round((score / 10) * 100);
-      
-      document.getElementById('resultScore').textContent = `${score}/10`;
-      document.getElementById('resultCorrect').textContent = score;
-      document.getElementById('resultIncorrect').textContent = 10 - score;
-      document.getElementById('resultAccuracy').textContent = accuracy + '%';
-      
-      if (score === 10) {
-        document.getElementById('resultMessage').textContent = 'Perfect! 🎉';
-      } else if (score >= 8) {
-        document.getElementById('resultMessage').textContent = 'Excellent! 🌟';
-      } else if (score >= 6) {
-        document.getElementById('resultMessage').textContent = 'Good Job! 👍';
-      } else {
-        document.getElementById('resultMessage').textContent = 'Keep Practicing! 💪';
-      }
-      
-      // Save progress
-      saveQuizProgress();
+    function setQuizFeedback(message) {
+      state.quizFeedback = message;
+      els.quizFeedback.textContent = message;
+      els.quizFeedback.classList.toggle('active', Boolean(message));
+      els.quizFeedback.classList.toggle('success', message === 'Correct!');
+      els.quizFeedback.classList.toggle('error', message && message !== 'Correct!');
     }
 
-    function backToDifficulty() {
-      document.getElementById('difficultyScreen').style.display = 'block';
-      document.getElementById('quizScreen').classList.remove('active');
-      document.getElementById('resultsScreen').classList.remove('active');
+    function updateQuizScoreboard() {
+      els.quizScore.textContent = state.quizScore;
+      els.quizRounds.textContent = state.quizRounds;
+      els.quizStreak.textContent = state.quizStreak;
     }
 
-    function retakeQuiz() {
-      startQuiz(quizState.difficulty);
+    function getRudimentsByTier(tier) {
+      return RUDIMENT_LIBRARY.filter(r => r.tier === tier);
     }
 
-    function saveQuizProgress() {
-      const progress = JSON.parse(localStorage.getItem('quizProgress') || '{"easy":0,"medium":0,"hard":0,"expert":0}');
-      const best = progress[quizState.difficulty] || 0;
-      progress[quizState.difficulty] = Math.max(best, quizState.score);
-      localStorage.setItem('quizProgress', JSON.stringify(progress));
-      loadQuizProgress();
+    function getCurrentRudiment() {
+      return RUDIMENT_LIBRARY.find(r => r.id === state.rudimentId);
     }
 
-    function loadQuizProgress() {
-      const progress = JSON.parse(localStorage.getItem('quizProgress') || '{"easy":0,"medium":0,"hard":0,"expert":0}');
-      document.getElementById('easyProgress').textContent = `${progress.easy || 0}/10`;
-      document.getElementById('mediumProgress').textContent = `${progress.medium || 0}/10`;
-      document.getElementById('hardProgress').textContent = `${progress.hard || 0}/10`;
-      document.getElementById('expertProgress').textContent = `${progress.expert || 0}/10`;
-    }
+    window.addEventListener('beforeunload', () => stopPulse());
 
-    // Modal close on escape
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeGridModal();
-      }
-    });
+    init();
   </script>
 </body>
 </html>
