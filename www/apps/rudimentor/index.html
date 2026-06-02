@@ -225,18 +225,21 @@
     }
 
     .sheet-note {
+      transform-box: fill-box;
+      transform-origin: center;
       transition: transform 0.2s ease;
     }
 
-    .sheet-note .vf-notehead path {
+    .sheet-note .note-head {
+      fill: #d7d7de;
       transition: fill 0.2s ease, filter 0.2s ease;
     }
 
-    .sheet-note.active .vf-notehead path {
+    .sheet-note.active .note-head {
       fill: #f5f5f7;
     }
 
-    .sheet-note.accented .vf-notehead path {
+    .sheet-note.accented .note-head {
       fill: var(--accent);
       filter: drop-shadow(0 0 10px rgba(230, 57, 70, 0.5));
     }
@@ -605,7 +608,6 @@
     </section>
   </div>
 
-  <script src="https://unpkg.com/vexflow@4.1.0/build/vexflow-min.js"></script>
   <script>
     const COUNT_LABELS = ['1', 'e', '&', 'a'];
     const TIER_ORDER = ['easy', 'medium', 'hard'];
@@ -824,100 +826,232 @@
       return NOTATION_PRESETS[rudimentId] || { duration: '16' };
     }
 
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+
     function renderSheet(pattern, target = els.sheetCanvas, options = {}) {
       const container = target;
       if (!container) return;
       container.innerHTML = '';
-      const VF = window.Vex?.Flow;
-      if (!VF) {
-        container.textContent = 'Loading notation...';
-        if (options.trackNotes) {
-          state.sheetNotes = [];
-        }
-        return;
-      }
-      const width = container.clientWidth || container.parentElement.clientWidth || 320;
-      const height = 150;
-      const renderer = new VF.Renderer(container, VF.Renderer.Backends.SVG);
-      renderer.resize(width, height);
-      const context = renderer.getContext();
-      context.setBackgroundFillStyle('transparent');
 
-      const stave = new VF.Stave(12, 18, width - 24);
-      stave.addClef('percussion');
-      stave.setContext(context).draw();
+      const parentWidth = container.parentElement ? container.parentElement.clientWidth : 0;
+      const width = Math.max(320, container.clientWidth || parentWidth || 320);
+      const height = 150;
+      const staffTop = 30;
+      const lineGap = 9;
+      const staffLeft = 18;
+      const staffRight = width - 18;
+      const noteY = staffTop + lineGap * 2;
+      const svg = createSvgElement('svg', {
+        viewBox: `0 0 ${width} ${height}`,
+        role: 'img',
+        'aria-label': 'Rudiment notation',
+        preserveAspectRatio: 'xMidYMid meet'
+      });
+
+      drawStaff(svg, staffLeft, staffRight, staffTop, lineGap);
 
       if (!pattern || !pattern.length) {
         if (options.trackNotes) {
           state.sheetNotes = [];
         }
+        container.appendChild(svg);
         return;
       }
 
-      const notation = options.notation || {};
-      const notes = pattern.map(symbol => createStaveNote(symbol, notation, options));
-      const voice = new VF.Voice({ num_beats: Math.max(1, Math.ceil(notes.length / 4)), beat_value: 4 }).setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
-      const beams = VF.Beam.generateBeams(notes, { beam_rests: false });
-
-      new VF.Formatter().joinVoices([voice]).format([voice], width - 80);
-      voice.draw(context, stave);
-      beams.forEach(beam => beam.setContext(context).draw());
-
-      const noteElements = [];
-      notes.forEach(note => {
-        const element = note.getElement();
-        if (element) {
-          element.classList.add('sheet-note');
-          noteElements.push(element);
-        }
+      const noteElements = drawPercussionNotes(svg, pattern, {
+        width,
+        height,
+        staffLeft,
+        staffRight,
+        noteY,
+        showAnnotations: options.showAnnotations !== false,
+        duration: (options.notation && options.notation.duration) || '16'
       });
 
+      container.appendChild(svg);
       if (options.trackNotes) {
         state.sheetNotes = noteElements;
       }
     }
 
-    function createStaveNote(symbol, notation, opts = {}) {
-      const VF = window.Vex.Flow;
-      const duration = notation.duration || '16';
-      const note = new VF.StaveNote({
-        keys: ['c/5'],
-        duration,
-        clef: 'percussion',
-        stem_direction: 1
+    function createSvgElement(tag, attrs = {}) {
+      const el = document.createElementNS(SVG_NS, tag);
+      Object.entries(attrs).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          el.setAttribute(key, value);
+        }
       });
-
-      if (opts.showAnnotations !== false) {
-        const annotation = new VF.Annotation(formatSymbol(symbol))
-          .setFont('SF Pro Display', 12, 'bold')
-          .setJustification(VF.Annotation.Justify.CENTER)
-          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
-        note.addAnnotation(0, annotation);
-      }
-
-      if (symbol.startsWith('f')) {
-        applyGraceNotes(note, 'flam');
-      }
-
-      if (symbol.startsWith('d')) {
-        applyGraceNotes(note, 'drag');
-      }
-
-      return note;
+      return el;
     }
 
-    function applyGraceNotes(note, type) {
-      const VF = window.Vex.Flow;
-      if (type === 'flam') {
-        const grace = new VF.GraceNote({ keys: ['c/5'], duration: '16', slash: false });
-        note.addGraceGroup(new VF.GraceNoteGroup([grace], false));
-      } else if (type === 'drag') {
-        const graceNotes = [
-          new VF.GraceNote({ keys: ['c/5'], duration: '32', slash: true }),
-          new VF.GraceNote({ keys: ['c/5'], duration: '32', slash: true })
-        ];
-        note.addGraceGroup(new VF.GraceNoteGroup(graceNotes, false));
+    function drawStaff(svg, left, right, top, gap) {
+      for (let i = 0; i < 5; i += 1) {
+        svg.appendChild(createSvgElement('line', {
+          x1: left,
+          y1: top + i * gap,
+          x2: right,
+          y2: top + i * gap,
+          stroke: '#4f505a',
+          'stroke-width': 1
+        }));
+      }
+
+      svg.appendChild(createSvgElement('line', {
+        x1: left,
+        y1: top,
+        x2: left,
+        y2: top + gap * 4,
+        stroke: '#6a6b75',
+        'stroke-width': 1.4
+      }));
+      svg.appendChild(createSvgElement('line', {
+        x1: right,
+        y1: top,
+        x2: right,
+        y2: top + gap * 4,
+        stroke: '#6a6b75',
+        'stroke-width': 1.4
+      }));
+
+      const clef = createSvgElement('text', {
+        x: left + 10,
+        y: top + gap * 3.15,
+        fill: '#8c8d98',
+        'font-size': 22,
+        'font-weight': 700,
+        'font-family': 'SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
+      });
+      clef.textContent = '||';
+      svg.appendChild(clef);
+    }
+
+    function drawPercussionNotes(svg, pattern, opts) {
+      const noteElements = [];
+      const usableLeft = opts.staffLeft + 48;
+      const usableRight = opts.staffRight - 18;
+      const span = Math.max(1, usableRight - usableLeft);
+      const step = span / Math.max(pattern.length, 1);
+      const stemTop = opts.noteY - 34;
+      const beamGroups = [];
+
+      pattern.forEach((symbol, index) => {
+        const x = usableLeft + step * (index + 0.5);
+        const note = drawPercussionNote(svg, symbol, x, opts.noteY, stemTop, opts.showAnnotations);
+        noteElements.push(note);
+
+        const groupIndex = Math.floor(index / 4);
+        if (!beamGroups[groupIndex]) beamGroups[groupIndex] = [];
+        beamGroups[groupIndex].push({ x, top: stemTop });
+      });
+
+      beamGroups.forEach(group => {
+        if (group.length < 2 || opts.duration === '4') return;
+        const beam = createSvgElement('line', {
+          x1: group[0].x + 8,
+          y1: group[0].top,
+          x2: group[group.length - 1].x + 8,
+          y2: group[group.length - 1].top,
+          stroke: '#d7d7de',
+          'stroke-width': 5,
+          'stroke-linecap': 'round'
+        });
+        svg.appendChild(beam);
+      });
+
+      return noteElements;
+    }
+
+    function drawPercussionNote(svg, symbol, x, y, stemTop, showAnnotations) {
+      const noteGroup = createSvgElement('g', {
+        class: 'sheet-note',
+        'data-symbol': symbol
+      });
+
+      if (symbol.startsWith('f')) {
+        drawGraceNote(noteGroup, x - 18, y + 1, 'flam');
+      } else if (symbol.startsWith('d')) {
+        drawGraceNote(noteGroup, x - 24, y + 1, 'drag');
+      }
+
+      const head = createSvgElement('ellipse', {
+        class: 'note-head',
+        cx: x,
+        cy: y,
+        rx: 7.8,
+        ry: 5.2,
+        transform: `rotate(-18 ${x} ${y})`
+      });
+      noteGroup.appendChild(head);
+      noteGroup.appendChild(createSvgElement('line', {
+        x1: x + 7,
+        y1: y - 1,
+        x2: x + 7,
+        y2: stemTop,
+        stroke: '#d7d7de',
+        'stroke-width': 1.8,
+        'stroke-linecap': 'round'
+      }));
+
+      if (showAnnotations) {
+        const label = createSvgElement('text', {
+          x,
+          y: 118,
+          fill: symbol.toUpperCase().includes('R') ? '#e63946' : '#3c98ff',
+          'font-size': 13,
+          'font-weight': 800,
+          'text-anchor': 'middle',
+          'font-family': 'SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
+        });
+        label.textContent = formatSymbol(symbol);
+        noteGroup.appendChild(label);
+      }
+
+      svg.appendChild(noteGroup);
+      return noteGroup;
+    }
+
+    function drawGraceNote(parent, x, y, type) {
+      const count = type === 'drag' ? 2 : 1;
+      for (let i = 0; i < count; i += 1) {
+        const gx = x + i * 8;
+        parent.appendChild(createSvgElement('ellipse', {
+          cx: gx,
+          cy: y,
+          rx: 4.4,
+          ry: 3,
+          transform: `rotate(-18 ${gx} ${y})`,
+          fill: '#8c8d98'
+        }));
+        parent.appendChild(createSvgElement('line', {
+          x1: gx + 4,
+          y1: y - 1,
+          x2: gx + 4,
+          y2: y - 21,
+          stroke: '#8c8d98',
+          'stroke-width': 1.2,
+          'stroke-linecap': 'round'
+        }));
+      }
+
+      if (type === 'drag') {
+        parent.appendChild(createSvgElement('line', {
+          x1: x + 4,
+          y1: y - 18,
+          x2: x + 12,
+          y2: y - 18,
+          stroke: '#8c8d98',
+          'stroke-width': 3,
+          'stroke-linecap': 'round'
+        }));
+        parent.appendChild(createSvgElement('line', {
+          x1: x - 2,
+          y1: y - 8,
+          x2: x + 17,
+          y2: y - 15,
+          stroke: '#8c8d98',
+          'stroke-width': 1.2,
+          'stroke-linecap': 'round'
+        }));
       }
     }
 
