@@ -13,6 +13,11 @@ jobs:
         run: |
           cd /home/clank/projects/stickwithit
           git pull origin main
+
+      - name: Normalize static file permissions
+        run: |
+          cd /home/clank/projects/stickwithit
+          chmod -R a+rX www
           
       - name: Restart container
         run: |
