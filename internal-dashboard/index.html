@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stick With It Clips Dashboard</title>
+  <link rel="icon" type="image/png" href="assets/StickWithItBlack.png" sizes="256x256">
+  <link rel="shortcut icon" href="assets/StickWithItBlack.png">
+  <style>
+    :root {
+      --bg: #050505;
+      --surface: #101010;
+      --surface-alt: #181818;
+      --border: #2b2b2b;
+      --text: #f5f5f5;
+      --text-muted: #bbbbbb;
+      --accent: #e63946;
+      --accent-soft: rgba(230,57,70,0.12);
+      --positive: #83f28f;
+      --table-header: #151515;
+    }
+
+    html[data-theme="light"] {
+      --bg: #fdfdfd;
+      --surface: #ffffff;
+      --surface-alt: #f3f3f3;
+      --border: #dedede;
+      --text: #111;
+      --text-muted: #555;
+      --accent: #e63946;
+      --accent-soft: rgba(230,57,70,0.12);
+      --positive: #267c32;
+      --table-header: #fafafa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.25rem;
+    }
+
+    .updated {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .toggle-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .toggle-switch {
+      width: 48px;
+      height: 26px;
+      border-radius: 13px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: var(--accent);
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--text);
+      transition: left 0.3s ease;
+    }
+
+    .toggle-switch.active .toggle-slider {
+      left: 24px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .card .value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .card small {
+      color: var(--text-muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: var(--table-header);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+    }
+
+    tr + tr {
+      border-top: 1px solid var(--border);
+    }
+
+    .status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .status-uploaded {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .status-draft {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+
+    .watch-bar {
+      width: 120px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--surface-alt);
+      position: relative;
+    }
+
+    .watch-bar span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      border-radius: 4px;
+      background: var(--accent);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table td small {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      word-break: break-all;
+    }
+
+    .mono {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.85rem;
+    }
+
+    .drafts-section {
+      margin-top: 2.5rem;
+    }
+
+    .drafts-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .drafts-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      max-width: 600px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Stick With It Clips</h1>
+      <p class="updated" id="updatedAt">Loading latest metrics…</p>
+    </div>
+    <div class="theme-toggle">
+      <span class="toggle-label">Dark</span>
+      <div class="toggle-switch" id="themeToggle">
+        <div class="toggle-slider"></div>
+      </div>
+      <span class="toggle-label">Light</span>
+    </div>
+  </header>
+
+  <section class="cards">
+    <div class="card">
+      <h3>Total Clips</h3>
+      <div class="value" id="totalClips">-</div>
+      <small>All uploads with telemetry</small>
+    </div>
+    <div class="card">
+      <h3>Average Views</h3>
+      <div class="value" id="avgViews">-</div>
+      <small>Mean views per clip</small>
+    </div>
+    <div class="card">
+      <h3>Top Performer</h3>
+      <div class="value" id="topClip">-</div>
+      <small id="topClipLabel">Loading…</small>
+    </div>
+    <div class="card">
+      <h3>Draft Queue</h3>
+      <div class="value" id="draftCount">-</div>
+      <small>Awaiting metadata approval</small>
+    </div>
+  </section>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Clip</th>
+          <th>Views</th>
+          <th>Watch %</th>
+          <th>Status</th>
+          <th>Last Sampled</th>
+          <th>Scheduled</th>
+        </tr>
+      </thead>
+      <tbody id="telemetryRows">
+        <tr>
+          <td colspan="6">Loading data…</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="drafts-section">
+    <div class="drafts-header">
+      <div>
+        <h2>Drafts</h2>
+        <p>Auto-derived titles from the current Draft folders. Tweak these before moving clips into Approved.</p>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Proposed Title</th>
+            <th>Project ID</th>
+            <th>Clip ID</th>
+          </tr>
+        </thead>
+        <tbody id="draftRows">
+          <tr><td colspan="4">Loading drafts…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'light') themeToggle.classList.add('active');
+
+    themeToggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      themeToggle.classList.toggle('active');
+    });
+
+    async function loadTelemetry() {
+      try {
+        const resp = await fetch('/data/telemetry.json?_=' + Date.now());
+        if (!resp.ok) throw new Error('Telemetry fetch failed');
+        const data = await resp.json();
+        const rows = data.records || [];
+        const totalViews = rows.reduce((sum, row) => sum + (row.view_count || 0), 0);
+        const maxClip = rows.reduce((max, row) => row.view_count > (max?.view_count || 0) ? row : max, null);
+
+        document.getElementById('updatedAt').textContent = `Last updated ${new Date(data.generated_at).toLocaleString()}`;
+        document.getElementById('totalClips').textContent = rows.length.toString();
+        document.getElementById('avgViews').textContent = rows.length ? Math.round(totalViews / rows.length).toLocaleString() : '-';
+        document.getElementById('topClip').textContent = maxClip ? maxClip.view_count.toLocaleString() : '-';
+        document.getElementById('topClipLabel').textContent = maxClip ? (maxClip.youtube_title || maxClip.clip_title || maxClip.project_title) : 'No data yet';
+
+        const tbody = document.getElementById('telemetryRows');
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="6">No telemetry collected yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = rows.map(row => {
+          const watchPct = row.avg_watch_percentage ? row.avg_watch_percentage.toFixed(2) : '0.00';
+          const barWidth = Math.min(100, row.avg_watch_percentage || 0);
+          const statusClass = row.clip_status === 'uploaded' ? 'status-uploaded' : 'status-draft';
+          const scheduled = row.scheduled_at || '—';
+          return `
+            <tr>
+              <td>
+                <strong>${row.youtube_title || row.clip_title || row.project_title}</strong><br>
+                <small>${row.youtube_video_id || ''}</small>
+              </td>
+              <td>${(row.view_count || 0).toLocaleString()}</td>
+              <td>
+                <div class="watch-bar"><span style="width: ${barWidth}%"></span></div>
+                <small>${watchPct}%</small>
+              </td>
+              <td><span class="status ${statusClass}">${row.clip_status}</span></td>
+              <td>${row.sampled_at ? new Date(row.sampled_at).toLocaleString() : '—'}</td>
+              <td>${scheduled}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+        document.getElementById('telemetryRows').innerHTML = '<tr><td colspan="6">Failed to load telemetry.</td></tr>';
+      }
+    }
+
+    async function loadDrafts() {
+      try {
+        const resp = await fetch('/data/drafts.json?_=' + Date.now());
+        if (!resp.ok) throw new Error('Draft fetch failed');
+        const data = await resp.json();
+        const drafts = data.drafts || [];
+        document.getElementById('draftCount').textContent = drafts.length.toString();
+        const tbody = document.getElementById('draftRows');
+        if (!drafts.length) {
+          tbody.innerHTML = '<tr><td colspan="4">No drafts detected.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = drafts.map((draft, idx) => {
+          const shortProject = draft.project_id ? draft.project_id.slice(0, 8) : '';
+          const shortClip = draft.clip_id ? draft.clip_id.slice(0, 8) : '';
+          const normalized = draft.normalized_title || '';
+          return `
+            <tr>
+              <td>
+                <strong>${draft.project_title || 'Untitled'}</strong>
+                <small>${normalized}</small>
+              </td>
+              <td>${draft.proposed_title || ''}</td>
+              <td><span class="mono">${shortProject}</span><small>${draft.project_id || ''}</small></td>
+              <td><span class="mono">${shortClip}</span><small>${draft.clip_id || ''}</small></td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+        document.getElementById('draftRows').innerHTML = '<tr><td colspan="4">Failed to load drafts.</td></tr>';
+      }
+    }
+
+    loadTelemetry();
+    loadDrafts();
+  </script>
+</body>
+</html>

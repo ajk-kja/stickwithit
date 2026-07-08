@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stick With It</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--swi-bg);
+    color: var(--swi-fg);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .player-wrap {
+    width: 100%;
+    max-width: 1100px;
+    padding: clamp(18px, 4vw, 30px) 16px 0;
+  }
+  video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 10px;
+    outline: none;
+  }
+  .underrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 4px;
+  }
+  #status {
+    font-size: .9rem;
+    color: var(--swi-muted);
+    min-height: 1.2em;
+  }
+  #golive {
+    min-height: 44px;
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 16px;
+    font-size: .82rem; font-weight: 700; letter-spacing: .08em;
+    color: var(--swi-muted);
+    background: var(--swi-bg-elevated);
+    border: 1px solid var(--swi-border);
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  #golive .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--swi-dim);
+  }
+  #golive.edge {
+    color: #fff; background: #16181d; border-color: var(--swi-accent-deep); cursor: default;
+  }
+  #golive.edge .dot {
+    background: #e0245e;
+    box-shadow: 0 0 0 0 rgba(224, 36, 94, .55);
+    animation: pulse 2s ease-out infinite;
+  }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 7px rgba(224, 36, 94, 0); } }
+  #golive:not(.edge):hover { color: var(--swi-fg); border-color: var(--swi-border-strong); }
+  footer {
+    margin-top: auto;
+    padding: 18px;
+    font-size: .8rem;
+    color: var(--swi-dim);
+  }
+  footer a { color: var(--swi-muted); }
+  .market {
+    width: 100%;
+    max-width: 1100px;
+    padding: 8px 16px 0;
+  }
+  .market-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 18px 4px 10px;
+  }
+  .market h2 {
+    font-size: .86rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--swi-fg);
+  }
+  .market-note {
+    color: var(--swi-muted);
+    font-size: .82rem;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 850px) { .products { grid-template-columns: 1fr; } }
+  .product {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 12px;
+    min-height: 100px;
+    color: inherit;
+    text-decoration: none;
+    background: var(--swi-panel);
+    border: 1px solid var(--swi-border);
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .product:hover { border-color: var(--swi-accent-deep); background: var(--swi-bg-elevated); }
+  .product img, .product .ph {
+    width: 76px;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #09090d;
+  }
+  .product .ph {
+    display: grid;
+    place-items: center;
+    color: var(--swi-dim);
+    font-weight: 800;
+  }
+  .product .title { font-size: .92rem; font-weight: 750; line-height: 1.2; }
+  .product .blurb { display: block; margin-top: 5px; color: var(--swi-muted); font-size: .8rem; line-height: 1.35; }
+  .product .price { display: block; margin-top: 7px; color: var(--swi-fg); font-size: .78rem; font-weight: 750; }
+  .market-empty {
+    color: var(--swi-dim);
+    font-size: .86rem;
+    border: 1px dashed var(--swi-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+</style>
+  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
+  <script src="/assets/nav.js?v=20260707b" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142348904039164" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="player-wrap">
+  <video id="player" controls autoplay muted playsinline></video>
+  <div class="underrow">
+    <div id="status"></div>
+    <button id="golive" title="Jump to the live edge"><span class="dot"></span><span id="golive-label">LIVE</span></button>
+  </div>
+</div>
+
+<section class="market" id="market">
+  <div class="market-head">
+    <h2>Market</h2>
+    <div class="market-note">Tools, lessons, downloads, and gear from Stick With It</div>
+  </div>
+  <div id="products" class="products">
+    <div class="market-empty" aria-label="Loading market"></div>
+  </div>
+</section>
+
+<footer><a href="/">stickwithit.xyz</a> · <a href="/drummers/">featured artists</a> · <a href="/submit/">submit</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<script>
+  const STREAM_URL = "https://stream.stickwithit.xyz/live/live.m3u8";
+  const video = document.getElementById("player");
+  const status = document.getElementById("status");
+  const RETRY_MS = 8000;
+  const LIVE_SYNC_SEGMENTS = 3;
+  const LIVE_MAX_LATENCY_SEGMENTS = 15;
+  let hlsRef = null;
+  let resumeTarget = NaN;
+  let stallNudgeTimer = null;
+
+  // ---- live-edge indicator (DVR allowed, but always show where live is) ----
+  const goliveBtn = document.getElementById("golive");
+  const goliveLabel = document.getElementById("golive-label");
+
+  function liveEdgeTime() {
+    if (hlsRef && hlsRef.liveSyncPosition != null) return hlsRef.liveSyncPosition;
+    const s = video.seekable;
+    return s.length ? s.end(s.length - 1) : NaN;
+  }
+  function atLiveEdge() {
+    const edge = liveEdgeTime();
+    return isNaN(edge) ? true : (edge - video.currentTime) < 8;
+  }
+  setInterval(() => {
+    const edge = atLiveEdge() && !video.paused;
+    goliveBtn.classList.toggle("edge", edge);
+    goliveLabel.textContent = edge ? "LIVE" : "GO LIVE";
+  }, 1000);
+  goliveBtn.onclick = () => {
+    const edge = liveEdgeTime();
+    if (!isNaN(edge)) video.currentTime = edge;
+    video.play().catch(() => {});
+  };
+
+  function setStatus(msg) { status.textContent = msg || ""; }
+  function seekNear(time) {
+    const s = video.seekable;
+    if (!isFinite(time) || !s.length) return false;
+    for (let i = 0; i < s.length; i++) {
+      const start = s.start(i);
+      const end = s.end(i);
+      if (time >= start && time <= end) {
+        video.currentTime = Math.min(Math.max(time, start + 0.5), end - 2);
+        return true;
+      }
+    }
+    return false;
+  }
+  function restoreResumeTarget(tries = 6) {
+    if (seekNear(resumeTarget)) {
+      resumeTarget = NaN;
+      return;
+    }
+    if (tries > 0 && isFinite(resumeTarget)) {
+      setTimeout(() => restoreResumeTarget(tries - 1), 500);
+    }
+  }
+
+  function startHlsJs() {
+    const hls = new Hls({
+      liveSyncDurationCount: LIVE_SYNC_SEGMENTS,
+      liveMaxLatencyDurationCount: LIVE_MAX_LATENCY_SEGMENTS,
+      backBufferLength: 180,
+      manifestLoadingMaxRetry: 6,
+      levelLoadingMaxRetry: 6,
+      fragLoadingMaxRetry: 6,
+    });
+    hlsRef = hls;
+    hls.loadSource(STREAM_URL);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      setStatus("");
+      restoreResumeTarget();
+      video.play().catch(() => {});
+    });
+    hls.on(Hls.Events.ERROR, (_evt, data) => {
+      if (!data.fatal && data.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) {
+        const here = video.currentTime;
+        clearTimeout(stallNudgeTimer);
+        stallNudgeTimer = setTimeout(() => {
+          if (!video.paused && Math.abs(video.currentTime - here) < 0.05) {
+            seekNear(here + 0.25);
+            video.play().catch(() => {});
+          }
+        }, 1200);
+      }
+      if (!data.fatal) return;
+      if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+        hls.recoverMediaError();
+        return;
+      }
+      // network or other fatal error: full teardown + fresh start
+      resumeTarget = video.currentTime;
+      setStatus("Stream unavailable \u2014 retrying\u2026");
+      hls.destroy();
+      hlsRef = null;
+      setTimeout(startHlsJs, RETRY_MS);
+    });
+  }
+
+  function startNative() {
+    video.src = STREAM_URL;
+    video.addEventListener("error", () => {
+      resumeTarget = video.currentTime;
+      setStatus("Stream unavailable — retrying…");
+      setTimeout(() => {
+        video.src = STREAM_URL;
+        restoreResumeTarget();
+        video.play().catch(() => {});
+      }, RETRY_MS);
+    });
+    video.play().catch(() => {});
+  }
+
+  if (window.Hls && Hls.isSupported()) {
+    startHlsJs();
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    startNative(); // Safari / iOS
+  } else {
+    setStatus("This browser can't play HLS streams.");
+  }
+
+  async function loadMarket() {
+    const wrap = document.getElementById("products");
+    const esc = (s) => String(s || "").replace(/[&<"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", '"': "&quot;" }[c]));
+    try {
+      const r = await fetch("/assets/data/market.json?ts=" + Date.now(), { cache: "no-store" });
+      const d = await r.json();
+      const products = (Array.isArray(d.products) ? d.products : []).filter((p) => p.active !== false);
+      wrap.innerHTML = products.length ? products.slice(0, 6).map((p) => `
+        <a class="product" href="${esc(p.url)}" target="_blank" rel="noopener">
+          ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.title)}">` : `<div class="ph">SWI</div>`}
+          <span>
+            <span class="title">${esc(p.title)}</span>
+            ${p.blurb ? `<span class="blurb">${esc(p.blurb)}</span>` : ""}
+            ${p.price ? `<span class="price">${esc(p.price)}</span>` : ""}
+          </span>
+        </a>`).join("") : '<div class="market-empty">Drops open soon.</div>';
+    } catch {
+      wrap.innerHTML = '<div class="market-empty">Market unavailable.</div>';
+    }
+  }
+  loadMarket();
+  setInterval(loadMarket, 60000);
+</script>
+</body>
+</html>

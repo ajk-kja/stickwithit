@@ -7,7 +7,8 @@
   <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
   <title>Stick With It | Live Drums, Clips, Contests, Apps</title>
   <meta name="description" content="Watch Stick With It live, submit a drum clip, vote in the monthly contest, find free drum apps, featured artists, merch, and blog posts.">
-  <link rel="stylesheet" href="/assets/home.css?v=20260707c">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/test/home.css?v=20260708a">
   <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
   <script src="/assets/nav.js?v=20260707b" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js" defer></script>
@@ -16,14 +17,30 @@
 </head>
 <body>
   <main class="home-shell">
-    <h1 class="sr-only">Stick With It live drums, contests, apps, artists, and blog</h1>
     <section class="home-live" id="live" aria-label="Live">
-      <div class="live-player-panel">
-        <div class="player-card">
-          <video id="home-player" controls autoplay muted playsinline poster="/assets/StickWithItBlack.png"></video>
-          <div class="player-meta">
-            <span id="home-live-status" aria-live="polite"></span>
-            <button id="home-go-live" type="button"><span class="live-dot"></span><span>LIVE</span></button>
+      <div class="home-hero-grid">
+        <div class="home-hero-copy">
+          <p class="eyebrow">Live drums, contests, and practice tools</p>
+          <h1>Stick With It</h1>
+          <p class="hero-intro">Watch the live room, vote on monthly drum submissions, and jump into free browser tools built for practice that actually sticks.</p>
+          <div class="home-hero-actions" aria-label="Primary actions">
+            <a class="action primary" href="#vote">Vote now</a>
+            <a class="action" href="/submit/">Submit a clip</a>
+            <a class="action" href="#apps">Open apps</a>
+          </div>
+          <div class="hero-stats" aria-label="Site highlights">
+            <span><strong>24/7</strong> live channel</span>
+            <span><strong>Monthly</strong> clip contest</span>
+            <span><strong>Free</strong> drum apps</span>
+          </div>
+        </div>
+        <div class="live-player-panel">
+          <div class="player-card">
+            <video id="home-player" controls autoplay muted playsinline poster="/assets/StickWithItBlack.png"></video>
+            <div class="player-meta">
+              <span id="home-live-status" aria-live="polite"></span>
+              <button id="home-go-live" type="button"><span class="live-dot"></span><span>LIVE</span></button>
+            </div>
           </div>
         </div>
       </div>

@@ -4,19 +4,19 @@
   <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
   <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chopmeister | Stick With It</title>
   <meta name="theme-color" content="#000000">
   <style>
     :root {
-      --bg: #000;
-      --surface: #0a0a0a;
-      --border: #333;
-      --text: #fff;
-      --text-muted: #666;
-      --accent: #e63946;
-      --staff-line: #555;
-      --note-fill: #fff;
+      --bg: var(--swi-bg);
+      --surface: var(--swi-panel);
+      --border: var(--swi-border-strong);
+      --text: var(--swi-fg);
+      --text-muted: var(--swi-muted);
+      --accent: var(--swi-accent);
+      --staff-line: var(--swi-dim);
+      --note-fill: var(--swi-fg);
     }
 
     * {
@@ -44,7 +44,7 @@
     .mobile-audio-splash {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.72);
       display: none;
       align-items: center;
       justify-content: center;
@@ -55,7 +55,7 @@
       display: flex;
     }
     .mobile-audio-splash .card {
-      background: #111;
+      background: var(--surface);
       border-radius: 20px;
       padding: 1.5rem;
       width: 100%;
@@ -68,7 +68,7 @@
     }
     .mobile-audio-splash ul {
       margin: 0 0 1.1rem 1.1rem;
-      color: #ddd;
+      color: var(--text);
       font-size: 0.95rem;
       line-height: 1.5;
     }
@@ -85,7 +85,7 @@
     }
     .mobile-audio-splash p.small {
       font-size: 0.85rem;
-      color: #aaa;
+      color: var(--text-muted);
       margin-top: 1rem;
     }
 
@@ -640,6 +640,9 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
+  <script src="/assets/nav.js?v=20260707b" defer></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142348904039164" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="chop-splash" id="chopSplash">

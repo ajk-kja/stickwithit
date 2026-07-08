@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-04-13T23:13:03.047096+00:00",
+  "records": [
+    {
+      "clip_id": "c1a9473d-afef-4ba8-ac08-32d12764594c",
+      "project_id": "94bf7ec2-a629-4427-a11e-00a82a4db527",
+      "project_title": "Kaz Rodriguez.mp4",
+      "clip_title": "Bell Brass Snare Drum Warm Up",
+      "youtube_title": "Tama Kaz Rodriguez Signature Snare feat. @SinisterDrums #namm2026  #drums",
+      "youtube_video_id": "Nbcq2yWbWd4",
+      "clip_status": "uploaded",
+      "upload_status": "scheduled",
+      "upload_job_id": "44f9ec85-69f7-4fec-baf9-e7c9b6b48bdf",
+      "view_count": 81,
+      "avg_watch_percentage": 72.89,
+      "sampled_at": "2026-04-13 22:13:03.28143+00",
+      "scheduled_at": "2026-04-03T14:00:00+00:00",
+      "last_job_update": "2026-04-13 22:13:03.517792+00"
+    },
+    {
+      "clip_id": "f7150d1c-13dd-48a3-b54d-60081562ee9b",
+      "project_id": "f6634ca0-fb03-4d63-a16c-3cdc70366d5d",
+      "project_title": "IronCobraDarkShadowEdition.mp4",
+      "clip_title": "Unleash Your Inner Drummer with Iron Cobra!",
+      "youtube_title": "Unleash Your Inner Drummer with Iron Cobra!",
+      "youtube_video_id": "vHREbfKzUEo",
+      "clip_status": "uploaded",
+      "upload_status": "scheduled",
+      "upload_job_id": "f739f6f4-5ba1-4e96-b68a-d01abfe6498c",
+      "view_count": 1545,
+      "avg_watch_percentage": 100.0,
+      "sampled_at": "2026-04-13 20:13:02.900268+00",
+      "scheduled_at": "2026-03-25T14:00:00+00:00",
+      "last_job_update": "2026-04-13 20:13:03.188934+00"
+    },
+    {
+      "clip_id": "3ec7cf93-5d2b-4819-a9e2-f9bdf815e826",
+      "project_id": "823db556-a617-4418-ba01-ce52cba2940e",
+      "project_title": "LimitedStarclassic.mp4",
+      "clip_title": "Unleash Your Rhythm with LimitedStarclassic!",
+      "youtube_title": "Tama Star Classic Limited Edition #namm2026",
+      "youtube_video_id": "lcJwsm8SxD4",
+      "clip_status": "uploaded",
+      "upload_status": "scheduled",
+      "upload_job_id": "7e45feb9-9023-4ffb-9614-c8f47cec61a1",
+      "view_count": 610,
+      "avg_watch_percentage": 91.99,
+      "sampled_at": "2026-04-13 19:13:02.788159+00",
+      "scheduled_at": "2026-03-27T14:00:00+00:00",
+      "last_job_update": "2026-04-13 19:13:03.114246+00"
+    }
+  ]
+}

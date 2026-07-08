@@ -3,3 +3,11 @@ node_modules/
 .env
 
 ci/
+
+# local-only artifacts
+backups/
+blog-backups/
+.tmp-review/
+.tmp-shots/
+n8n_workflow_*.json
+testfile_from_workspace

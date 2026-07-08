@@ -1,0 +1,18 @@
+{
+  "provider": "Fourthwall",
+  "note": "Fourthwall products feed the homepage, store page, and live market.",
+  "products": [
+    {
+      "id": "product-1-vic-firth-american-classic-3a-1783395637",
+      "title": "Product 1 Vic Firth American Classic 3A",
+      "blurb": "Test Test Test",
+      "url": "https://www.amazon.com/Vic-Firth-American-Classic-3A/dp/B0002F7434",
+      "image": "https://m.media-amazon.com/images/I/615WwGl4jwL._AC_SL1500_.jpg",
+      "price": "$15",
+      "source": "manual",
+      "youtube_tag": false,
+      "active": true,
+      "updated_at": "2026-07-07T03:40:37Z"
+    }
+  ]
+}

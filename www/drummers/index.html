@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
+<title>Featured Artists | Stick With It</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh; background: var(--swi-bg); color: var(--swi-fg);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { width: 100%; max-width: 1100px; margin: 0 auto; padding: 22px 16px 42px; }
+  h1 { font-size: clamp(2rem, 5vw, 4.8rem); line-height: .95; letter-spacing: 0; margin: 28px 0 10px; }
+  .intro { color: var(--swi-muted); max-width: 680px; line-height: 1.6; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--swi-panel); border: 1px solid var(--swi-border); border-radius: 8px;
+    overflow: hidden; min-height: 100%; display: flex; flex-direction: column;
+  }
+  .card.memorial {
+    grid-column: span 2; position: relative;
+    background: linear-gradient(180deg, rgba(56, 43, 18, .28), var(--swi-panel) 46%);
+    border-color: rgba(214, 176, 76, .72);
+    box-shadow: 0 0 0 1px rgba(214, 176, 76, .12), 0 18px 44px rgba(0, 0, 0, .24);
+  }
+  .card.memorial::before {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 3px;
+    background: linear-gradient(180deg, rgba(245, 214, 120, .95), rgba(214, 176, 76, .18));
+  }
+  @media (max-width: 640px) { .card.memorial { grid-column: span 1; } }
+  .photo, .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--swi-bg-elevated); }
+  .photo { object-fit: cover; display: block; }
+  .ph { display: grid; place-items: center; color: var(--swi-dim); font-size: 2rem; font-weight: 850; }
+  .body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .memorial .body { padding: 16px; }
+  .memorial-label {
+    align-self: flex-start; color: #f4d27a; border: 1px solid rgba(244, 210, 122, .42);
+    border-radius: 999px; padding: 4px 9px; font-size: .72rem; font-weight: 820;
+    letter-spacing: .06em; text-transform: uppercase; background: rgba(244, 210, 122, .08);
+  }
+  h2 { font-size: 1.15rem; line-height: 1.2; }
+  .memorial h2 { font-size: 1.32rem; }
+  .blurb { color: var(--swi-muted); line-height: 1.5; font-size: .92rem; }
+  .first-featured {
+    color: var(--swi-muted); border-top: 1px solid var(--swi-border); padding-top: 10px;
+    line-height: 1.4; font-size: .8rem; font-weight: 700;
+  }
+  .memorial .first-featured { color: #e7cf8e; border-top-color: rgba(214, 176, 76, .28); }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+  .links a {
+    color: var(--swi-fg); background: var(--swi-bg-elevated); border: 1px solid var(--swi-border-strong); border-radius: 6px;
+    padding: 7px 10px; font-size: .8rem; font-weight: 760; text-decoration: none;
+  }
+  .links a.primary { background: var(--swi-accent-deep); border-color: var(--swi-accent); color: #fff; }
+  .links a:hover { border-color: var(--swi-accent); }
+  .empty {
+    color: var(--swi-dim); border: 1px dashed var(--swi-border); border-radius: 8px;
+    padding: 18px; font-size: .92rem;
+  }
+</style>
+  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
+  <script src="/assets/nav.js?v=20260707b" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142348904039164" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="wrap">
+  <main>
+    <h1>Featured Artists</h1>
+    <p class="intro">Players AJ has connected with, worked with, filmed, studied, or brought into the Stick With It orbit.</p>
+    <div id="grid" class="grid"><div class="empty">Loading artists...</div></div>
+  </main>
+</div>
+
+<script>
+  const grid = document.getElementById("grid");
+  const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+
+  function card(d) {
+    const socials = Array.isArray(d.socials) ? d.socials : [];
+    const links = [
+      d.playlist_url ? { label: d.playlist_label || "AJ playlist", url: d.playlist_url, primary: true } : null,
+      d.lessons_url ? { label: "Lessons / channel", url: d.lessons_url } : null,
+      ...socials,
+    ].filter(Boolean);
+    return `<article class="card${d.memorial ? " memorial" : ""}">
+      ${d.image ? `<img class="photo" src="${esc(d.image)}" alt="${esc(d.name)}">` : `<div class="ph">SWI</div>`}
+      <div class="body">
+        ${d.memorial ? '<div class="memorial-label">In Memoriam</div>' : ""}
+        <h2>${esc(d.name)}</h2>
+        ${d.blurb ? `<p class="blurb">${esc(d.blurb)}</p>` : ""}
+        ${d.first_featured ? `<p class="first-featured">${esc(d.first_featured)}</p>` : ""}
+        <div class="links">
+          ${links.map((l) => `<a class="${l.primary ? "primary" : ""}" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join("")}
+        </div>
+      </div>
+    </article>`;
+  }
+
+  async function load() {
+    try {
+      const r = await fetch("/assets/data/drummers.json?ts=" + Date.now(), { cache: "no-store" });
+      const data = await r.json();
+      const drummers = (Array.isArray(data.drummers) ? data.drummers : [])
+        .filter((d) => d.active !== false)
+        .sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || String(a.name || "").localeCompare(String(b.name || "")));
+      grid.innerHTML = drummers.length ? drummers.map(card).join("") : '<div class="empty">More artists soon.</div>';
+    } catch {
+      grid.innerHTML = '<div class="empty">Players unavailable.</div>';
+    }
+  }
+  load();
+</script>
+</body>
+</html>

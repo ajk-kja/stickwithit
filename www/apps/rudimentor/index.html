@@ -2,21 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rudimentor | Stick With It</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
   <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
   <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
   <meta name="theme-color" content="#000000">
   <style>
     :root {
-      --bg: #020203;
-      --surface: #070708;
-      --surface-2: #0f0f13;
-      --border: #1a1a21;
-      --border-strong: #272730;
-      --text: #f5f5f7;
-      --muted: #8c8d98;
-      --accent: #e63946;
+      --bg: var(--swi-bg);
+      --surface: var(--swi-bg-elevated);
+      --surface-2: var(--swi-panel);
+      --border: var(--swi-border);
+      --border-strong: var(--swi-border-strong);
+      --text: var(--swi-fg);
+      --muted: var(--swi-muted);
+      --accent: var(--swi-accent);
       --accent-blue: #3c98ff;
       --shadow: rgba(0, 0, 0, 0.65);
       font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -88,7 +90,7 @@
     }
 
     .tab-btn.active {
-      background: #0f0f15;
+      background: var(--surface);
       color: var(--text);
       box-shadow: inset 0 0 0 1px var(--border-strong);
     }
@@ -137,7 +139,7 @@
       width: 100%;
       border-radius: 14px;
       border: 1px solid var(--border-strong);
-      background: #0f0f15;
+      background: var(--surface);
       color: var(--text);
       padding: 0.65rem 0.75rem;
       font-size: 0.95rem;
@@ -146,7 +148,7 @@
     .sheet-card {
       border-radius: 20px;
       border: 1px solid var(--border-strong);
-      background: #08080b;
+      background: var(--surface);
       padding: 1rem;
       display: flex;
       flex-direction: column;
@@ -231,12 +233,12 @@
     }
 
     .sheet-note .note-head {
-      fill: #d7d7de;
+      fill: var(--muted);
       transition: fill 0.2s ease, filter 0.2s ease;
     }
 
     .sheet-note.active .note-head {
-      fill: #f5f5f7;
+      fill: var(--text);
     }
 
     .sheet-note.accented .note-head {
@@ -294,7 +296,7 @@
       width: 100%;
       height: 6px;
       border-radius: 999px;
-      background: #1d1d22;
+      background: var(--border);
       outline: none;
     }
 
@@ -317,7 +319,7 @@
       flex: 1;
       border-radius: 16px;
       border: 1px solid var(--border-strong);
-      background: #0f0f15;
+      background: var(--surface);
       color: var(--muted);
       padding: 0.65rem 0.75rem;
       font-size: 0.85rem;
@@ -353,7 +355,7 @@
     .grid-btn {
       border-radius: 14px;
       border: 1px solid var(--border);
-      background: #101017;
+      background: var(--surface);
       color: var(--text);
       padding: 0.6rem 0;
       font-weight: 600;
@@ -393,7 +395,7 @@
       padding: 0.4rem 0.8rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: #0f0f15;
+      background: var(--surface);
       color: var(--muted);
       font-size: 0.75rem;
       letter-spacing: 0.08em;
@@ -415,7 +417,7 @@
     .score-tile {
       border-radius: 14px;
       border: 1px solid var(--border);
-      background: #101017;
+      background: var(--surface);
       padding: 0.75rem;
       text-align: center;
     }
@@ -437,7 +439,7 @@
     .quiz-sheet {
       border-radius: 20px;
       border: 1px solid var(--border-strong);
-      background: #08080b;
+      background: var(--surface);
       padding: 1rem;
       display: flex;
       flex-direction: column;
@@ -494,7 +496,7 @@
     .quiz-choice {
       border-radius: 16px;
       border: 1px solid var(--border);
-      background: #0f0f15;
+      background: var(--surface);
       color: var(--text);
       padding: 0.75rem 0.9rem;
       font-size: 0.85rem;
@@ -514,6 +516,9 @@
       background: rgba(255, 115, 115, 0.1);
     }
   </style>
+  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
+  <script src="/assets/nav.js?v=20260707b" defer></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142348904039164" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="app-shell">

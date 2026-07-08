@@ -1,0 +1,91 @@
+{
+  "id": "monthly-july-2026",
+  "cadence": "Monthly",
+  "status_label": "Open",
+  "voting_window": "July 2026",
+  "ends_at": "2026-08-01T03:59:00.000Z",
+  "voting_open": true,
+  "note": "Current rotation",
+  "page": {
+    "headline": "Adil is the Best",
+    "description": [
+      "This song was made by the homie and he's great"
+    ],
+    "youtube_video_id": null,
+    "steps": [
+      {
+        "title": "Get the track",
+        "text": "Download this month's play-along track from this page when it drops."
+      },
+      {
+        "title": "Film your version",
+        "text": "Record your take with the track in frame, in headphones, or mixed into the video."
+      },
+      {
+        "title": "Submit at /submit/",
+        "text": "Send your clip through the submit page so it can join the current vote."
+      }
+    ],
+    "tracks": [
+      {
+        "title": "Asteroid Ascends",
+        "url": "/assets/contest/tracks/20260708-043854-Asteroid_Ascends.mp3",
+        "note": "Sup Adilly DIIIILLLLL!"
+      }
+    ],
+    "prize": null
+  },
+  "entries": [
+    {
+      "id": "20260704-155656-admin-vid-20260123",
+      "title": "NAMM Clip",
+      "artist": "Current rotation",
+      "image": "/assets/contest/vid-20260123.jpg?v=2",
+      "video": "/assets/contest/vid-20260123.mp4?v=2",
+      "active": true
+    },
+    {
+      "id": "20260704-203114-aaron-ovecka-false-prophet",
+      "title": "False Prophet",
+      "artist": "Aaron Ovecka | I, The Breather",
+      "image": "/assets/contest/aaron-ovecka-false-prophet.jpg?v=2",
+      "video": "/assets/contest/aaron-ovecka-false-prophet.mp4?v=2",
+      "active": true
+    },
+    {
+      "id": "20260705-151621-frank-de-santis-security-and-compliance",
+      "title": "Security and Compliance",
+      "artist": "Frank De Santis | One Fell Swoop",
+      "image": "/assets/contest/frank-de-santis-security-and-compliance.jpg?v=2",
+      "video": "/assets/contest/frank-de-santis-security-and-compliance.mp4?v=2",
+      "active": true
+    },
+    {
+      "id": "20260705-153036-doug-court-chosen-one",
+      "title": "Chosen One",
+      "artist": "Doug Court | Sirens & Sailors",
+      "image": "/assets/contest/doug-court-chosen-one.jpg?v=2",
+      "video": "/assets/contest/doug-court-chosen-one.mp4?v=2",
+      "active": true
+    },
+    {
+      "id": "20260705-160725-drummer-hears-song-second-time",
+      "title": "Drummer hears song for the second time",
+      "artist": "Stick Stickly",
+      "image": "/assets/contest/drummer-hears-song-second-time.jpg?v=2",
+      "video": "/assets/contest/drummer-hears-song-second-time.mp4?v=2",
+      "active": true
+    }
+  ],
+  "archive": [],
+  "dates": {
+    "submission_deadline": "2026-08-01T03:59:00.000Z"
+  },
+  "winners": [
+    {
+      "rank": 1,
+      "entry_id": "20260704-155656-admin-vid-20260123",
+      "label": "1st"
+    }
+  ]
+}

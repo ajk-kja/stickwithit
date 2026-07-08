@@ -1,0 +1,373 @@
+{
+  "drummers": [
+    {
+      "id": "dan-odowd",
+      "name": "Dan O'Dowd",
+      "image": "https://i.ytimg.com/vi/9f3MJ34Y40g/hqdefault.jpg",
+      "blurb": "Dan O'Dowd was the sole member, composer, and instrumentalist behind Redshifts, arranging and recording progressive metal material with live strings and synths and programmed drums. In loving memory of an amazing dude whose work brought care, craft, and heart into the Stick With It orbit.",
+      "first_featured": "First featured: Dec 2022",
+      "memorial": true,
+      "socials": [
+        {
+          "label": "Spotify",
+          "url": "https://open.spotify.com/artist/2ajX1PveT90QYliTXrJHnN"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlyoX0OIy2q27vc9Aku2fnQ6",
+      "lessons_url": "https://www.youtube.com/channel/UCnOepenPVSBY-lwx_s88bMg",
+      "active": true,
+      "order": 0
+    },
+    {
+      "id": "tyree-white",
+      "name": "Tyree White",
+      "image": "https://i.ytimg.com/vi/mKbsZDXT8qI/hqdefault.jpg",
+      "blurb": "Tyree White is a drummer and keyboard player with an active YouTube channel under Tyree White Drums. His Stick With It playlist features drum covers and playthroughs across gospel, R&B, and fusion material.",
+      "first_featured": "First featured: Oct 2024",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/ty_drums91/"
+        },
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/TyreeWhiteDrums/"
+        },
+        {
+          "label": "Stick Together Podcast Ep 11",
+          "url": "https://www.youtube.com/watch?v=N3OB9V9B_So"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlzPjRuvJCH_rJJ0FHNg5k-Z",
+      "lessons_url": "https://www.youtube.com/@tyreewhitedrums6113",
+      "active": true,
+      "order": 10
+    },
+    {
+      "id": "will-ferri",
+      "name": "Will Ferri",
+      "image": "https://i.ytimg.com/vi/0F63vLT-bn8/hqdefault.jpg",
+      "blurb": "Will Ferri is a drummer and producer associated with Against The Current. His Stick With It playlist collects drum-focused videos under the Will Ferri Drums handle.",
+      "first_featured": "First featured: Nov 2020",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/willferri/"
+        },
+        {
+          "label": "Stick Together Podcast Ep 7",
+          "url": "https://www.youtube.com/watch?v=tVbOe0cLrGY"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlwhqQ6proNsespnLAqCQZvO",
+      "lessons_url": "https://www.youtube.com/@willferridrums",
+      "active": true,
+      "order": 20
+    },
+    {
+      "id": "kevin-mcguill",
+      "name": "Kevin McGuill",
+      "image": "https://i.ytimg.com/vi/C71YHnOXqKU/hqdefault.jpg",
+      "blurb": "Kevin McGuill is the drummer for Within The Ruins, the Western Massachusetts metal band he co-founded with guitarist Joe Cocchi. His Stick With It playlist focuses on Within The Ruins drum-cam performances.",
+      "first_featured": "First featured: Aug 2015 - The Marlin Room, Webster Hall",
+      "socials": [
+        {
+          "label": "Within The Ruins Instagram",
+          "url": "https://www.instagram.com/withintheruinsofficial/"
+        },
+        {
+          "label": "Within The Ruins Facebook",
+          "url": "https://www.facebook.com/withintheruins/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlwx7nf7eFFdkzEthrOx3M5s",
+      "lessons_url": "",
+      "active": true,
+      "order": 30
+    },
+    {
+      "id": "frank-de-santis",
+      "name": "Frank De Santis",
+      "image": "https://i.ytimg.com/vi/9xUMcdOUstA/hqdefault.jpg",
+      "blurb": "Frank De Santis is a drummer featured on Stick With It through One Fell Swoop drum-cam footage. His playlist includes live videos from the band's EP release show.",
+      "first_featured": "First featured: Dec 2014",
+      "socials": [
+        {
+          "label": "Stick Together Podcast Ep 6",
+          "url": "https://www.youtube.com/watch?v=mlqfPqFx1WU"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlykvOeVtoLsl_zGX-9GGP6D",
+      "lessons_url": "",
+      "active": true,
+      "order": 40
+    },
+    {
+      "id": "aaron-ovecka",
+      "name": "Aaron Ovecka",
+      "image": "https://i.ytimg.com/vi/uNfkWKO-h54/hqdefault.jpg",
+      "blurb": "Aaron Ovecka is a drummer known for his work with I, The Breather. His Stick With It playlist collects I, The Breather drum-cam footage and related live clips.",
+      "first_featured": "First featured: Oct 2014 - The Studio at Webster Hall",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/aaronovecka/"
+        },
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/AaronOveckaMusic/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlwDVtfIBekVEIbOmrJoMaHq",
+      "lessons_url": "",
+      "active": true,
+      "order": 50
+    },
+    {
+      "id": "adam-gray",
+      "name": "Adam Gray",
+      "image": "https://i.ytimg.com/vi/5kqGX-iWzxo/hqdefault.jpg",
+      "blurb": "Adam Gray is the drummer for Texas in July and has worked as a drum tech and performer with August Burns Red and The Ghost Inside. His Stick With It playlists include drum-cam and performance footage.",
+      "first_featured": "First featured: Dec 2014 - The Studio at Webster Hall, NYC",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/adamgraydrums/"
+        },
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/AdamGrayDrums/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlyQ5PLhFUQNvO28-K8FNIUJ",
+      "lessons_url": "https://www.youtube.com/@AdamGrayDrums",
+      "active": true,
+      "order": 60
+    },
+    {
+      "id": "alex-ballew",
+      "name": "Alex Ballew",
+      "image": "https://i.ytimg.com/vi/9J1LEdSXokY/hqdefault.jpg",
+      "blurb": "Alex Ballew is the drummer and a founding member of the progressive metalcore band ERRA. His Stick With It playlist features ERRA drum material and performance-focused clips.",
+      "first_featured": "First featured: Oct 2016",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/alexballew/"
+        },
+        {
+          "label": "Mapex Artist Page",
+          "url": "https://mapexdrums.com/mapex-international/artists/alex-ballew"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlydsQ1FHvPsF98b9TZF808O",
+      "lessons_url": "",
+      "active": true,
+      "order": 70
+    },
+    {
+      "id": "amasa-bruce",
+      "name": "Amasa Bruce",
+      "image": "https://i.ytimg.com/vi/c2hvHUUqdoE/hqdefault.jpg",
+      "blurb": "Amasa Bruce is a drummer featured on Stick With It through cover and session-style performance videos. His playlist spans pop, gospel, and groove-focused drum material.",
+      "first_featured": "First featured: Sep 2016 - Guitar Center Ridge Hill, Yonkers",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/gtm_masa/"
+        },
+        {
+          "label": "Stick Together Podcast Ep 2",
+          "url": "https://www.youtube.com/watch?v=kb-KgHeTgqU"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlyYup_tnPPRDE7VjYtK0yC6",
+      "lessons_url": "",
+      "active": true,
+      "order": 80
+    },
+    {
+      "id": "donald-perdomo",
+      "name": "Donald Perdomo",
+      "image": "https://i.ytimg.com/vi/UqnGK8NRqDs/hqdefault.jpg",
+      "blurb": "Donald Perdomo is a drummer and coffee professional known online as The Barefoot Barista. His Stick With It playlist features drum performance clips under his own name.",
+      "first_featured": "First featured: Apr 2017",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/the_barefoot_barista/"
+        },
+        {
+          "label": "Stick Together Podcast Ep 1",
+          "url": "https://www.youtube.com/watch?v=dp1SJIJhTzA"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlyNXKIx8gb3Ow131KAhc8Qu",
+      "lessons_url": "",
+      "active": true,
+      "order": 90
+    },
+    {
+      "id": "dan-lomeli",
+      "name": "Dan Lomeli",
+      "image": "https://i.ytimg.com/vi/mnZfV5KGlMo/hqdefault.jpg",
+      "blurb": "Dan Lomeli is the drummer for Long Island hardcore band Incendiary. His Stick With It playlist captures Incendiary live drum-cam footage from Revolution.",
+      "first_featured": "First featured: Aug 2017 - Revolution Bar & Venue, Amityville, LI",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/danny_hammer/"
+        },
+        {
+          "label": "Sabian Artist Page",
+          "url": "https://sabian.com/artist/dan-lomeli/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlyu2LoqjqoOiA4oGspoGp9j",
+      "lessons_url": "",
+      "active": true,
+      "order": 100
+    },
+    {
+      "id": "matt-greiner",
+      "name": "Matt Greiner",
+      "image": "https://i.ytimg.com/vi/yB3YquyoqFQ/hqdefault.jpg",
+      "blurb": "Matt Greiner is the drummer and a founding member of August Burns Red, and he teaches through Matt Greiner Lessons. His Stick With It playlist includes August Burns Red drum-cam material.",
+      "first_featured": "First featured: Jan 2017",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/matthewgreiner/"
+        },
+        {
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@MattGreiner"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlxjvIv5GMvNvVQuD8iYlYtE",
+      "lessons_url": "https://www.mattgreinerlessons.com/",
+      "active": true,
+      "order": 110
+    },
+    {
+      "id": "doug-court",
+      "name": "Doug Court",
+      "image": "https://i.ytimg.com/vi/2s75Tl3MsLQ/hqdefault.jpg",
+      "blurb": "Doug Court is the drummer for Rochester metalcore band Sirens & Sailors. His Stick With It playlists include live drum-cam footage from New York shows.",
+      "first_featured": "First featured: Dec 2014 - The Studio at Webster Hall",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/dougcourt/"
+        },
+        {
+          "label": "Sirens & Sailors Instagram",
+          "url": "https://www.instagram.com/sirensandsailors/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlwzR2Z3SDBhhrVrhWjYmrnC",
+      "lessons_url": "",
+      "active": true,
+      "order": 120
+    },
+    {
+      "id": "tito-felix",
+      "name": "Tito Felix",
+      "image": "https://i.ytimg.com/vi/etoHVQZsRck/hqdefault.jpg",
+      "blurb": "Tito Felix is a drummer best known for his long run with Upon A Burning Body. His Stick With It playlist features Upon A Burning Body drum-cam footage from that era.",
+      "first_featured": "First featured: Aug 2015 - The Marlin Room, Webster Hall, NYC",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/tito_felix_uabb/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlxBSPO2ppf220FEJNof6TIK",
+      "lessons_url": "",
+      "active": true,
+      "order": 130
+    },
+    {
+      "id": "matt-mingus",
+      "name": "Matt Mingus",
+      "image": "https://i.ytimg.com/vi/_986R2Z1w2o/hqdefault.jpg",
+      "blurb": "Matt Mingus is the drummer for Dance Gavin Dance and Secret Band. His Stick With It playlist features Dance Gavin Dance drum-cam footage.",
+      "first_featured": "First featured: Aug 2015 - The Marlin Room, Webster Hall",
+      "socials": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/matthewmingus916/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlywccrzXTgmEAt4wcxB8f1p",
+      "lessons_url": "",
+      "active": true,
+      "order": 140
+    },
+    {
+      "id": "mike-montgomery",
+      "name": "Mike Montgomery",
+      "image": "https://i.ytimg.com/vi/U-jWENHpWkQ/hqdefault.jpg",
+      "blurb": "Mike Montgomery, also listed as Mikey or Mical Montgomery, is a drummer best known for Iwrestledabearonce. His Stick With It playlist features IWABO drum-cam footage.",
+      "first_featured": "First featured: Aug 2015 - The Marlin Room, Webster Hall, NYC",
+      "socials": [
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/officialmikeymontgomery/"
+        }
+      ],
+      "playlist_url": "https://www.youtube.com/playlist?list=PLGfQVfsRvQlzKpNPcLhuwhI0mKSroAUZA",
+      "lessons_url": "",
+      "active": true,
+      "order": 150
+    },
+    {
+      "id": "stick-together-brandon-florek",
+      "name": "Brandon Florek",
+      "image": "https://i.ytimg.com/vi/qfcWFQ6biPw/hqdefault.jpg",
+      "blurb": "Stick Together Podcast - Episode 4",
+      "socials": [],
+      "playlist_url": "https://www.youtube.com/watch?v=qfcWFQ6biPw",
+      "playlist_label": "Podcast episode",
+      "lessons_url": "",
+      "active": true,
+      "order": 1020
+    },
+    {
+      "id": "stick-together-frank-cortalano",
+      "name": "Frank Cortalano",
+      "image": "https://i.ytimg.com/vi/BqY9Wyq9b3k/hqdefault.jpg",
+      "blurb": "Stick Together Podcast - Episode 5",
+      "socials": [],
+      "playlist_url": "https://www.youtube.com/watch?v=BqY9Wyq9b3k",
+      "playlist_label": "Podcast episode",
+      "lessons_url": "",
+      "active": true,
+      "order": 1030
+    },
+    {
+      "id": "stick-together-tim-fountain",
+      "name": "Tim Fountain",
+      "image": "https://i.ytimg.com/vi/izi5Y7-x9do/hqdefault.jpg",
+      "blurb": "Stick Together Podcast - Episode 9",
+      "socials": [],
+      "playlist_url": "https://www.youtube.com/watch?v=izi5Y7-x9do",
+      "playlist_label": "Podcast episode",
+      "lessons_url": "",
+      "active": true,
+      "order": 1060
+    },
+    {
+      "id": "stick-together-chris-g",
+      "name": "Chris G.",
+      "image": "https://i.ytimg.com/vi/TfTmGw8xPAg/hqdefault.jpg",
+      "blurb": "Stick Together Podcast - Episode 10",
+      "socials": [],
+      "playlist_url": "https://www.youtube.com/watch?v=TfTmGw8xPAg",
+      "playlist_label": "Podcast episode",
+      "lessons_url": "",
+      "active": true,
+      "order": 1070
+    }
+  ]
+}
