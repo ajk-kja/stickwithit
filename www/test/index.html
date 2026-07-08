@@ -2,184 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050506">
   <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
-  <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
-  <title>Stick With It | Live Drums, Clips, Contests, Apps</title>
-  <meta name="description" content="Watch Stick With It live, submit a drum clip, vote in the monthly contest, find free drum apps, featured artists, merch, and blog posts.">
+  <title>Stick With It — Live drums &amp; the monthly clip contest</title>
+  <meta name="description" content="Watch live, play along to this month's track, and submit your clip to the contest.">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="/test/home.css?v=20260708a">
-  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
-  <script src="/assets/nav.js?v=20260707b" defer></script>
+  <link rel="stylesheet" href="/test/home.css?v=20260708c">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js" defer></script>
-  <script src="/assets/home.js?v=20260707a" defer></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142348904039164" crossorigin="anonymous"></script>
+  <script src="/test/app.js?v=20260708c" defer></script>
 </head>
 <body>
-  <main class="home-shell">
-    <section class="home-live" id="live" aria-label="Live">
-      <div class="home-hero-grid">
-        <div class="home-hero-copy">
-          <p class="eyebrow">Live drums, contests, and practice tools</p>
-          <h1>Stick With It</h1>
-          <p class="hero-intro">Watch the live room, vote on monthly drum submissions, and jump into free browser tools built for practice that actually sticks.</p>
-          <div class="home-hero-actions" aria-label="Primary actions">
-            <a class="action primary" href="#vote">Vote now</a>
-            <a class="action" href="/submit/">Submit a clip</a>
-            <a class="action" href="#apps">Open apps</a>
-          </div>
-          <div class="hero-stats" aria-label="Site highlights">
-            <span><strong>24/7</strong> live channel</span>
-            <span><strong>Monthly</strong> clip contest</span>
-            <span><strong>Free</strong> drum apps</span>
-          </div>
-        </div>
-        <div class="live-player-panel">
-          <div class="player-card">
-            <video id="home-player" controls autoplay muted playsinline poster="/assets/StickWithItBlack.png"></video>
-            <div class="player-meta">
-              <span id="home-live-status" aria-live="polite"></span>
-              <button id="home-go-live" type="button"><span class="live-dot"></span><span>LIVE</span></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="/test/" aria-label="Stick With It home">
+        <img class="brand-mark" src="/assets/StickWithItBlack.png" alt="">
+        <span>Stick With It</span>
+      </a>
+    </header>
 
-    <section class="home-band contest-band" id="vote" aria-label="Monthly contest voting">
-      <div class="contest-wrap">
-        <div class="contest-countdown is-loading" id="contest-countdown" aria-live="polite"></div>
-        <div class="carousel-shell" id="vote-shell">
-          <button class="carousel-button" type="button" data-carousel="vote" data-dir="-1" aria-label="Previous entry">‹</button>
-          <div class="vote-carousel" id="vote-grid" aria-live="polite">
-            <article class="vote-card" data-entry-id="20260704-155656-admin-vid-20260123">
-              <video class="vote-video" controls muted playsinline preload="metadata" poster="/assets/contest/vid-20260123.jpg?v=2" src="/assets/contest/vid-20260123.mp4?v=2"></video>
-              <div>
-                <h3>VID_20260123</h3>
-                <p>Current rotation</p>
-              </div>
-              <button class="vote-button" type="button">Vote</button>
-            </article>
-            <article class="vote-card" data-entry-id="20260704-203114-aaron-ovecka-false-prophet">
-              <video class="vote-video" controls muted playsinline preload="metadata" poster="/assets/contest/aaron-ovecka-false-prophet.jpg?v=2" src="/assets/contest/aaron-ovecka-false-prophet.mp4?v=2"></video>
-              <div>
-                <h3>False Prophet</h3>
-                <p>Aaron Ovecka | I, The Breather</p>
-              </div>
-              <button class="vote-button" type="button">Vote</button>
-            </article>
-            <article class="vote-card" data-entry-id="20260705-151621-frank-de-santis-security-and-compliance">
-              <video class="vote-video" controls muted playsinline preload="metadata" poster="/assets/contest/frank-de-santis-security-and-compliance.jpg?v=2" src="/assets/contest/frank-de-santis-security-and-compliance.mp4?v=2"></video>
-              <div>
-                <h3>Security and Compliance</h3>
-                <p>Frank De Santis | One Fell Swoop</p>
-              </div>
-              <button class="vote-button" type="button">Vote</button>
-            </article>
-            <article class="vote-card" data-entry-id="20260705-153036-doug-court-chosen-one">
-              <video class="vote-video" controls muted playsinline preload="metadata" poster="/assets/contest/doug-court-chosen-one.jpg?v=2" src="/assets/contest/doug-court-chosen-one.mp4?v=2"></video>
-              <div>
-                <h3>Chosen One</h3>
-                <p>Doug Court | Sirens &amp; Sailors</p>
-              </div>
-              <button class="vote-button" type="button">Vote</button>
-            </article>
-            <article class="vote-card" data-entry-id="20260705-160725-drummer-hears-song-second-time">
-              <video class="vote-video" controls muted playsinline preload="metadata" poster="/assets/contest/drummer-hears-song-second-time.jpg?v=2" src="/assets/contest/drummer-hears-song-second-time.mp4?v=2"></video>
-              <div>
-                <h3>Drummer hears song for the second time</h3>
-                <p>Stick Stickly</p>
-              </div>
-              <button class="vote-button" type="button">Vote</button>
-            </article>
-          </div>
-          <button class="carousel-button" type="button" data-carousel="vote" data-dir="1" aria-label="Next entry">›</button>
+    <main class="feed">
+      <!-- Live player -->
+      <section class="player-sec" aria-label="Live stream">
+        <div class="player-card">
+          <video id="player" playsinline muted autoplay poster="/assets/StickWithItBlack.png"></video>
+          <span class="badge is-off" id="live-badge">● OFFLINE</span>
+          <button class="expand" id="expand-btn" type="button" aria-label="Fullscreen the player">⤢</button>
         </div>
-        <a class="text-link contest-submit" href="/contest/">Contest details &rarr;</a>
-        <a class="text-link contest-submit" href="/submit/">Submit for next month</a>
-      </div>
-    </section>
+        <p class="player-status" id="player-status" role="status" aria-live="polite"></p>
+      </section>
 
-    <section class="home-band store-band" id="store" aria-labelledby="store-title">
-      <div class="section-head">
-        <h2 id="store-title">Merch</h2>
-      </div>
-      <div class="fourthwall-embed">
-        <div class="fourthwall-topbar">
-          <span>stickwithit</span>
-          <span>Fourthwall</span>
+      <!-- Vote this month -->
+      <section class="vote-sec" aria-label="Vote this month">
+        <div class="sec-head"><h2>Vote this month</h2><span>1 vote / day</span></div>
+        <div class="vote-rail" id="vote-rail"><div class="empty">Loading entries…</div></div>
+      </section>
+
+      <!-- Contest pill -->
+      <section class="contest-sec" aria-label="This month's contest">
+        <div class="pill">
+          <span class="eyebrow" id="contest-eyebrow">This month's contest</span>
+          <div class="countdown" id="countdown" aria-live="polite"></div>
+          <div class="track" id="track"></div>
+          <ol class="steps">
+            <li><b>Play along</b> to the track</li>
+            <li><b>Record</b> your take</li>
+            <li><b>Submit</b> — right here</li>
+          </ol>
+          <a class="submit" href="/submit/">Submit your clip →</a>
         </div>
-        <div class="market-grid" id="home-market">
-          <div class="empty-state" aria-label="Loading shop"></div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <section class="home-band apps-band" id="apps" aria-labelledby="apps-title">
-      <div class="section-head">
-        <h2 id="apps-title">Apps</h2>
-      </div>
-      <div class="app-grid">
-        <a class="tool-card" href="/apps/metrognome/">
-          <img src="/assets/apps/previews/metrognome.webp" alt="MetroGnome app preview" loading="lazy" width="640" height="400">
-          <span>MetroGnome</span>
-          <small>Timing and subdivisions</small>
-        </a>
-        <a class="tool-card" href="/apps/chopmeister/">
-          <img src="/assets/apps/previews/chopmeister.webp" alt="Chopmeister app preview" loading="lazy" width="640" height="400">
-          <span>Chopmeister</span>
-          <small>Linear lick generator</small>
-        </a>
-        <a class="tool-card" href="/apps/gigasector/">
-          <img src="/assets/apps/previews/gigasector.webp" alt="Gigasector app preview" loading="lazy" width="640" height="400">
-          <span>Gigasector</span>
-          <small>Setlist loop reps</small>
-        </a>
-        <a class="tool-card" href="/apps/rudimentor/">
-          <img src="/assets/apps/previews/rudimentor.webp" alt="Rudimentor app preview" loading="lazy" width="640" height="400">
-          <span>Rudimentor</span>
-          <small>Rudiment practice</small>
-        </a>
-      </div>
-    </section>
+    <nav class="tabbar" aria-label="Primary">
+      <a class="tab is-active" href="/test/" aria-current="page"><span class="ti" aria-hidden="true">⌂</span>Home</a>
+      <a class="tab" href="/contest/"><span class="ti" aria-hidden="true">◎</span>Contest</a>
+      <a class="tab" href="/drummers/"><span class="ti" aria-hidden="true">♪</span>Artists</a>
+      <button class="tab" id="more-btn" type="button" aria-haspopup="true" aria-expanded="false"><span class="ti" aria-hidden="true">≡</span>More</button>
+    </nav>
+  </div>
 
-    <section class="home-band drummers-band" id="drummers" aria-labelledby="drummers-title">
-      <div class="section-head">
-        <h2 id="drummers-title">Featured Artists</h2>
-        <a class="text-link" href="/drummers/">View all</a>
-      </div>
-      <div class="carousel-shell">
-        <button class="carousel-button" type="button" data-carousel="drummers" data-dir="-1" aria-label="Previous artist">‹</button>
-        <div class="drummer-rail" id="home-drummers">
-          <div class="empty-state" aria-label="Loading featured artists"></div>
-        </div>
-        <button class="carousel-button" type="button" data-carousel="drummers" data-dir="1" aria-label="Next artist">›</button>
-      </div>
-    </section>
-
-    <section class="home-band blog-band" id="blog" aria-labelledby="blog-title">
-      <div class="section-head">
-        <h2 id="blog-title">Latest posts</h2>
-      </div>
-      <div class="blog-feed">
-        <a class="blog-card" href="/blog/chopmeister-pattern-generator/">
-          <time datetime="2026-02-24">February 24, 2026</time>
-          <span>Chopmeister and the Pattern Generator DNA</span>
-          <small>How the Android Pattern Generator inspired Chopmeister's browser grid, sharable URLs, and upcoming humanizer, with a practice flow built around fast ideas that stay easy to revisit.</small>
-        </a>
-        <a class="blog-card" href="/blog/setlist-sprint-roadmap/">
-          <time datetime="2026-02-20">February 20, 2026</time>
-          <span>Renaming Setlist Sprint &amp; Sharpening Its Job</span>
-          <small>Show planning, runtime math, and why the next name needs to reflect calm control instead of chaos when drummers are building repeatable setlist reps.</small>
-        </a>
-        <a class="blog-card" href="/blog/free-drum-tools/">
-          <time datetime="2026-02-05">February 5, 2026</time>
-          <span>Three Free Drum Tools for Everyday Practice</span>
-          <small>MetroGnome, Chopmeister, and Gigasector in one free toolkit for timing, vocabulary, and show prep.</small>
-        </a>
-      </div>
-      <a class="text-link blog-more" href="/blog/">All posts</a>
-    </section>
-  </main>
+  <div class="more-sheet" id="more-sheet" hidden>
+    <div class="more-panel" role="dialog" aria-label="More">
+      <div class="more-grab"></div>
+      <div class="more-title">Apps</div>
+      <a href="/apps/metrognome/">MetroGnome</a>
+      <a href="/apps/chopmeister/">Chopmeister</a>
+      <a href="/apps/gigasector/">Gigasector</a>
+      <a href="/apps/rudimentor/">Rudimentor</a>
+      <div class="more-title">More</div>
+      <a href="/store/">Store</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
 </body>
 </html>
