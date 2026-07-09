@@ -104,7 +104,8 @@
 
   async function loadContest() {
     const cd = $("countdown"), tk = $("track"), eb = $("contest-eyebrow"),
-          entriesEl = $("vote-rail") || $("vote-grid"), win = $("winner"), desc = $("contest-desc");
+          entriesEl = $("vote-rail") || $("vote-grid"), win = $("winner"),
+          head = $("contest-headline"), tag = $("contest-tagline");
     if (!cd && !tk && !entriesEl && !eb) return;
     let data;
     try { data = await getJSON("/assets/data/contest.json"); }
@@ -112,7 +113,8 @@
     if (eb) setEyebrow(eb, data);
     if (cd) renderCountdown(cd, data.ends_at);
     if (tk) renderTrack(tk, data.page && Array.isArray(data.page.tracks) ? data.page.tracks[0] : null);
-    if (desc && data.page) desc.innerHTML = `<b>${esc(data.page.headline || "")}</b> ${esc((data.page.description || [])[0] || "")}`;
+    if (head && data.page) head.textContent = data.page.headline || "";
+    if (tag && data.page) tag.textContent = (data.page.description || [])[0] || "";
     if (entriesEl) renderEntries(entriesEl, data);
     if (win) renderWinner(win, data);
   }
@@ -152,11 +154,20 @@
     document.title = `${a.name} — Stick With It`;
   }
 
+  /* ---------- store (More page) ---------- */
+  async function loadMarket() {
+    const el = $("store-grid"); if (!el) return;
+    let data; try { data = await getJSON("/assets/data/market.json"); } catch { el.innerHTML = `<div class="empty">Store loading soon.</div>`; return; }
+    const products = (data.products || []).filter((p) => p.active !== false);
+    if (!products.length) { el.innerHTML = `<div class="empty">New drops soon.</div>`; return; }
+    el.innerHTML = products.map((p) => `<a class="merchcard" href="${esc(p.url || "/store/")}" target="_blank" rel="noopener"><div class="mi">${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : "🛍️"}</div><div class="mb"><b>${esc(p.title)}</b>${p.price ? `<span class="pr">${esc(p.price)}</span>` : ""}${p.blurb ? `<span class="st">${esc(p.blurb)}</span>` : ""}</div></a>`).join("");
+  }
+
   /* ---------- submit (preview only on /test) ---------- */
   function initSubmit() {
     const btn = $("submit-btn"); if (!btn) return;
     btn.addEventListener("click", (e) => { e.preventDefault(); const n = $("submit-note"); if (n) n.textContent = "✓ Preview — on the live site this uploads your clip to the July contest."; });
   }
 
-  initPlayer(); loadContest(); loadArtists(); loadArtistDetail(); initSubmit();
+  initPlayer(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket(); initSubmit();
 })();
