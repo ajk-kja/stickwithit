@@ -256,3 +256,11 @@ img{max-width:100%;}
 .submit-note:empty{display:none;}
 .chead{font-size:clamp(1.6rem,4.5vw,2.4rem);font-weight:850;letter-spacing:-.02em;margin:0;color:#fff;}
 .ctag{font-size:.92rem;color:var(--muted);line-height:1.45;margin:0 auto;max-width:52ch;}
+.howcard.cta{border-color:var(--acc);background:linear-gradient(155deg,rgba(230,57,70,.22),rgba(230,57,70,.05));cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;}
+.howcard.cta:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(230,57,70,.3);}
+.howcard.cta .n{background:var(--acc);border-color:var(--acc);}
+.howcard.cta .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.howcard.cta b{margin:0;color:#fff;font-size:1.02rem;}
+.howcard.cta .arw{color:#fff;font-size:1.4rem;line-height:1;transition:transform .15s ease;}
+.howcard.cta:hover .arw{transform:translateX(4px);}
+.howcard.cta p{color:rgba(255,255,255,.82);}
