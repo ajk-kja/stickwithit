@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#050506">
 <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
 <title>Submit your clip — Stick With It</title>
-<link rel="stylesheet" href="/app.css?v=20260711c">
+<link rel="stylesheet" href="/app.css?v=20260711d">
 <script>
   window._tsApiReady = false;
   window._tsInit = function () {
@@ -14,7 +14,7 @@
   };
 </script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_tsInit&render=explicit" async defer></script>
-<script src="/app.js?v=20260711c" defer></script>
+<script src="/app.js?v=20260711d" defer></script>
 <style>
   .ctxbanner{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid rgba(230,57,70,.45);background:linear-gradient(150deg,rgba(230,57,70,.15),transparent);margin-bottom:14px;}
   @media(min-width:640px){.ctxbanner{flex-direction:row;align-items:center;gap:12px;}}
@@ -84,6 +84,7 @@
 
       <div class="checkstack">
         <label class="checkrow"><input type="checkbox" id="f-consent"> I made this clip and grant Stick With It permission to broadcast and feature it.</label>
+        <label class="checkrow"><input type="checkbox" id="f-terms"> I agree to the <a href="/contest/terms/" target="_blank" rel="noopener">Terms and Conditions</a>.</label>
         <label class="checkrow"><input type="checkbox" id="f-updates"> Get updates from Stick With It.</label>
       </div>
 
@@ -103,6 +104,7 @@
           <li><b>Voting runs daily</b> — one vote per person per day.</li>
           <li><b>Winner revealed</b> when the countdown hits zero.</li>
         </ol>
+        <p class="hint" style="margin-top:12px">By submitting, you agree to the <a href="/contest/terms/">Terms and Conditions</a>.</p>
         <details class="feedback-box">
           <summary>Having trouble uploading?</summary>
           <div class="field"><label>Tell us what happened</label><textarea id="feedback-msg" rows="3" maxlength="2000" placeholder="Error message, browser, or anything useful"></textarea></div>
@@ -130,7 +132,7 @@
 
   function setStatus(msg, cls) { const s = $("status"); s.textContent = msg; s.className = "status " + (cls || ""); }
   function setFeedbackStatus(msg, cls) { const s = $("feedback-status"); s.textContent = msg; s.className = "status " + (cls || ""); }
-  function maybeEnable() { $("go").disabled = !(file && $("f-consent").checked && (token || (cfg && cfg.optional))); }
+  function maybeEnable() { $("go").disabled = !(file && $("f-consent").checked && $("f-terms").checked && (token || (cfg && cfg.optional))); }
   function socialForSubmit() {
     const social = $("f-social").value.trim();
     return $("f-updates").checked ? (social + " " + OPT_IN_MARKER).trim() : social;
@@ -196,6 +198,7 @@
 
   $("file").onchange = () => pick($("file").files[0]);
   $("f-consent").addEventListener("change", maybeEnable);
+  $("f-terms").addEventListener("change", maybeEnable);
   const drop = $("drop");
   drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
   drop.ondragleave = () => drop.classList.remove("over");
@@ -262,6 +265,7 @@
             artist_name: $("f-artist").value.trim(),
             social_handle: socialForSubmit(),
             email_opt_in: $("f-updates").checked,
+            terms_accepted: $("f-terms").checked,
           }),
         })).json();
         done.ok
@@ -280,6 +284,7 @@
     xhr.setRequestHeader("X-Artist-Name", encodeURIComponent($("f-artist").value.trim()));
     xhr.setRequestHeader("X-Social-Handle", encodeURIComponent(socialForSubmit()));
     xhr.setRequestHeader("X-Email-Opt-In", $("f-updates").checked ? "1" : "0");
+    xhr.setRequestHeader("X-Terms-Accepted", $("f-terms").checked ? "1" : "0");
     if (token) xhr.setRequestHeader("X-Turnstile-Token", token);
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable) $("bar").style.width = (e.loaded / e.total * 100).toFixed(1) + "%";
@@ -302,6 +307,7 @@
     if (!emailEl.value.trim() || !emailEl.checkValidity()) { setStatus("a valid email is required", "err"); emailEl.focus(); return; }
     if (!file) { setStatus("choose a file first", "err"); return; }
     if (!$("f-consent").checked) { setStatus("confirm you made the clip and grant permission first", "err"); $("f-consent").focus(); return; }
+    if (!$("f-terms").checked) { setStatus("agree to the Terms and Conditions first", "err"); $("f-terms").focus(); return; }
     if (!token && !(cfg && cfg.optional)) { setStatus("complete the human check first", "err"); return; }
     $("go").disabled = true;
     $("barwrap").style.display = "block";

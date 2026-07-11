@@ -29,7 +29,9 @@
     "tracks": [
       {
         "title": "Asteroid Ascends",
-        "url": "/assets/contest/tracks/20260708-043854-Asteroid_Ascends.mp3",
+        "month": "July 2026",
+        "filename": "july-2026-asteroid-ascends.mp3",
+        "url": "https://stream.stickwithit.xyz/tracks/july-2026-asteroid-ascends.mp3",
         "note": "Sup Adilly DIIIILLLLL!"
       }
     ],
@@ -78,6 +80,8 @@
     }
   ],
   "archive": [],
+  "last_winner": {},
+  "giveaways": [],
   "dates": {
     "submission_deadline": "2026-08-01T03:59:00.000Z"
   },

@@ -150,10 +150,24 @@
   }
 
   /* ---------- play-along track (audio) ---------- */
+  function trackDownloadName(track) {
+    const fromUrl = String(track?.url || "").split("/").pop() || "";
+    return track?.filename || fromUrl || "stickwithit-playalong.mp3";
+  }
+
+  function renderTrackActions(el, track) {
+    if (!el) return;
+    if (!track || !track.url) {
+      el.innerHTML = "";
+      return;
+    }
+    el.innerHTML = `<a class="btn track-download-btn" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}">Download track</a><a class="btn" href="/apps/gigasector/">Open in Gigasector</a>`;
+  }
+
   function renderTrack(el, track) {
     if (!track || !track.url) { el.remove(); return; }
     const lbl = el.dataset.label || "Play-along track";
-    el.innerHTML = `<button class="play" type="button" aria-label="Play the track">▶</button><div class="info"><div class="lbl">${esc(lbl)}</div><div class="t">${esc(track.title || "This month's track")}</div><div class="bar"><i></i></div></div>`;
+    el.innerHTML = `<button class="play" type="button" aria-label="Play the track">▶</button><div class="info"><div class="lbl">${esc(lbl)}</div><div class="t">${esc(track.title || "This month's track")}</div><div class="bar"><i></i></div></div><a class="track-dl" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}">Download</a>`;
     const audio = new Audio(track.url); audio.preload = "none";
     const btn = el.querySelector(".play"), fill = el.querySelector(".bar i");
     btn.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
@@ -189,28 +203,70 @@
     else if (data.voting_window) el.textContent = `${data.voting_window} contest`;
   }
 
-  function renderWinner(el, data) {
-    const w = (data.winners || [])[0]; if (!w) { el.remove(); return; }
-    const entry = (data.entries || []).find((e) => e.id === w.entry_id);
-    if (!entry) { el.remove(); return; }
-    el.innerHTML = `<span class="medal">🏆</span><div class="th"><img src="${esc(entry.image || "")}" alt=""></div><div><b>${esc(entry.title)}</b><span class="wl">${esc(w.label || "1st")} place</span></div>`;
+  function artistSlug(value) {
+    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function findArtistProfile(artists, data) {
+    const chosen = data.last_winner && data.last_winner.artist_id;
+    if (chosen) return artists.find((a) => a.id === chosen);
+    const w = (data.winners || [])[0];
+    const entry = w && (data.entries || []).find((e) => e.id === w.entry_id);
+    if (!entry) return null;
+    const entryArtist = artistSlug(entry.artist || "");
+    return artists.find((a) => {
+      const id = a.id || "";
+      const name = artistSlug(a.name);
+      return id === entryArtist || name === entryArtist || entryArtist.startsWith(id + "-") || entryArtist.startsWith(name + "-");
+    });
+  }
+
+  function renderWinner(el, data, artists = []) {
+    const artist = findArtistProfile(artists, data);
+    if (!artist) {
+      el.innerHTML = `<div class="empty">Last winner profile coming soon.</div>`;
+      return;
+    }
+    const month = data.last_winner?.win_month || data.voting_window || "";
+    el.innerHTML = `<a class="winner" href="/artist/?id=${encodeURIComponent(artist.id)}"><span class="medal">🏆</span><div class="th"><img src="${esc(artist.image || "")}" alt=""></div><div><b>${esc(artist.name)}</b><span class="wl">Contest Winner${month ? " — " + esc(month) : ""}</span></div></a>`;
+  }
+
+  function renderGiveaways(data) {
+    const section = $("giveaways-section"), list = $("giveaways-list");
+    if (!section || !list) return;
+    const items = (Array.isArray(data.giveaways) ? data.giveaways : []).filter((g) => g && g.active !== false);
+    if (!items.length) {
+      section.hidden = true;
+      list.innerHTML = "";
+      return;
+    }
+    section.hidden = false;
+    list.innerHTML = items.map((g) => `<article class="giveaway-card">${g.image ? `<img src="${esc(g.image)}" alt="">` : ""}<div><b>${esc(g.title || "Giveaway")}</b>${g.description ? `<p>${esc(g.description)}</p>` : ""}<span>${g.end_date ? `Ends ${esc(g.end_date)} · ` : ""}<a href="/contest/terms/">Terms</a></span></div></article>`).join("");
   }
 
   async function loadContest() {
     const cd = $("countdown"), tk = $("track"), eb = $("contest-eyebrow"),
           entriesEl = $("vote-rail") || $("vote-grid"), win = $("winner"),
-          head = $("contest-headline"), tag = $("contest-tagline");
+          head = $("contest-headline"), tag = $("contest-tagline"),
+          trackActions = $("contest-track-actions");
     if (!cd && !tk && !entriesEl && !eb) return;
     let data;
     try { data = await getJSON("/assets/data/contest.json"); }
     catch { if (cd) cd.innerHTML = `<div class="g"><b>Soon</b><span>voting opens</span></div>`; if (tk) tk.remove(); if (entriesEl) entriesEl.innerHTML = `<div class="empty">Couldn't load entries.</div>`; return; }
+    const track = data.page && Array.isArray(data.page.tracks) ? data.page.tracks[0] : null;
     if (eb) setEyebrow(eb, data);
     if (cd) renderCountdown(cd, data.ends_at);
-    if (tk) renderTrack(tk, data.page && Array.isArray(data.page.tracks) ? data.page.tracks[0] : null);
+    if (tk) renderTrack(tk, track);
+    renderTrackActions(trackActions, track);
     if (head && data.page) head.textContent = data.page.headline || "";
     if (tag && data.page) tag.textContent = (data.page.description || [])[0] || "";
     if (entriesEl) renderEntries(entriesEl, data);
-    if (win) renderWinner(win, data);
+    renderGiveaways(data);
+    if (win) {
+      let artists = [];
+      try { artists = (await getJSON("/assets/data/drummers.json")).drummers || []; } catch {}
+      renderWinner(win, data, artists);
+    }
   }
 
   /* ---------- artists ---------- */
@@ -233,7 +289,10 @@
   async function loadArtistDetail() {
     const nameEl = $("a-name"); if (!nameEl) return;
     let data; try { data = await getJSON("/assets/data/drummers.json"); } catch { nameEl.textContent = "Artist unavailable"; return; }
-    const id = new URLSearchParams(location.search).get("id");
+    let contest = {};
+    try { contest = await getJSON("/assets/data/contest.json"); } catch {}
+    const pathId = (location.pathname.match(/^\/artist\/([^/]+)/) || [])[1] || "";
+    const id = new URLSearchParams(location.search).get("id") || pathId;
     const list = data.drummers || [];
     const a = list.find((d) => d.id === id) || list[0];
     if (!a) return;
@@ -241,6 +300,12 @@
     nameEl.textContent = a.name;
     $("a-ff").textContent = a.first_featured || "";
     $("a-bio").textContent = a.blurb || "";
+    const wins = Array.isArray(a.wins) ? a.wins.slice() : [];
+    if (contest.last_winner?.artist_id === a.id) {
+      wins.unshift({ month: contest.last_winner.win_month || contest.voting_window || "", label: "Contest Winner" });
+    }
+    const badgeEl = $("a-badges");
+    if (badgeEl) badgeEl.innerHTML = wins.length ? wins.map((w) => `<span class="winner-badge">🏆 ${esc(w.label || "Contest Winner")}${w.month ? " — " + esc(w.month) : ""}</span>`).join("") : "";
     const emb = ytEmbed(a.playlist_url);
     $("a-playlist").innerHTML = emb ? `<iframe class="yt" src="${emb}" title="${esc(a.name)} playlist" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>` : `<div class="empty">No videos yet.</div>`;
     const socs = a.socials || [];
