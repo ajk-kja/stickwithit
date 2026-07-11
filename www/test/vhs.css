@@ -198,7 +198,7 @@ body.vhs-mock .sound,
 body.vhs-mock .expand,
 body.vhs-mock .submit,
 body.vhs-mock .track .play,
-body.vhs-mock .player-shortcut,
+body.vhs-mock .track-shortcut,
 body.vhs-mock .btn,
 body.vhs-mock .votecard .vb,
 body.vhs-mock .chat .ci .snd {
@@ -213,7 +213,7 @@ body.vhs-mock .expand {
   color: var(--fg);
 }
 
-body.vhs-mock .player-shortcut {
+body.vhs-mock .track-shortcut {
   border-color: rgba(230, 57, 70, 0.76);
   background: rgba(0, 0, 0, 0.72);
   color: var(--fg);
@@ -284,6 +284,7 @@ body.vhs-mock .chat .ci .snd,
 body.vhs-mock .submit,
 body.vhs-mock .votecard .vb,
 body.vhs-mock .track .play,
+body.vhs-mock .track-shortcut,
 body.vhs-mock .btn {
   border: 1px solid rgba(230, 57, 70, 0.76);
   background: rgba(230, 57, 70, 0.2);
