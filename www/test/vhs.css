@@ -18,6 +18,7 @@ body.vhs-mock {
   --acc: #e63946;
   --acc-deep: #7f1d24;
   --acc-soft: #ff5a66;
+  --nav-h: 60px;
   --vhs-red: #e63946;
   --vhs-white: #ffffff;
   --vhs-gray: #c8c8cf;
@@ -63,6 +64,12 @@ body.vhs-mock .tabbar {
   box-shadow: 0 1px 0 rgba(230, 57, 70, 0.26);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+}
+
+body.vhs-mock .chrome {
+  position: sticky;
+  top: 0;
+  z-index: 60;
 }
 
 body.vhs-mock .brand,
@@ -481,7 +488,11 @@ body.vhs-mock .empty {
 }
 
 body.vhs-mock .tabbar {
-  height: calc(var(--nav-h) + 4px);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 70;
 }
 
 body.vhs-mock .tabbar a {
