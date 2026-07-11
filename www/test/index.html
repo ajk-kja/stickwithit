@@ -4,21 +4,22 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#050506">
 <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
-<title>Stick With It — Live drums &amp; the monthly contest</title>
+<title>Stick With It - VHS Homepage Mock</title>
 <meta name="description" content="Watch live, play along to this month's track, and submit your clip to the contest.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/test/app.css?v=20260708f">
+<link rel="stylesheet" href="/app.css?v=20260711d">
+<link rel="stylesheet" href="/test/vhs.css?v=20260711a">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js" defer></script>
-<script src="/test/app.js?v=20260708f" defer></script>
+<script src="/app.js?v=20260711d" defer></script>
 <style>
   .home-grid{display:grid;gap:16px;grid-template-columns:1fr;grid-template-areas:"player" "chat" "vote" "contest";}
   @media(min-width:860px){.home-grid{grid-template-columns:1fr 1fr;grid-template-areas:"player player" "chat contest" "vote vote";align-items:start;}}
   .ga-player{grid-area:player}.ga-chat{grid-area:chat}.ga-vote{grid-area:vote}.ga-contest{grid-area:contest}
   .ga-chat{min-height:210px}
   #player-status:empty{display:none}
-</style></head><body>
+</style></head><body class="vhs-mock">
 <header class="chrome"><div class="chrome-in">
-  <a class="brand" href="/test/"><span class="mk"></span>Stick With It</a>
+  <a class="brand" href="/test/"><img class="mk-img" src="/assets/StickWithItBlack.png" alt="" height="30" style="height:30px;width:auto" decoding="async">Stick With It</a>
   <nav class="desknav">
     <a class="live" href="/test/" aria-current="page"><span class="dot"></span>LIVE</a>
     <a href="/test/contest/">Contest</a><a href="/test/artists/">Artists</a><a href="/test/more/">More</a>
@@ -30,33 +31,32 @@
     <div class="ga-player player">
       <video id="player" playsinline muted autoplay poster="/assets/StickWithItBlack.png"></video>
       <span class="badge is-off" id="live-badge"><span class="dot" style="background:var(--dim)"></span>OFFLINE</span>
+      <button class="sound" id="sound-btn" type="button" aria-label="Unmute the live stream" title="Unmute">🔇</button>
       <button class="expand" id="expand-btn" type="button" aria-label="Fullscreen the player">⤢</button>
     </div>
 
-    <div class="ga-chat chat">
-      <div class="ch"><span>Live chat</span><span class="who">42 watching</span></div>
-      <div class="cm">
-        <div class="m"><b>groove_greg</b> that fill was insane 🔥</div>
-        <div class="m"><b>tama_tina</b> what bpm is this track?</div>
-        <div class="m"><b>swi_mod</b> 12 days left to submit — get yours in!</div>
-        <div class="m"><b>paradiddle_pat</b> just submitted mine 🥁</div>
-        <div class="m me"><b>you</b> let's gooo</div>
-      </div>
-      <div class="ci"><div class="box">Say something…</div><div class="snd">➤</div></div>
-      <div class="soon">Placeholder — live chat is a parked build (realtime backend + moderation).</div>
+    <div class="ga-chat chat live-chat" id="live-chat">
+      <div class="ch"><span>Live chat</span><span class="who" id="chat-state">Connecting</span></div>
+      <div class="cm chat-messages" id="chat-messages" aria-live="polite"></div>
+      <form class="ci chat-compose" id="chat-form" autocomplete="off">
+        <input class="chat-name" id="chat-name" name="name" maxlength="24" placeholder="Name" aria-label="Chat name">
+        <input class="box chat-text" id="chat-text" name="text" maxlength="300" placeholder="Say something..." aria-label="Chat message">
+        <button class="snd" id="chat-send" type="submit" aria-label="Send chat message">➤</button>
+      </form>
+      <div class="soon chat-status" id="chat-status"></div>
     </div>
 
     <section class="ga-vote">
       <div class="sh"><h2>Vote this month</h2><span>1 vote / day</span></div>
-      <div class="voterail" id="vote-rail"><div class="empty">Loading entries…</div></div>
+      <div class="voterail" id="vote-rail"><div class="empty">Loading entries...</div></div>
     </section>
 
     <aside class="ga-contest pill">
       <span class="eyebrow" id="contest-eyebrow">This month's contest</span>
       <div class="cd" id="countdown"></div>
       <div class="track" id="track" data-label="Play-along track"></div>
-      <ol class="steps"><li><b>Play along</b> to the track</li><li><b>Record</b> your take</li><li><b>Submit</b> — right here</li></ol>
-      <a class="submit" href="/test/submit/">Submit your clip →</a>
+      <ol class="steps"><li><b>Play along</b> to the track</li><li><b>Record</b> your take</li><li><b>Submit</b> - right here</li></ol>
+      <a class="submit" href="/test/submit/">Submit your clip -></a>
     </aside>
   </div>
 </main>
