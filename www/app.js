@@ -40,6 +40,13 @@
     else { setLive(false); setStatus("This browser can't play the live stream."); }
     const ex = $("expand-btn");
     if (ex) ex.addEventListener("click", () => { const el = video.closest(".player") || video; if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); });
+    const snd = $("sound-btn");
+    if (snd) {
+      const paint = () => { snd.textContent = video.muted ? "\uD83D\uDD07" : "\uD83D\uDD0A"; snd.title = video.muted ? "Unmute" : "Mute"; snd.setAttribute("aria-label", (video.muted ? "Unmute" : "Mute") + " the live stream"); };
+      snd.addEventListener("click", () => { video.muted = !video.muted; if (!video.muted) { video.volume = video.volume || 1; video.play().catch(() => {}); } paint(); });
+      video.addEventListener("volumechange", paint);
+      paint();
+    }
   }
 
   /* ---------- countdown ---------- */
