@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050506">
+<link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
+<title>Contest Archive — Stick With It</title>
+<link rel="stylesheet" href="/app.css?v=20260711h">
+<link rel="stylesheet" href="/vhs.css?v=20260711f">
+<script src="/app.js?v=20260711g" defer></script>
+<style>
+  .archive-head{margin-bottom:24px;}
+  .archive-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+  @media(min-width:640px){.archive-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:960px){.archive-grid{grid-template-columns:repeat(3,1fr);}}
+  .archive-card{display:flex;flex-direction:column;border:1px solid var(--bd);border-radius:0;background:var(--panel);overflow:hidden;}
+  .archive-card .th{aspect-ratio:16/9;position:relative;background:#000;overflow:hidden;}
+  .archive-card .th img,.archive-card .th video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
+  .archive-card .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--dim);font-weight:850;letter-spacing:.08em;}
+  .archive-card .m{padding:12px;display:flex;flex-direction:column;gap:7px;min-height:0;}
+  .archive-card h2{margin:0;color:#fff;font-size:.98rem;line-height:1.22;}
+  .archive-card p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.45;}
+  .archive-card .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+  .archive-card .meta span{display:inline-flex;align-items:center;min-height:24px;padding:4px 7px;border:1px solid var(--bd);border-radius:0;color:var(--muted);font-size:.64rem;font-weight:750;}
+  .archive-card .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px;}
+  .archive-empty{max-width:680px;margin:0 auto;}
+  .archive-empty .empty{padding:22px;text-align:center;}
+  .archive-empty h2{margin:0 0 8px;color:#fff;font-size:1.08rem;}
+  .archive-empty p{margin:0 auto 14px;max-width:48ch;color:var(--muted);font-size:.86rem;line-height:1.5;}
+</style>
+</head><body class="vhs-mock">
+<header class="chrome"><div class="chrome-in">
+  <a class="brand" href="/"><img class="mk-img" src="/assets/StickWithItBlack.png" alt="" height="30" style="height:30px;width:auto" decoding="async">Stick With It</a>
+  <nav class="desknav">
+    <a class="live" href="/"><span class="dot"></span>LIVE</a>
+    <a href="/contest/" aria-current="page">Contest</a><a href="/artists/">Artists</a><a href="/more/">More</a>
+  </nav>
+</div></header>
+
+<main class="wrap page">
+  <div class="backbar"><a class="back" href="/contest/">← Contest</a></div>
+  <div class="chero archive-head">
+    <span class="eyebrow">Contest archive</span>
+    <h1 class="chead">Past winners and closed contests</h1>
+    <p class="ctag">A public record of Stick With It contest results, pulled from the current contest data.</p>
+  </div>
+
+  <section aria-labelledby="archive-title">
+    <div class="sh"><h2 id="archive-title">Archive</h2><span id="archive-status">Loading…</span></div>
+    <div id="archive-grid" class="archive-grid"><div class="empty">Loading archive…</div></div>
+  </section>
+</main>
+
+<nav class="tabbar">
+  <a class="live" href="/"><span class="ic">●</span>LIVE</a>
+  <a href="/contest/" aria-current="page"><span class="ic">◎</span>Contest</a>
+  <a href="/artists/"><span class="ic">♪</span>Artists</a>
+  <a href="/more/"><span class="ic">≡</span>More</a>
+</nav>
+
+<script>
+(() => {
+  "use strict";
+  const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+  const grid = document.getElementById("archive-grid");
+  const status = document.getElementById("archive-status");
+
+  function firstValue(...values) {
+    return values.find((value) => value !== undefined && value !== null && String(value).trim() !== "");
+  }
+
+  function formatDate(value) {
+    const date = new Date(value || "");
+    if (Number.isNaN(date.getTime())) return "";
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function winnerFrom(item) {
+    if (item && typeof item.winner === "object" && item.winner) return item.winner;
+    if (Array.isArray(item?.winners) && item.winners[0]) return item.winners[0];
+    if (item?.winner) return { name: item.winner };
+    return null;
+  }
+
+  function mediaFor(item, winner) {
+    const image = firstValue(item.image, item.poster, item.thumbnail, winner?.image, winner?.poster);
+    const video = firstValue(item.video, item.url, winner?.video, winner?.url);
+    if (video && /\.(mp4|webm|mov)(\?|$)/i.test(video)) {
+      return `<video controls muted playsinline preload="metadata"${image ? ` poster="${esc(image)}"` : ""} src="${esc(video)}"></video>`;
+    }
+    if (image) return `<img src="${esc(image)}" alt="${esc(firstValue(winner?.name, item.label, item.title, "Contest winner"))}">`;
+    return '<div class="ph" aria-hidden="true">SWI</div>';
+  }
+
+  function renderItem(item) {
+    const winner = winnerFrom(item);
+    const label = firstValue(item.label, item.title, item.name, item.month, item.voting_window, "Closed contest");
+    const winnerName = firstValue(winner?.name, winner?.artist, winner?.handle, item.winner_name);
+    const winnerTitle = firstValue(winner?.title, winner?.entry_title, item.winning_entry, item.entry_title);
+    const awarded = formatDate(firstValue(item.date_awarded, item.awarded_at, item.closed_at, item.ends_at, item.end_date));
+    const prize = firstValue(winner?.prize, item.prize, item.prize_label);
+    const watchUrl = firstValue(item.watch_url, item.video_url, winner?.watch_url);
+
+    return `<article class="archive-card">
+      <div class="th">${mediaFor(item, winner)}</div>
+      <div class="m">
+        <h2>${esc(label)}</h2>
+        ${winnerName ? `<p><b>Winner:</b> ${esc(winnerName)}${winnerTitle ? ` - ${esc(winnerTitle)}` : ""}</p>` : '<p>Winner details coming soon.</p>'}
+        <div class="meta">
+          ${awarded ? `<span>${esc(awarded)}</span>` : ""}
+          ${prize ? `<span>${esc(prize)}</span>` : ""}
+        </div>
+        ${watchUrl ? `<div class="actions"><a class="btn" href="${esc(watchUrl)}">Watch winner</a></div>` : ""}
+      </div>
+    </article>`;
+  }
+
+  function renderEmpty() {
+    status.textContent = "No closed contests yet";
+    grid.className = "archive-empty";
+    grid.innerHTML = `<div class="empty">
+      <h2>Archive coming after the first contest closes.</h2>
+      <p>Winners will appear here after Stick With It contests close and results are published.</p>
+      <a class="btn" href="/contest/">Back to current contest</a>
+    </div>`;
+  }
+
+  async function loadArchive() {
+    try {
+      const response = await fetch("/assets/data/contest.json?ts=" + Date.now(), { cache: "no-store" });
+      if (!response.ok) throw new Error("archive unavailable");
+      const data = await response.json();
+      const archive = Array.isArray(data.archive) ? data.archive.filter(Boolean) : [];
+      if (!archive.length) {
+        renderEmpty();
+        return;
+      }
+      status.textContent = `${archive.length} ${archive.length === 1 ? "result" : "results"}`;
+      grid.className = "archive-grid";
+      grid.innerHTML = archive.map(renderItem).join("");
+    } catch {
+      status.textContent = "Unavailable";
+      grid.className = "archive-empty";
+      grid.innerHTML = `<div class="empty">
+        <h2>Archive unavailable.</h2>
+        <p>Contest results could not be loaded right now.</p>
+        <a class="btn" href="/contest/">Back to current contest</a>
+      </div>`;
+    }
+  }
+
+  loadArchive();
+})();
+</script>
+</body></html>
