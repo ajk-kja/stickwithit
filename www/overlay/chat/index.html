@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="en" class="is-hidden"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
@@ -9,7 +9,8 @@
   *{box-sizing:border-box}
   html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden}
   body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--fg)}
-  #chat{position:fixed;left:28px;right:28px;bottom:26px;display:flex;flex-direction:column;gap:10px}
+  #chat{position:fixed;left:28px;right:28px;bottom:26px;display:flex;flex-direction:column;gap:10px;opacity:1;visibility:visible;transition:opacity .22s ease}
+  html.is-hidden #chat{opacity:0;visibility:hidden;pointer-events:none}
   .m{display:grid;grid-template-columns:30px minmax(0,auto) minmax(0,1fr);gap:11px;align-items:baseline;
     font-size:31px;line-height:1.18;font-weight:750;text-shadow:0 2px 7px var(--shadow),0 0 2px #000;overflow-wrap:anywhere}
   .m:nth-last-child(8){opacity:.28}.m:nth-last-child(7){opacity:.36}.m:nth-last-child(6){opacity:.48}.m:nth-last-child(5){opacity:.62}
@@ -34,6 +35,17 @@
   };
   const el = document.getElementById("chat");
   const seen = new Set();
+  function setVisible(enabled) {
+    document.documentElement.classList.toggle("is-hidden", !enabled);
+    el.setAttribute("aria-hidden", enabled ? "false" : "true");
+  }
+  async function refreshState() {
+    try {
+      const res = await fetch("/api/chat/state?ts=" + Date.now(), { cache:"no-store" });
+      const data = await res.json();
+      if (typeof data.overlay_enabled === "boolean") setVisible(data.overlay_enabled);
+    } catch (e) {}
+  }
   function add(msg) {
     if (!msg || !msg.id || seen.has(msg.id)) return;
     seen.add(msg.id);
@@ -57,8 +69,13 @@
     es.onmessage = (ev) => { try { add(JSON.parse(ev.data)); } catch (e) {} };
     es.addEventListener("message", (ev) => { try { add(JSON.parse(ev.data)); } catch (e) {} });
   } else {
-    fetch("/api/chat/recent", { cache:"no-store" }).then((r) => r.json()).then((d) => (d.messages || []).forEach(add)).catch(() => {});
+    fetch("/api/chat/recent", { cache:"no-store" }).then((r) => r.json()).then((d) => {
+      if (typeof d.overlay_enabled === "boolean") setVisible(d.overlay_enabled);
+      (d.messages || []).forEach(add);
+    }).catch(() => {});
   }
+  refreshState();
+  setInterval(refreshState, 1500);
 })();
 </script>
 </body></html>
