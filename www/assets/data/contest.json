@@ -14,8 +14,8 @@
     "youtube_video_id": null,
     "steps": [
       {
-        "title": "Get the track",
-        "text": "Download this month's play-along track from this page when it drops."
+        "title": "Use the player",
+        "text": "Use the live player shortcuts to download this month's play-along track or open Gigasector."
       },
       {
         "title": "Film your version",
@@ -29,13 +29,28 @@
     "tracks": [
       {
         "title": "Asteroid Ascends",
-        "month": "July 2026",
-        "filename": "july-2026-asteroid-ascends.mp3",
-        "url": "https://stream.stickwithit.xyz/tracks/july-2026-asteroid-ascends.mp3",
+        "url": "/assets/contest/tracks/20260708-043854-Asteroid_Ascends.mp3",
         "note": "Sup Adilly DIIIILLLLL!"
       }
     ],
-    "prize": null
+    "prize": null,
+    "prizes": [
+      {
+        "place": "1st",
+        "text": "Prize TBA",
+        "value": ""
+      },
+      {
+        "place": "2nd",
+        "text": "Prize TBA",
+        "value": ""
+      },
+      {
+        "place": "3rd",
+        "text": "Prize TBA",
+        "value": ""
+      }
+    ]
   },
   "entries": [
     {
@@ -80,7 +95,10 @@
     }
   ],
   "archive": [],
-  "last_winner": {},
+  "last_winner": {
+    "artist_id": "aaron-ovecka",
+    "win_month": "July 2026"
+  },
   "giveaways": [],
   "dates": {
     "submission_deadline": "2026-08-01T03:59:00.000Z"
@@ -88,8 +106,19 @@
   "winners": [
     {
       "rank": 1,
-      "entry_id": "20260704-155656-admin-vid-20260123",
+      "entry_id": "20260704-203114-aaron-ovecka-false-prophet",
       "label": "1st"
+    },
+    {
+      "rank": 2,
+      "entry_id": "20260705-151621-frank-de-santis-security-and-compliance",
+      "label": "2nd"
+    },
+    {
+      "rank": 3,
+      "entry_id": "20260705-153036-doug-court-chosen-one",
+      "label": "3rd"
     }
-  ]
+  ],
+  "updated_at": "2026-07-11T16:38:51.246129Z"
 }
