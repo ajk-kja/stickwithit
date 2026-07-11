@@ -1,18 +1,36 @@
 {
   "provider": "Fourthwall",
-  "note": "Fourthwall products feed the homepage, store page, and live market.",
+  "note": "Synced from Fourthwall Open API by the admin dashboard.",
+  "synced_at": "2026-07-11T20:10:10Z",
+  "shop": {
+    "name": "Stick With It",
+    "domain": "stick-with-it-shop.fourthwall.com",
+    "password_gated": true
+  },
   "products": [
     {
-      "id": "product-1-vic-firth-american-classic-3a-1783395637",
-      "title": "Product 1 Vic Firth American Classic 3A",
-      "blurb": "Test Test Test",
-      "url": "https://www.amazon.com/Vic-Firth-American-Classic-3A/dp/B0002F7434",
-      "image": "https://m.media-amazon.com/images/I/615WwGl4jwL._AC_SL1500_.jpg",
-      "price": "$15",
-      "source": "manual",
+      "id": "c1a7a9c9-ab28-4fbd-b39c-d509fdef6c7d",
+      "title": "Stick With It Tee",
+      "blurb": "A minimalist candle graphic on Bella+Canvas's most iconic unisex tee. Lightweight 4.2 oz cotton, supersoft feel, regular fit.",
+      "url": "https://stick-with-it-shop.fourthwall.com/products/stick-with-it-tee",
+      "image": "https://cdn.fourthwall.com/customizations/sh_5a404ddb-d394-44c7-adc8-70130cb28382/0dec137c-6d8d-436f-956a-2e7307e791e5.webp",
+      "price": "$22.00",
+      "source": "fourthwall",
       "youtube_tag": false,
       "active": true,
-      "updated_at": "2026-07-07T03:40:37Z"
+      "updated_at": "2026-07-11T20:10:10Z"
+    },
+    {
+      "id": "bbfe4496-1dfb-4b8d-bbef-e7f96a8ac927",
+      "title": "Stick With It Candle Sticker",
+      "blurb": "Durable vinyl kiss-cut sticker featuring the Stick With It candle design. Easy peel, bubble-free application, perfect for indoor use.",
+      "url": "https://stick-with-it-shop.fourthwall.com/products/stick-with-it-candle-sticker",
+      "image": "https://cdn.fourthwall.com/customizations/sh_5a404ddb-d394-44c7-adc8-70130cb28382/4b9b3b4d-d34f-476c-97f7-b3a611ee576a.webp",
+      "price": "$8.00",
+      "source": "fourthwall",
+      "youtube_tag": false,
+      "active": true,
+      "updated_at": "2026-07-11T20:10:10Z"
     }
   ]
 }

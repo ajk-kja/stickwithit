@@ -37,18 +37,18 @@
     "prizes": [
       {
         "place": "1st",
-        "text": "Prize TBA",
-        "value": ""
+        "text": "Headphones",
+        "value": "~$100"
       },
       {
         "place": "2nd",
-        "text": "Prize TBA",
-        "value": ""
+        "text": "Drum Sticks",
+        "value": "~%15"
       },
       {
         "place": "3rd",
-        "text": "Prize TBA",
-        "value": ""
+        "text": "Stickers",
+        "value": "~$5"
       }
     ]
   },
@@ -99,7 +99,15 @@
     "artist_id": "aaron-ovecka",
     "win_month": "July 2026"
   },
-  "giveaways": [],
+  "giveaways": [
+    {
+      "title": "In Ear headphones",
+      "image": "https://m.media-amazon.com/images/I/61zJN-ORQ9L._AC_SL1200_.jpg",
+      "description": "These are great headphones to listen and practice with.",
+      "end_date": "08/01/2026",
+      "active": true
+    }
+  ],
   "dates": {
     "submission_deadline": "2026-08-01T03:59:00.000Z"
   },
@@ -120,5 +128,5 @@
       "label": "3rd"
     }
   ],
-  "updated_at": "2026-07-11T16:38:51.246129Z"
+  "updated_at": "2026-07-11T19:55:48.770905Z"
 }
