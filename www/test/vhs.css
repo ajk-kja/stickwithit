@@ -76,6 +76,13 @@ body.vhs-mock .chat .ch,
 body.vhs-mock .chat .soon,
 body.vhs-mock .votecard .vb,
 body.vhs-mock .submit,
+body.vhs-mock .btn,
+body.vhs-mock .backbar .back,
+body.vhs-mock .backbar .share,
+body.vhs-mock .soc,
+body.vhs-mock .contest-prize-title,
+body.vhs-mock .appcard2 b,
+body.vhs-mock .merchcard b,
 body.vhs-mock .cd .g span,
 body.vhs-mock .steps li::before {
   font-family: "VCR OSD Mono", "Courier New", monospace;
@@ -125,7 +132,11 @@ body.vhs-mock .chat,
 body.vhs-mock .pill,
 body.vhs-mock .votecard,
 body.vhs-mock .empty,
-body.vhs-mock .track {
+body.vhs-mock .track,
+body.vhs-mock .howcard,
+body.vhs-mock .contest-prizes li,
+body.vhs-mock .dropzone,
+body.vhs-mock .nextcard {
   border-radius: 0;
 }
 
@@ -133,7 +144,11 @@ body.vhs-mock .player,
 body.vhs-mock .chat,
 body.vhs-mock .pill,
 body.vhs-mock .votecard,
-body.vhs-mock .empty {
+body.vhs-mock .empty,
+body.vhs-mock .howcard,
+body.vhs-mock .contest-prizes li,
+body.vhs-mock .dropzone,
+body.vhs-mock .nextcard {
   border: 1px solid var(--bd);
   background: rgba(8, 8, 10, 0.92);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055), 0 18px 32px rgba(0, 0, 0, 0.26);
@@ -201,7 +216,16 @@ body.vhs-mock .track .play,
 body.vhs-mock .track-shortcut,
 body.vhs-mock .btn,
 body.vhs-mock .votecard .vb,
-body.vhs-mock .chat .ci .snd {
+body.vhs-mock .chat .ci .snd,
+body.vhs-mock .howcard.cta,
+body.vhs-mock .artistcard,
+body.vhs-mock .feat-hero,
+body.vhs-mock .appcard2,
+body.vhs-mock .merchcard,
+body.vhs-mock .blogcard,
+body.vhs-mock .winner,
+body.vhs-mock .soc,
+body.vhs-mock .backbar .share {
   border-radius: 7px;
 }
 
@@ -285,7 +309,9 @@ body.vhs-mock .submit,
 body.vhs-mock .votecard .vb,
 body.vhs-mock .track .play,
 body.vhs-mock .track-shortcut,
-body.vhs-mock .btn {
+body.vhs-mock .btn,
+body.vhs-mock .soc,
+body.vhs-mock .backbar .share {
   border: 1px solid rgba(230, 57, 70, 0.76);
   background: rgba(230, 57, 70, 0.2);
   color: #fff;
@@ -354,6 +380,68 @@ body.vhs-mock .steps li::before {
 
 body.vhs-mock .votecard {
   background: rgba(8, 8, 10, 0.94);
+}
+
+body.vhs-mock .chead,
+body.vhs-mock .aname,
+body.vhs-mock .feat-hero .nm {
+  font-family: "VCR OSD Mono", "Courier New", monospace;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.5), -1px 0 rgba(230, 57, 70, 0.62), 2px 2px 0 #000;
+}
+
+body.vhs-mock .ctag,
+body.vhs-mock .muted,
+body.vhs-mock .abio,
+body.vhs-mock .howcard p,
+body.vhs-mock .nextsteps li,
+body.vhs-mock .appcard2 .nt,
+body.vhs-mock .merchcard .st,
+body.vhs-mock .blogcard p {
+  color: var(--muted);
+}
+
+body.vhs-mock .feat-hero,
+body.vhs-mock .artistcard,
+body.vhs-mock .appcard2,
+body.vhs-mock .merchcard,
+body.vhs-mock .blogcard {
+  border-color: var(--bd);
+  background: rgba(8, 8, 10, 0.92);
+  box-shadow: none;
+}
+
+body.vhs-mock .feat-hero .img img,
+body.vhs-mock .appcard2 .prev img,
+body.vhs-mock .merchcard .mi img,
+body.vhs-mock .dhero img,
+body.vhs-mock .winner .th img,
+body.vhs-mock .giveaway-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.vhs-mock .appcard2 .prev,
+body.vhs-mock .merchcard .mi,
+body.vhs-mock .dhero,
+body.vhs-mock .winner .th,
+body.vhs-mock .giveaway-card img {
+  border-radius: 0;
+  background: #020203;
+}
+
+body.vhs-mock .field input,
+body.vhs-mock .field textarea {
+  border-radius: 0;
+  border-color: var(--bd2);
+  background: #020203;
+  color: var(--fg);
+}
+
+body.vhs-mock .contest-prizes li {
+  box-shadow: none;
 }
 
 body.vhs-mock .votecard .th {

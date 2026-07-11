@@ -6,11 +6,12 @@
 <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
 <title>Contest — Stick With It</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/test/app.css?v=20260708f">
-<script src="/test/app.js?v=20260708f" defer></script>
-</head><body>
+<link rel="stylesheet" href="/test/app.css?v=20260711g">
+<link rel="stylesheet" href="/test/vhs.css?v=20260711d">
+<script src="/test/app.js?v=20260711g" defer></script>
+</head><body class="vhs-mock">
 <header class="chrome"><div class="chrome-in">
-  <a class="brand" href="/test/"><span class="mk"></span>Stick With It</a>
+  <a class="brand" href="/test/"><img class="mk-img" src="/assets/StickWithItBlack.png" alt="" height="30" style="height:30px;width:auto" decoding="async">Stick With It</a>
   <nav class="desknav">
     <a class="live" href="/test/"><span class="dot"></span>LIVE</a>
     <a href="/test/contest/" aria-current="page">Contest</a><a href="/test/artists/">Artists</a><a href="/test/more/">More</a>
@@ -26,11 +27,12 @@
   </div>
 
   <div class="track" id="track" data-label="Play-along track" style="margin-top:18px"></div>
+  <div class="contest-prizes" id="contest-prizes" style="margin-top:14px"></div>
 
   <div class="howwrap" style="margin-top:22px">
     <div class="sh" style="justify-content:center"><h2>How to enter</h2></div>
     <div class="howgrid">
-      <div class="howcard"><div class="n">1</div><b>Get the track</b><p>Grab this month's play-along track above.</p></div>
+      <div class="howcard"><div class="n">1</div><b>Use the player</b><p>Start from the live player shortcuts to download the track or open Gigasector.</p></div>
       <div class="howcard"><div class="n">2</div><b>Film your version</b><p>Record your take with the track playing.</p></div>
       <a class="howcard cta" href="/test/submit/"><div class="n">3</div><div class="hd"><b>Submit</b><span class="arw">→</span></div><p>Send your clip — it joins the current vote.</p></a>
     </div>
@@ -43,7 +45,12 @@
 
   <div style="margin-top:24px">
     <div class="sh"><h2>Last winner</h2></div>
-    <div class="winner" id="winner"></div>
+    <div id="winner"></div>
+  </div>
+
+  <div id="giveaways-section" style="margin-top:24px" hidden>
+    <div class="sh"><h2>Giveaways</h2><span><a href="/contest/terms/">Terms</a></span></div>
+    <div class="giveaway-grid" id="giveaways-list"></div>
   </div>
 </main>
 

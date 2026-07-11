@@ -133,7 +133,7 @@ img{max-width:100%;}
 .voterail::-webkit-scrollbar{display:none;}
 .votecard{scroll-snap-align:start;display:flex;flex-direction:column;border:1px solid var(--bd);border-radius:11px;overflow:hidden;background:var(--panel);}
 .votecard .th{aspect-ratio:16/9;position:relative;background:#000;overflow:hidden;}
-.votecard .th img,.votecard .th video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;}
+.votecard .th img,.votecard .th video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
 .votecard .m{padding:8px 10px;}
 .votecard .m strong{display:block;font-size:.8rem;line-height:1.2;}
 .votecard .m span{font-size:.66rem;color:var(--muted);}

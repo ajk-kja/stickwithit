@@ -6,8 +6,9 @@
 <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
 <title>Submit your clip — Stick With It</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/test/app.css?v=20260708f">
-<script src="/test/app.js?v=20260708f" defer></script>
+<link rel="stylesheet" href="/test/app.css?v=20260711g">
+<link rel="stylesheet" href="/test/vhs.css?v=20260711d">
+<script src="/test/app.js?v=20260711g" defer></script>
 <style>
   .ctxbanner{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid rgba(230,57,70,.45);background:linear-gradient(150deg,rgba(230,57,70,.15),transparent);margin-bottom:14px;}
   @media(min-width:640px){.ctxbanner{flex-direction:row;align-items:center;gap:12px;}}
@@ -20,9 +21,9 @@
   .nextsteps li{counter-increment:n;display:flex;gap:10px;font-size:.8rem;color:var(--muted);line-height:1.4;}
   .nextsteps li::before{content:counter(n);width:20px;height:20px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:rgba(230,57,70,.16);border:1px solid var(--acc);color:#fff;font-size:.66rem;font-weight:850;}
   .nextsteps b{color:var(--fg);}
-</style></head><body>
+</style></head><body class="vhs-mock">
 <header class="chrome"><div class="chrome-in">
-  <a class="brand" href="/test/"><span class="mk"></span>Stick With It</a>
+  <a class="brand" href="/test/"><img class="mk-img" src="/assets/StickWithItBlack.png" alt="" height="30" style="height:30px;width:auto" decoding="async">Stick With It</a>
   <nav class="desknav">
     <a class="live" href="/test/"><span class="dot"></span>LIVE</a>
     <a href="/test/contest/">Contest</a><a href="/test/artists/">Artists</a><a href="/test/more/">More</a>
@@ -38,7 +39,7 @@
     <span class="tx">You're entering the <b>July contest</b> — play along to <b>“Asteroid Ascends.”</b> Free, one entry.</span>
   </div>
 
-  <div class="track" data-label="Need the track?" style="margin-bottom:18px"><div class="play">▶</div><div class="info"><div class="lbl">Need the track?</div><div class="t">Asteroid Ascends</div><div class="bar"><i></i></div></div></div>
+  <div class="track" id="track" data-label="Need the track?" style="margin-bottom:18px"></div>
 
   <div class="split contest-split">
     <div class="stack">

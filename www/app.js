@@ -4,6 +4,8 @@
   const RETRY_MS = 8000;
   const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const $ = (id) => document.getElementById(id);
+  const TEST_BASE = location.pathname.startsWith("/test/") ? "/test" : "";
+  const sitePath = (path) => `${TEST_BASE}${path}`;
   const today = () => new Date().toISOString().slice(0, 10);
   const cookie = (n) => (document.cookie.split("; ").find((p) => p.startsWith(n + "=")) || "").split("=")[1] || "";
   const setCookie = (n, v) => { const e = new Date(); e.setMonth(e.getMonth() + 2); document.cookie = `${n}=${encodeURIComponent(v)}; expires=${e.toUTCString()}; path=/; SameSite=Lax`; };
@@ -157,6 +159,7 @@
 
   function gigasectorUrl(track) {
     const params = new URLSearchParams();
+    params.set("demo", "1");
     if (track?.url) params.set("track", track.url);
     if (track?.title) params.set("title", track.title);
     const qs = params.toString();
@@ -245,7 +248,7 @@
       return;
     }
     const month = data.last_winner?.win_month || data.voting_window || "";
-    el.innerHTML = `<a class="winner" href="/artist/?id=${encodeURIComponent(artist.id)}"><span class="medal">🏆</span><div class="th"><img src="${esc(artist.image || "")}" alt=""></div><div><b>${esc(artist.name)}</b><span class="wl">Contest Winner${month ? " — " + esc(month) : ""}</span></div></a>`;
+    el.innerHTML = `<a class="winner" href="${sitePath("/artist/")}?id=${encodeURIComponent(artist.id)}"><span class="medal">🏆</span><div class="th"><img src="${esc(artist.image || "")}" alt=""></div><div><b>${esc(artist.name)}</b><span class="wl">Contest Winner${month ? " — " + esc(month) : ""}</span></div></a>`;
   }
 
   function renderGiveaways(data) {
@@ -289,7 +292,7 @@
   /* ---------- artists ---------- */
   const isPodcast = (d) => String(d.id || "").startsWith("stick-together-");
   function artistTile(d) {
-    return `<a class="artistcard${d.memorial ? " mem" : ""}" href="/artist/?id=${encodeURIComponent(d.id)}"><div class="img"><img src="${esc(d.image)}" alt="" loading="lazy"></div><div class="tx">${d.memorial ? '<span class="memtag">In memoriam</span>' : ""}<div class="nm">${esc(d.name)}</div><div class="bl">${esc(d.blurb || "")}</div><div class="ff">${esc(d.first_featured || "")}</div></div></a>`;
+    return `<a class="artistcard${d.memorial ? " mem" : ""}" href="${sitePath("/artist/")}?id=${encodeURIComponent(d.id)}"><div class="img"><img src="${esc(d.image)}" alt="" loading="lazy"></div><div class="tx">${d.memorial ? '<span class="memtag">In memoriam</span>' : ""}<div class="nm">${esc(d.name)}</div><div class="bl">${esc(d.blurb || "")}</div><div class="ff">${esc(d.first_featured || "")}</div></div></a>`;
   }
   async function loadArtists() {
     const featEl = $("artist-featured"), subEl = $("artist-sub"), gridEl = $("artist-grid");
@@ -298,7 +301,7 @@
     const all = (data.drummers || []).filter((d) => d.active !== false && !isPodcast(d)).sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
     const hero = all.find((d) => !d.memorial) || all[0];
     const rest = all.filter((d) => d !== hero);
-    if (featEl && hero) featEl.innerHTML = `<a class="feat-hero" href="/artist/?id=${encodeURIComponent(hero.id)}"><div class="img"><img src="${esc(hero.image)}" alt=""></div><div class="tx"><span class="kick">Featured</span><div class="nm">${esc(hero.name)}</div><div class="bl">${esc(hero.blurb || "")}</div><div class="ff">${esc(hero.first_featured || "")}</div></div></a>`;
+    if (featEl && hero) featEl.innerHTML = `<a class="feat-hero" href="${sitePath("/artist/")}?id=${encodeURIComponent(hero.id)}"><div class="img"><img src="${esc(hero.image)}" alt=""></div><div class="tx"><span class="kick">Featured</span><div class="nm">${esc(hero.name)}</div><div class="bl">${esc(hero.blurb || "")}</div><div class="ff">${esc(hero.first_featured || "")}</div></div></a>`;
     if (subEl) subEl.innerHTML = rest.slice(0, 3).map(artistTile).join("");
     if (gridEl) gridEl.innerHTML = rest.slice(3).map(artistTile).join("");
   }
@@ -308,7 +311,7 @@
     let data; try { data = await getJSON("/assets/data/drummers.json"); } catch { nameEl.textContent = "Artist unavailable"; return; }
     let contest = {};
     try { contest = await getJSON("/assets/data/contest.json"); } catch {}
-    const pathId = (location.pathname.match(/^\/artist\/([^/]+)/) || [])[1] || "";
+    const pathId = (location.pathname.match(/^\/(?:test\/)?artist\/([^/]+)/) || [])[1] || "";
     const id = new URLSearchParams(location.search).get("id") || pathId;
     const list = data.drummers || [];
     const a = list.find((d) => d.id === id) || list[0];
@@ -339,5 +342,14 @@
     el.innerHTML = products.map((p) => `<a class="merchcard" href="${esc(p.url || "/store/")}" target="_blank" rel="noopener"><div class="mi">${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : "🛍️"}</div><div class="mb"><b>${esc(p.title)}</b>${p.price ? `<span class="pr">${esc(p.price)}</span>` : ""}${p.blurb ? `<span class="st">${esc(p.blurb)}</span>` : ""}</div></a>`).join("");
   }
 
-  initPlayer(); initChat(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket();
+  function initSubmitPreview() {
+    const btn = $("submit-btn"); if (!btn) return;
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const n = $("submit-note");
+      if (n) n.textContent = "Preview - on the live site this uploads your clip to the current contest.";
+    });
+  }
+
+  initPlayer(); initChat(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket(); initSubmitPreview();
 })();
