@@ -29,7 +29,7 @@
     "tracks": [
       {
         "title": "Asteroid Ascends",
-        "url": "/assets/contest/tracks/20260708-043854-Asteroid_Ascends.mp3",
+        "url": "https://stream.stickwithit.xyz/tracks/july-2026-asteroid-ascends.mp3",
         "note": "Sup Adilly DIIIILLLLL!"
       }
     ],
@@ -43,7 +43,7 @@
       {
         "place": "2nd",
         "text": "Drum Sticks",
-        "value": "~%15"
+        "value": "~$15"
       },
       {
         "place": "3rd",
@@ -128,5 +128,5 @@
       "label": "3rd"
     }
   ],
-  "updated_at": "2026-07-11T19:55:48.770905Z"
+  "updated_at": "2026-07-11T22:01:24.506921Z"
 }
