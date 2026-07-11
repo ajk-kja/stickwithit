@@ -49,6 +49,93 @@
     }
   }
 
+  /* ---------- live chat ---------- */
+  const CHAT_ICONS = {
+    twitch: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#9146ff" d="M4 3h17v11.7l-4.8 4.8h-3.7L9.8 22H7v-2.5H3V6.8L4 3Zm2 2v12.5h4v1.8l1.8-1.8h3.4L19 13.7V5H6Zm4.5 3.1h2v5.6h-2V8.1Zm5 0h2v5.6h-2V8.1Z"/></svg>',
+    discord: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#5865f2" d="M19.7 5.4A16.7 16.7 0 0 0 15.6 4l-.2.3c-.2.4-.4.8-.5 1.2a15.6 15.6 0 0 0-5.8 0 8 8 0 0 0-.7-1.5 16.7 16.7 0 0 0-4.1 1.4C1.7 9.3 1 13.2 1.4 17c1.7 1.3 3.4 2 5 2.4.4-.5.8-1.1 1.1-1.8-.6-.2-1.1-.5-1.7-.8l.4-.3c3.3 1.5 6.8 1.5 10 0l.4.3c-.5.3-1.1.6-1.7.8.3.7.7 1.3 1.1 1.8 1.7-.5 3.4-1.2 5.1-2.4.5-4.4-.8-8.2-3.4-11.6ZM8.4 14.7c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm7.2 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>',
+    web: '<span class="src-web" aria-hidden="true">🥁</span>'
+  };
+
+  function chatIcon(source) {
+    return CHAT_ICONS[source] || CHAT_ICONS.web;
+  }
+
+  function initChat() {
+    const root = $("live-chat"), list = $("chat-messages"), form = $("chat-form"),
+          nameEl = $("chat-name"), textEl = $("chat-text"), sendEl = $("chat-send"),
+          stateEl = $("chat-state"), statusEl = $("chat-status");
+    if (!root || !list || !form || !nameEl || !textEl) return;
+    let autoScroll = true;
+    const seen = new Set();
+    const setState = (value) => { if (stateEl) stateEl.textContent = value; };
+    const setStatus = (value) => { if (statusEl) statusEl.textContent = value || ""; };
+    const atBottom = () => list.scrollTop + list.clientHeight >= list.scrollHeight - 24;
+    const scrollDown = () => { if (autoScroll) list.scrollTop = list.scrollHeight; };
+    const saved = localStorage.getItem("swi_chat_name") || "";
+    if (saved) nameEl.value = saved.slice(0, 24);
+    list.addEventListener("scroll", () => { autoScroll = atBottom(); });
+    function addMessage(msg) {
+      if (!msg || !msg.id || seen.has(msg.id)) return;
+      seen.add(msg.id);
+      const wasBottom = atBottom();
+      const row = document.createElement("div");
+      row.className = `m source-${String(msg.source || "web").replace(/[^a-z]/g, "")}`;
+      const src = document.createElement("span");
+      src.className = "src";
+      src.innerHTML = chatIcon(msg.source);
+      const user = document.createElement("b");
+      user.textContent = String(msg.user || "guest");
+      const text = document.createElement("span");
+      text.className = "txt";
+      text.textContent = String(msg.text || "");
+      row.append(src, user, text);
+      list.append(row);
+      while (list.children.length > 200) list.firstElementChild.remove();
+      if (wasBottom || autoScroll) scrollDown();
+    }
+    function connect() {
+      if (!("EventSource" in window)) {
+        setState("Recent");
+        getJSON("/api/chat/recent").then((d) => (d.messages || []).forEach(addMessage)).catch(() => setState("Offline"));
+        return;
+      }
+      const es = new EventSource("/api/chat/events");
+      es.onopen = () => { setState("Live"); setStatus(""); };
+      es.onmessage = (ev) => {
+        try { addMessage(JSON.parse(ev.data)); } catch (e) {}
+      };
+      es.addEventListener("message", (ev) => {
+        try { addMessage(JSON.parse(ev.data)); } catch (e) {}
+      });
+      es.onerror = () => { setState("Reconnecting"); };
+    }
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const name = nameEl.value.trim();
+      const text = textEl.value.trim();
+      if (!name || !text) return;
+      localStorage.setItem("swi_chat_name", name);
+      setStatus("");
+      if (sendEl) sendEl.disabled = true;
+      try {
+        const res = await fetch("/api/chat/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, text })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.error || "chat unavailable");
+        textEl.value = "";
+        textEl.focus();
+      } catch (err) {
+        setStatus(err.message || "chat unavailable");
+      } finally {
+        if (sendEl) sendEl.disabled = false;
+      }
+    });
+    connect();
+  }
+
   /* ---------- countdown ---------- */
   function renderCountdown(el, iso) {
     const end = new Date(iso || "");
@@ -170,5 +257,5 @@
     el.innerHTML = products.map((p) => `<a class="merchcard" href="${esc(p.url || "/store/")}" target="_blank" rel="noopener"><div class="mi">${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : "🛍️"}</div><div class="mb"><b>${esc(p.title)}</b>${p.price ? `<span class="pr">${esc(p.price)}</span>` : ""}${p.blurb ? `<span class="st">${esc(p.blurb)}</span>` : ""}</div></a>`).join("");
   }
 
-  initPlayer(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket();
+  initPlayer(); initChat(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket();
 })();

@@ -33,17 +33,15 @@
       <button class="expand" id="expand-btn" type="button" aria-label="Fullscreen the player">⤢</button>
     </div>
 
-    <div class="ga-chat chat">
-      <div class="ch"><span>Live chat</span><span class="who">42 watching</span></div>
-      <div class="cm">
-        <div class="m"><b>groove_greg</b> that fill was insane 🔥</div>
-        <div class="m"><b>tama_tina</b> what bpm is this track?</div>
-        <div class="m"><b>swi_mod</b> 12 days left to submit — get yours in!</div>
-        <div class="m"><b>paradiddle_pat</b> just submitted mine 🥁</div>
-        <div class="m me"><b>you</b> let's gooo</div>
-      </div>
-      <div class="ci"><div class="box">Say something…</div><div class="snd">➤</div></div>
-      <div class="soon">Placeholder — live chat is a parked build (realtime backend + moderation).</div>
+    <div class="ga-chat chat live-chat" id="live-chat">
+      <div class="ch"><span>Live chat</span><span class="who" id="chat-state">Connecting</span></div>
+      <div class="cm chat-messages" id="chat-messages" aria-live="polite"></div>
+      <form class="ci chat-compose" id="chat-form" autocomplete="off">
+        <input class="chat-name" id="chat-name" name="name" maxlength="24" placeholder="Name" aria-label="Chat name">
+        <input class="box chat-text" id="chat-text" name="text" maxlength="300" placeholder="Say something..." aria-label="Chat message">
+        <button class="snd" id="chat-send" type="submit" aria-label="Send chat message">➤</button>
+      </form>
+      <div class="soon chat-status" id="chat-status"></div>
     </div>
 
     <section class="ga-vote">
