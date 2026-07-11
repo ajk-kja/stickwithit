@@ -1,11 +1,11 @@
 {
   "provider": "Fourthwall",
   "note": "Synced from Fourthwall Open API by the admin dashboard.",
-  "synced_at": "2026-07-11T20:10:10Z",
+  "synced_at": "2026-07-11T22:00:16Z",
   "shop": {
     "name": "Stick With It",
     "domain": "stick-with-it-shop.fourthwall.com",
-    "password_gated": true
+    "password_gated": false
   },
   "products": [
     {
@@ -18,7 +18,7 @@
       "source": "fourthwall",
       "youtube_tag": false,
       "active": true,
-      "updated_at": "2026-07-11T20:10:10Z"
+      "updated_at": "2026-07-11T22:00:15Z"
     },
     {
       "id": "bbfe4496-1dfb-4b8d-bbef-e7f96a8ac927",
@@ -30,7 +30,7 @@
       "source": "fourthwall",
       "youtube_tag": false,
       "active": true,
-      "updated_at": "2026-07-11T20:10:10Z"
+      "updated_at": "2026-07-11T22:00:15Z"
     }
   ]
 }
