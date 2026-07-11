@@ -1,67 +1,55 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
-  <link rel="shortcut icon" href="/assets/StickWithItBlack.png">
-  <title>Contest | Stick With It</title>
-  <meta name="description" content="Stick With It monthly play-along contest hub with contest details, play-along media, voting, and past winners.">
-  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
-  <link rel="stylesheet" href="/assets/contest.css?v=20260707a">
-  <script src="/assets/nav.js?v=20260707b" defer></script>
-  <script src="/assets/contest.js?v=20260707a" defer></script>
-</head>
-<body>
-  <main class="contest-page">
-    <section class="contest-hero" aria-labelledby="contest-title">
-      <div class="contest-hero__copy">
-        <div class="contest-countdown is-loading" id="contest-countdown" aria-live="polite"></div>
-        <p class="contest-kicker">Stick With It Contest</p>
-        <h1 id="contest-title">Contest</h1>
-        <div class="contest-description" id="contest-description"></div>
-        <div class="contest-actions">
-          <a class="contest-action contest-action--primary" href="#contest-entries">Vote on entries</a>
-          <a class="contest-action" href="/submit/">Submit a clip</a>
-        </div>
-        <p class="contest-prize" id="contest-prize" hidden></p>
-      </div>
-      <div class="contest-hero__media">
-        <div id="contest-video"></div>
-        <section class="contest-tracks" aria-labelledby="contest-tracks-title">
-          <div class="contest-section-head">
-            <h2 id="contest-tracks-title">Play-Along Track</h2>
-          </div>
-          <div id="contest-tracks"></div>
-        </section>
-      </div>
-    </section>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050506">
+<link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
+<title>Contest — Stick With It</title>
+<link rel="stylesheet" href="/app.css?v=20260711a">
+<script src="/app.js?v=20260711a" defer></script>
+</head><body>
+<header class="chrome"><div class="chrome-in">
+  <a class="brand" href="/"><span class="mk"></span>Stick With It</a>
+  <nav class="desknav">
+    <a class="live" href="/"><span class="dot"></span>LIVE</a>
+    <a href="/contest/" aria-current="page">Contest</a><a href="/artists/">Artists</a><a href="/more/">More</a>
+  </nav>
+</div></header>
 
-    <section class="contest-section contest-steps" aria-labelledby="contest-steps-title">
-      <div class="contest-section-head">
-        <h2 id="contest-steps-title">How To Enter</h2>
-      </div>
-      <div class="contest-step-grid" id="contest-steps"></div>
-    </section>
+<main class="wrap page">
+  <div class="chero">
+    <span class="eyebrow" id="contest-eyebrow">This month's contest</span>
+    <div class="cd" id="countdown"></div>
+    <h1 class="chead" id="contest-headline"></h1>
+    <p class="ctag" id="contest-tagline"></p>
+  </div>
 
-    <section class="contest-section contest-entries" id="contest-entries" aria-labelledby="contest-entries-title">
-      <div class="contest-section-head contest-section-head--split">
-        <div>
-          <p class="contest-kicker">Current Vote</p>
-          <h2 id="contest-entries-title">Current Entries</h2>
-        </div>
-        <a class="contest-action" href="/submit/">Submit for next month</a>
-      </div>
-      <div class="contest-entry-grid" id="vote-grid" aria-live="polite"></div>
-    </section>
+  <div class="track" id="track" data-label="Play-along track" style="margin-top:18px"></div>
 
-    <section class="contest-section contest-archive" id="contest-archive-section" aria-labelledby="contest-archive-title" hidden>
-      <div class="contest-section-head">
-        <p class="contest-kicker">Past Contests</p>
-        <h2 id="contest-archive-title">Archive</h2>
-      </div>
-      <div class="contest-archive-grid" id="contest-archive"></div>
-    </section>
-  </main>
-</body>
-</html>
+  <div class="howwrap" style="margin-top:22px">
+    <div class="sh" style="justify-content:center"><h2>How to enter</h2></div>
+    <div class="howgrid">
+      <div class="howcard"><div class="n">1</div><b>Get the track</b><p>Grab this month's play-along track above.</p></div>
+      <div class="howcard"><div class="n">2</div><b>Film your version</b><p>Record your take with the track playing.</p></div>
+      <a class="howcard cta" href="/submit/"><div class="n">3</div><div class="hd"><b>Submit</b><span class="arw">→</span></div><p>Send your clip — it joins the current vote.</p></a>
+    </div>
+  </div>
+
+  <div style="margin-top:30px">
+    <div class="sh"><h2>Current entries</h2><span>1 vote / day</span></div>
+    <div class="entrygrid" id="vote-grid"><div class="empty">Loading entries…</div></div>
+  </div>
+
+  <div style="margin-top:24px">
+    <div class="sh"><h2>Last winner</h2></div>
+    <div class="winner" id="winner"></div>
+  </div>
+</main>
+
+<nav class="tabbar">
+  <a class="live" href="/"><span class="ic">●</span>LIVE</a>
+  <a href="/contest/" aria-current="page"><span class="ic">◎</span>Contest</a>
+  <a href="/artists/"><span class="ic">♪</span>Artists</a>
+  <a href="/more/"><span class="ic">≡</span>More</a>
+</nav>
+</body></html>
