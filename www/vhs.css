@@ -1,0 +1,577 @@
+@font-face {
+  font-family: "VCR OSD Mono";
+  src: url("/VCR_OSD_MONO_1.001.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body.vhs-mock {
+  --bg: #030303;
+  --elev: #0d0d0f;
+  --panel: #111114;
+  --bd: rgba(230, 57, 70, 0.32);
+  --bd2: rgba(255, 255, 255, 0.34);
+  --fg: #ffffff;
+  --muted: #c8c8cf;
+  --dim: #82828b;
+  --acc: #e63946;
+  --acc-deep: #7f1d24;
+  --acc-soft: #ff5a66;
+  --nav-h: 60px;
+  --vhs-red: #e63946;
+  --vhs-white: #ffffff;
+  --vhs-gray: #c8c8cf;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    linear-gradient(180deg, #010201 0%, #030403 48%, #050705 100%);
+  color: var(--fg);
+}
+
+body.vhs-mock::before,
+body.vhs-mock::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body.vhs-mock::before {
+  z-index: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23ffffff' fill-opacity='.85' d='M0 0h1v1H0zM3 1h1v1H3zM1 3h1v1H1z'/%3E%3C/svg%3E");
+  background-size: 4px 4px;
+  image-rendering: pixelated;
+}
+
+body.vhs-mock::after {
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.42) 100%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025), transparent 18%, transparent 82%, rgba(230, 57, 70, 0.045));
+}
+
+body.vhs-mock > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.vhs-mock .chrome,
+body.vhs-mock .tabbar {
+  background: rgba(2, 2, 3, 0.96);
+  border-color: var(--bd);
+  box-shadow: 0 1px 0 rgba(230, 57, 70, 0.26);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.vhs-mock .chrome {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+
+body.vhs-mock .brand,
+body.vhs-mock .desknav a,
+body.vhs-mock .tabbar a,
+body.vhs-mock .eyebrow,
+body.vhs-mock .badge,
+body.vhs-mock .sh,
+body.vhs-mock .track .lbl,
+body.vhs-mock .chat .ch,
+body.vhs-mock .chat .soon,
+body.vhs-mock .votecard .vb,
+body.vhs-mock .submit,
+body.vhs-mock .btn,
+body.vhs-mock .backbar .back,
+body.vhs-mock .backbar .share,
+body.vhs-mock .soc,
+body.vhs-mock .contest-prize-title,
+body.vhs-mock .appcard2 b,
+body.vhs-mock .merchcard b,
+body.vhs-mock .cd .g span,
+body.vhs-mock .steps li::before {
+  font-family: "VCR OSD Mono", "Courier New", monospace;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.vhs-mock .brand {
+  color: var(--vhs-white);
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.45), -1px 0 rgba(230, 57, 70, 0.58), 0 0 10px rgba(230, 57, 70, 0.22);
+}
+
+body.vhs-mock .brand .mk-img {
+  filter: none;
+}
+
+body.vhs-mock .desknav a {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+body.vhs-mock .desknav a:hover,
+body.vhs-mock .desknav a[aria-current] {
+  border-color: var(--bd2);
+  background: rgba(230, 57, 70, 0.12);
+  color: var(--fg);
+}
+
+body.vhs-mock .desknav a.live {
+  color: var(--acc-soft);
+}
+
+body.vhs-mock .desknav a.live .dot,
+body.vhs-mock .tabbar a.live .ic {
+  animation: none;
+}
+
+body.vhs-mock .page {
+  padding-top: clamp(12px, 2vw, 22px);
+}
+
+body.vhs-mock .player,
+body.vhs-mock .chat,
+body.vhs-mock .pill,
+body.vhs-mock .votecard,
+body.vhs-mock .empty,
+body.vhs-mock .track,
+body.vhs-mock .howcard,
+body.vhs-mock .contest-prizes li,
+body.vhs-mock .dropzone,
+body.vhs-mock .nextcard {
+  border-radius: 0;
+}
+
+body.vhs-mock .player,
+body.vhs-mock .chat,
+body.vhs-mock .pill,
+body.vhs-mock .votecard,
+body.vhs-mock .empty,
+body.vhs-mock .howcard,
+body.vhs-mock .contest-prizes li,
+body.vhs-mock .dropzone,
+body.vhs-mock .nextcard {
+  border: 1px solid var(--bd);
+  background: rgba(8, 8, 10, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055), 0 18px 32px rgba(0, 0, 0, 0.26);
+}
+
+body.vhs-mock .player {
+  isolation: isolate;
+  border-color: rgba(230, 57, 70, 0.72);
+  background: #000;
+}
+
+body.vhs-mock .player::before,
+body.vhs-mock .player::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+body.vhs-mock .player::before {
+  z-index: 2;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.075) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, 0.5));
+  opacity: 0.46;
+}
+
+body.vhs-mock .player::after {
+  content: "PLAY >  CH 24/7";
+  z-index: 3;
+  inset: 12px auto auto 12px;
+  width: max-content;
+  height: max-content;
+  color: #fff;
+  font: 400 clamp(0.82rem, 2vw, 1rem) "VCR OSD Mono", "Courier New", monospace;
+  text-shadow: 2px 2px 0 #000, 1px 0 rgba(255, 255, 255, 0.64), -1px 0 rgba(230, 57, 70, 0.68);
+}
+
+body.vhs-mock .player video,
+body.vhs-mock .player .ph {
+  object-fit: cover;
+}
+
+body.vhs-mock .badge {
+  z-index: 4;
+  top: 12px;
+  right: 12px;
+  border-radius: 0;
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(0, 0, 0, 0.68);
+  color: #fff;
+  font-size: 0.7rem;
+  text-shadow: 2px 2px 0 #000;
+}
+
+body.vhs-mock .badge .dot,
+body.vhs-mock .live-dot {
+  border-radius: 50%;
+}
+
+body.vhs-mock .sound,
+body.vhs-mock .expand,
+body.vhs-mock .submit,
+body.vhs-mock .track .play,
+body.vhs-mock .track-shortcut,
+body.vhs-mock .btn,
+body.vhs-mock .votecard .vb,
+body.vhs-mock .chat .ci .snd,
+body.vhs-mock .howcard.cta,
+body.vhs-mock .artistcard,
+body.vhs-mock .feat-hero,
+body.vhs-mock .appcard2,
+body.vhs-mock .merchcard,
+body.vhs-mock .blogcard,
+body.vhs-mock .winner,
+body.vhs-mock .soc,
+body.vhs-mock .backbar .share {
+  border-radius: 7px;
+}
+
+body.vhs-mock .sound,
+body.vhs-mock .expand {
+  z-index: 4;
+  border-color: rgba(255, 255, 255, 0.46);
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--fg);
+}
+
+body.vhs-mock .track-shortcut {
+  border-color: rgba(230, 57, 70, 0.76);
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--fg);
+  font-family: "VCR OSD Mono", "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000;
+}
+
+body.vhs-mock .chat,
+body.vhs-mock .pill {
+  overflow: hidden;
+}
+
+body.vhs-mock .chat .ch,
+body.vhs-mock .sh {
+  border-bottom: 1px solid var(--bd);
+  color: var(--vhs-white);
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.34), -1px 0 rgba(230, 57, 70, 0.48);
+}
+
+body.vhs-mock .sh {
+  margin: 0 0 10px;
+  padding: 9px 0 8px;
+}
+
+body.vhs-mock .sh h2,
+body.vhs-mock .cd .g b {
+  font-family: "VCR OSD Mono", "Courier New", monospace;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.5), -1px 0 rgba(230, 57, 70, 0.62), 2px 2px 0 #000;
+}
+
+body.vhs-mock .chat .cm {
+  min-height: 168px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+body.vhs-mock .chat .m {
+  font-family: "Courier New", monospace;
+  color: var(--fg);
+}
+
+body.vhs-mock .chat .m b,
+body.vhs-mock .track .lbl,
+body.vhs-mock .eyebrow {
+  color: var(--acc-soft);
+}
+
+body.vhs-mock .eyebrow,
+body.vhs-mock .track .lbl,
+body.vhs-mock .cd .g span,
+body.vhs-mock .sh span {
+  font-size: 0.7rem;
+}
+
+body.vhs-mock .chat .ci input,
+body.vhs-mock .chat .ci .box {
+  border-radius: 0;
+  border-color: var(--bd2);
+  background: #020203;
+  color: var(--fg);
+}
+
+body.vhs-mock .chat .ci .snd,
+body.vhs-mock .submit,
+body.vhs-mock .votecard .vb,
+body.vhs-mock .track .play,
+body.vhs-mock .track-shortcut,
+body.vhs-mock .btn,
+body.vhs-mock .soc,
+body.vhs-mock .backbar .share {
+  border: 1px solid rgba(230, 57, 70, 0.76);
+  background: rgba(230, 57, 70, 0.2);
+  color: #fff;
+  box-shadow: none;
+}
+
+body.vhs-mock .pill {
+  position: relative;
+  padding-top: 18px;
+  background:
+    linear-gradient(180deg, rgba(230, 57, 70, 0.12), rgba(3, 3, 4, 0.82)),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055), transparent 48%, rgba(230, 57, 70, 0.07));
+}
+
+body.vhs-mock .pill::before {
+  content: "REC * CONTEST";
+  display: block;
+  margin-bottom: 8px;
+  color: var(--acc-soft);
+  font: 400 0.78rem "VCR OSD Mono", "Courier New", monospace;
+  text-shadow: 2px 2px 0 #000;
+}
+
+body.vhs-mock .cd {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+body.vhs-mock .cd .g {
+  align-items: flex-start;
+}
+
+body.vhs-mock .cd .g b {
+  color: var(--fg);
+}
+
+body.vhs-mock .cd .sep {
+  color: var(--acc-soft);
+  opacity: 0.75;
+}
+
+body.vhs-mock .track {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.34);
+}
+
+body.vhs-mock .track .bar,
+body.vhs-mock .track .bar i {
+  border-radius: 0;
+}
+
+body.vhs-mock .track .bar {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+body.vhs-mock .track .bar i {
+  background: var(--acc);
+}
+
+body.vhs-mock .steps li::before {
+  border-radius: 0;
+  border-color: rgba(230, 57, 70, 0.64);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--acc-soft);
+}
+
+body.vhs-mock .votecard {
+  background: rgba(8, 8, 10, 0.94);
+}
+
+body.vhs-mock .chead,
+body.vhs-mock .aname,
+body.vhs-mock .feat-hero .nm {
+  font-family: "VCR OSD Mono", "Courier New", monospace;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.5), -1px 0 rgba(230, 57, 70, 0.62), 2px 2px 0 #000;
+}
+
+body.vhs-mock .ctag,
+body.vhs-mock .muted,
+body.vhs-mock .abio,
+body.vhs-mock .howcard p,
+body.vhs-mock .nextsteps li,
+body.vhs-mock .appcard2 .nt,
+body.vhs-mock .merchcard .st,
+body.vhs-mock .blogcard p {
+  color: var(--muted);
+}
+
+body.vhs-mock .feat-hero,
+body.vhs-mock .artistcard,
+body.vhs-mock .appcard2,
+body.vhs-mock .merchcard,
+body.vhs-mock .blogcard {
+  border-color: var(--bd);
+  background: rgba(8, 8, 10, 0.92);
+  box-shadow: none;
+}
+
+body.vhs-mock .feat-hero .img img,
+body.vhs-mock .appcard2 .prev img,
+body.vhs-mock .merchcard .mi img,
+body.vhs-mock .dhero img,
+body.vhs-mock .winner .th img,
+body.vhs-mock .giveaway-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.vhs-mock .appcard2 .prev,
+body.vhs-mock .merchcard .mi,
+body.vhs-mock .dhero,
+body.vhs-mock .winner .th,
+body.vhs-mock .giveaway-card img {
+  border-radius: 0;
+  background: #020203;
+}
+
+body.vhs-mock .field input,
+body.vhs-mock .field textarea {
+  border-radius: 0;
+  border-color: var(--bd2);
+  background: #020203;
+  color: var(--fg);
+}
+
+body.vhs-mock .contest-prizes li {
+  box-shadow: none;
+}
+
+body.vhs-mock .votecard .th {
+  aspect-ratio: 16 / 9;
+  background: #020203;
+}
+
+body.vhs-mock .votecard .th img,
+body.vhs-mock .votecard .th video,
+body.vhs-mock .thumb,
+body.vhs-mock .vote-video,
+body.vhs-mock .artistcard .img img,
+body.vhs-mock .blogcard img,
+body.vhs-mock .market-card img,
+body.vhs-mock .drummer-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #020203;
+}
+
+body.vhs-mock .votecard .m strong {
+  color: var(--fg);
+}
+
+body.vhs-mock .votecard .m span {
+  color: var(--muted);
+}
+
+body.vhs-mock .votecard .vb:disabled {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--dim);
+}
+
+body.vhs-mock .empty {
+  color: var(--muted);
+}
+
+body.vhs-mock .tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 70;
+}
+
+body.vhs-mock .tabbar a {
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+}
+
+body.vhs-mock .tabbar a[aria-current] {
+  border-color: var(--bd2);
+  background: rgba(230, 57, 70, 0.12);
+}
+
+body.vhs-mock .tabbar a .ic {
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.vhs-mock a:hover,
+  body.vhs-mock button:hover {
+    transform: translate(1px, -1px);
+    transition: transform 80ms steps(1, end), border-color 120ms ease, background-color 120ms ease, color 120ms ease;
+    text-shadow: 1px 0 rgba(255, 255, 255, 0.48), -1px 0 rgba(230, 57, 70, 0.5);
+  }
+}
+
+@media (min-width: 860px) {
+  body.vhs-mock .chat .cm {
+    min-height: 210px;
+  }
+}
+
+@media (max-width: 560px) {
+  body.vhs-mock .brand {
+    font-size: 0.88rem;
+  }
+
+  body.vhs-mock .brand .mk-img {
+    height: 26px !important;
+  }
+
+  body.vhs-mock .player::after {
+    inset: 9px auto auto 9px;
+    font-size: 0.78rem;
+  }
+
+  body.vhs-mock .badge {
+    top: 9px;
+    right: 9px;
+    font-size: 0.66rem;
+  }
+
+  body.vhs-mock .cd {
+    gap: 7px;
+  }
+
+  body.vhs-mock .cd .g b {
+    font-size: 2rem;
+  }
+
+  body.vhs-mock .track {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.vhs-mock *,
+  body.vhs-mock *::before,
+  body.vhs-mock *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+
+  body.vhs-mock a:hover,
+  body.vhs-mock button:hover {
+    transform: none;
+  }
+}
