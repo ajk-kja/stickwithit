@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050506">
 <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
-<title>Submit Your Clip | Stick With It</title>
+<title>Submit your clip — Stick With It</title>
+<link rel="stylesheet" href="/app.css?v=20260711a">
 <script>
   window._tsApiReady = false;
   window._tsInit = function () {
@@ -13,115 +14,134 @@
   };
 </script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_tsInit&render=explicit" async defer></script>
+<script src="/app.js?v=20260711a" defer></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    min-height: 100vh; background: var(--swi-bg); color: var(--swi-fg);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    display: flex; flex-direction: column; align-items: center; padding: 0 0 2rem;
-  }
-  .card {
-    width: min(560px, calc(100% - 2rem)); background: var(--swi-panel);
-    border: 1px solid var(--swi-border); border-radius: 14px; padding: 28px; margin-top: clamp(22px, 5vw, 38px);
-  }
-  h1 { font-size: 1.5rem; margin-bottom: 8px; }
-  .sub { color: var(--swi-muted); font-size: .92rem; margin-bottom: 24px; line-height: 1.5; }
-  .drop {
-    display: block; width: 100%;
-    border: 2px dashed var(--swi-border-strong); border-radius: 12px; padding: 40px 20px;
-    text-align: center; cursor: pointer; transition: border-color .15s, background .15s;
-  }
-  .drop:hover, .drop.over { border-color: var(--swi-accent); background: var(--swi-bg-elevated); }
-  .drop .big { font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; }
-  .drop .small { color: var(--swi-muted); font-size: .82rem; }
-  input[type=file] { display: none; }
-  .f-label { display: block; margin-bottom: 14px; font-size: .85rem; color: var(--swi-muted); }
-  .f-label input {
-    display: block; width: 100%; margin-top: 6px; padding: 11px 12px;
-    background: var(--swi-bg-elevated); color: var(--swi-fg); border: 1px solid var(--swi-border-strong); border-radius: 8px;
-    font-size: .95rem;
-  }
-  .check-label {
-    display: flex; align-items: center; gap: 10px; margin: 2px 0 14px;
-    color: var(--swi-fg); font-size: .9rem; cursor: pointer;
-  }
-  .check-label input { width: 18px; height: 18px; accent-color: #16a34a; }
-  .f-label input:focus { outline: none; border-color: var(--swi-accent); }
-  .filename { margin-top: 14px; font-size: .88rem; color: var(--swi-fg); word-break: break-all; min-height: 1.2em; }
-  .bar-wrap { margin-top: 14px; height: 8px; background: var(--swi-bg-elevated); border-radius: 4px; overflow: hidden; display: none; }
-  .bar { height: 100%; width: 0%; background: #22c55e; transition: width .2s; }
-  .ts-wrap { margin: 18px 0 4px; min-height: 66px; }
-  button.go {
-    width: 100%; margin-top: 14px; padding: 15px; font-size: 1rem; font-weight: 700;
-    color: #fff; background: #16a34a; border: none; border-radius: 10px; cursor: pointer;
-  }
-  button.go:hover { background: #15803d; }
-  button.go:disabled { opacity: .4; cursor: not-allowed; }
-  #status { margin-top: 14px; font-size: .9rem; min-height: 1.3em; color: var(--swi-muted); }
-  #status.ok { color: #4ade80; } #status.err { color: #f87171; }
-  .rules { margin-top: 22px; color: var(--swi-dim); font-size: .78rem; line-height: 1.6; }
-  .closed { text-align: center; color: var(--swi-muted); padding: 30px 10px; font-size: .95rem; display: none; }
-</style>
-  <link rel="stylesheet" href="/assets/nav.css?v=20260707a">
-  <script src="/assets/nav.js?v=20260707b" defer></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142348904039164" crossorigin="anonymous"></script>
-</head>
-<body>
-<div class="card">
-  <h1>Submit your clip 🥁</h1>
-  <div class="sub">Send us your drumming — approved clips join the 24/7 stream rotation.
-    Videos (MP4/MOV/WebM) or bulletin images (PNG/JPG).</div>
+  .ctxbanner{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid rgba(230,57,70,.45);background:linear-gradient(150deg,rgba(230,57,70,.15),transparent);margin-bottom:14px;}
+  @media(min-width:640px){.ctxbanner{flex-direction:row;align-items:center;gap:12px;}}
+  .ctxbanner .cd-mini{font-weight:850;color:#fff;font-size:.92rem;white-space:nowrap;}
+  .ctxbanner .tx{font-size:.8rem;color:var(--muted);line-height:1.4;}
+  .ctxbanner .tx b{color:var(--fg);}
+  .dropzone{display:block;cursor:pointer;transition:border-color .15s,background .15s;}
+  .dropzone:hover,.dropzone.over{border-color:var(--acc);background:rgba(230,57,70,.08);}
+  .dropzone input{display:none;}
+  .filename{min-height:1.2em;font-size:.78rem;color:var(--muted);word-break:break-word;}
+  .bar-wrap{height:8px;background:#000;border:1px solid var(--bd);border-radius:999px;overflow:hidden;display:none;}
+  .bar{height:100%;width:0%;background:var(--acc);transition:width .2s;}
+  .ts-wrap{min-height:66px;}
+  .ts-msg{min-height:1.1em;color:#f87171;font-size:.78rem;}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--acc);}
+  .field input:disabled,.field textarea:disabled,.submit:disabled{opacity:.45;cursor:not-allowed;}
+  .status{min-height:1.3em;font-size:.84rem;color:var(--muted);}
+  .status.ok{color:#4ade80;}
+  .status.err{color:#f87171;}
+  .checkstack{display:flex;flex-direction:column;gap:9px;}
+  .checkrow input{margin-top:2px;accent-color:var(--acc);}
+  .closed{text-align:center;color:var(--muted);padding:28px 10px;font-size:.92rem;display:none;}
+  .nextcard{border:1px solid var(--bd);border-radius:12px;background:var(--panel);padding:15px;}
+  .nextcard h3{margin:0 0 10px;font-size:.95rem;}
+  .nextsteps{list-style:none;counter-reset:n;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+  .nextsteps li{counter-increment:n;display:flex;gap:10px;font-size:.8rem;color:var(--muted);line-height:1.4;}
+  .nextsteps li::before{content:counter(n);width:20px;height:20px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:rgba(230,57,70,.16);border:1px solid var(--acc);color:#fff;font-size:.66rem;font-weight:850;}
+  .nextsteps b{color:var(--fg);}
+  .feedback-box{margin-top:13px;border-top:1px solid var(--bd);padding-top:13px;}
+  .feedback-box summary{cursor:pointer;color:var(--muted);font-size:.78rem;font-weight:700;}
+  .feedback-box textarea{margin-top:10px;}
+</style></head><body>
+<header class="chrome"><div class="chrome-in">
+  <a class="brand" href="/"><span class="mk"></span>Stick With It</a>
+  <nav class="desknav">
+    <a class="live" href="/"><span class="dot"></span>LIVE</a>
+    <a href="/contest/">Contest</a><a href="/artists/">Artists</a><a href="/more/">More</a>
+  </nav>
+</div></header>
 
-  <div id="form-area">
-    <label class="f-label">Title of your clip *
-      <input type="text" id="f-title" maxlength="120" placeholder="e.g. Linear fills over samba groove">
-    </label>
-    <label class="f-label">Email <span style="color:var(--swi-dim)">(required)</span>
-      <input type="email" id="f-email" maxlength="120" placeholder="you@example.com" required autocomplete="email">
-    </label>
-    <label class="f-label">Artist / drummer name <span style="color:var(--swi-dim)">(optional)</span>
-      <input type="text" id="f-artist" maxlength="120" placeholder="e.g. Jordan Smith">
-    </label>
-    <label class="f-label">Social handle <span style="color:var(--swi-dim)">(optional)</span>
-      <input type="text" id="f-social" maxlength="80" placeholder="@yourhandle">
-    </label>
-    <label class="check-label">
-      <input type="checkbox" id="f-updates">
-      <span>Get updates from Stick With It</span>
-    </label>
-    <label class="drop" id="drop">
-      <div class="big">Drop a file here or tap to choose</div>
-      <div class="small" id="limit-note">up to 100MB for now</div>
-      <input type="file" id="file" accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm,image/png,image/jpeg,image/webp">
-    </label>
-    <div class="filename" id="filename"></div>
-    <div class="bar-wrap" id="barwrap"><div class="bar" id="bar"></div></div>
-    <div class="ts-wrap"><div id="ts-widget"></div><div id="ts-msg" style="color:#f87171;font-size:.82rem;min-height:1.1em"></div></div>
-    <button class="go" id="go" disabled>Submit</button>
-    <div id="status"></div>
+<main class="wrap page">
+  <div class="backbar"><a class="back" href="/contest/">← Back to contest</a></div>
+  <h1 class="aname" style="font-size:clamp(1.4rem,3.5vw,1.9rem);margin-bottom:12px">Submit your clip</h1>
+
+  <div class="ctxbanner">
+    <span class="cd-mini">⏱ 12d 04h left</span>
+    <span class="tx">You're entering the <b>July contest</b> — play along to <b>“Asteroid Ascends.”</b> Free, one entry.</span>
   </div>
 
-  <div class="closed" id="closed">Submissions are opening soon — check back shortly.</div>
+  <div class="track" id="track" data-label="Need the track?" style="margin-bottom:18px"></div>
 
-  <div class="rules">
-    By submitting you confirm you own the content and grant Stick With It
-    permission to broadcast it. Every submission is reviewed before airing.
-    <br><br>Heads-up: ad-blockers and strict privacy modes can prevent the
-    human check (and uploads) from working — whitelist this site if the page
-    misbehaves.
+  <div class="split contest-split">
+    <div class="stack" id="form-area">
+      <label class="dropzone" id="drop">
+        <div class="ic">🎥</div>
+        <h3>Drop your video here</h3>
+        <p id="limit-note">or tap to choose a file · MP4/MOV/WebM/PNG/JPG/WebP · up to 100 MB</p>
+        <input type="file" id="file" accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm,image/png,image/jpeg,image/webp">
+      </label>
+      <div class="filename" id="filename"></div>
+      <div class="bar-wrap" id="barwrap"><div class="bar" id="bar"></div></div>
+
+      <div class="field"><label>Title of your clip *</label><input type="text" id="f-title" maxlength="120" placeholder="e.g. Linear fills over samba groove"></div>
+      <div class="field"><label>Email <span class="muted">(required)</span></label><input type="email" id="f-email" maxlength="120" placeholder="you@example.com" required autocomplete="email"></div>
+      <div class="field"><label>Artist / drummer name <span class="muted">(optional)</span></label><input type="text" id="f-artist" maxlength="120" placeholder="e.g. Jordan Smith"></div>
+      <div class="field"><label>Social handle <span class="muted">(optional)</span></label><input type="text" id="f-social" maxlength="80" placeholder="@yourhandle"></div>
+
+      <div class="checkstack">
+        <label class="checkrow"><input type="checkbox" id="f-consent"> I made this clip and grant Stick With It permission to broadcast and feature it.</label>
+        <label class="checkrow"><input type="checkbox" id="f-updates"> Get updates from Stick With It.</label>
+      </div>
+
+      <div class="ts-wrap"><div id="ts-widget"></div><div class="ts-msg" id="ts-msg"></div></div>
+      <button class="submit" id="go" type="button" disabled>Submit to the July contest →</button>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="closed" id="closed">Submissions are opening soon — check back shortly.</div>
+
+    <aside class="stack">
+      <div class="nextcard">
+        <h3>What happens next</h3>
+        <ol class="nextsteps">
+          <li><b>We review it</b> — usually within a day.</li>
+          <li><b>It joins the vote</b> on the home &amp; contest pages.</li>
+          <li><b>Voting runs daily</b> — one vote per person per day.</li>
+          <li><b>Winner revealed</b> when the countdown hits zero.</li>
+        </ol>
+        <details class="feedback-box">
+          <summary>Having trouble uploading?</summary>
+          <div class="field"><label>Tell us what happened</label><textarea id="feedback-msg" rows="3" maxlength="2000" placeholder="Error message, browser, or anything useful"></textarea></div>
+          <button class="btn" id="feedback-send" type="button">Send feedback</button>
+          <div class="status" id="feedback-status"></div>
+        </details>
+      </div>
+    </aside>
   </div>
-</div>
+</main>
+
+<nav class="tabbar">
+  <a class="live" href="/"><span class="ic">●</span>LIVE</a>
+  <a href="/contest/" aria-current="page"><span class="ic">◎</span>Contest</a>
+  <a href="/artists/"><span class="ic">♪</span>Artists</a>
+  <a href="/more/"><span class="ic">≡</span>More</a>
+</nav>
 
 <script>
   const $ = (id) => document.getElementById(id);
   let file = null, token = null, cfg = null;
   const OPT_IN_MARKER = "[swi-email-opt-in]";
+  const ACCEPT_TYPES = new Set(["video/mp4", "video/quicktime", "video/webm", "image/png", "image/jpeg", "image/webp"]);
+  const ACCEPT_EXTS = [".mp4", ".mov", ".m4v", ".webm", ".png", ".jpg", ".jpeg", ".webp"];
 
-  function setStatus(msg, cls) { const s = $("status"); s.textContent = msg; s.className = cls || ""; }
-  function maybeEnable() { $("go").disabled = !(file && (token || (cfg && cfg.optional))); }
+  function setStatus(msg, cls) { const s = $("status"); s.textContent = msg; s.className = "status " + (cls || ""); }
+  function setFeedbackStatus(msg, cls) { const s = $("feedback-status"); s.textContent = msg; s.className = "status " + (cls || ""); }
+  function maybeEnable() { $("go").disabled = !(file && $("f-consent").checked && (token || (cfg && cfg.optional))); }
   function socialForSubmit() {
     const social = $("f-social").value.trim();
     return $("f-updates").checked ? (social + " " + OPT_IN_MARKER).trim() : social;
+  }
+  function maxBytes() {
+    if (!cfg) return 100 * 1024 * 1024;
+    return (cfg.direct ? cfg.direct_max_mb : cfg.max_mb) * 1024 * 1024;
+  }
+  function validFileType(f) {
+    const name = String(f.name || "").toLowerCase();
+    return ACCEPT_TYPES.has(f.type) || ACCEPT_EXTS.some((ext) => name.endsWith(ext));
   }
 
   window.onTurnstile = (t) => { token = t; maybeEnable(); };
@@ -136,7 +156,7 @@
       $("closed").style.display = "block";
       return;
     }
-    $("limit-note").textContent = "up to " + (cfg.direct ? cfg.direct_max_mb : cfg.max_mb) + "MB";
+    $("limit-note").textContent = "or tap to choose a file · MP4/MOV/WebM/PNG/JPG/WebP · up to " + (cfg.direct ? cfg.direct_max_mb : cfg.max_mb) + " MB";
     const blockedMsg = "Verification appears blocked. Disable ad-blocker or Brave Shields for stickwithit.xyz, then reload.";
     const tsMsg = (m) => { $("ts-msg").textContent = m; };
 
@@ -149,8 +169,6 @@
       return true;
     };
 
-    // api.js is loaded statically in <head> (dynamic injection breaks its
-    // bootstrap); it calls _tsInit when ready, which calls _tsRender.
     let rendered = false;
     window._tsRender = () => {
       if (rendered) return;
@@ -161,7 +179,7 @@
           callback: (t) => window.onTurnstile(t),
           "expired-callback": () => window.onTurnstileExpired(),
           "error-callback": (c) => window.onTurnstileError(c),
-          theme: document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark",
+          theme: "dark",
         });
         tsMsg("");
       } catch (e) {
@@ -173,21 +191,22 @@
     setTimeout(() => {
       if (!rendered || !window._tsApiReady || !$("ts-widget").children.length) tsMsg(blockedMsg);
     }, 5000);
+    maybeEnable();
   }
 
   $("file").onchange = () => pick($("file").files[0]);
+  $("f-consent").addEventListener("change", maybeEnable);
   const drop = $("drop");
   drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
   drop.ondragleave = () => drop.classList.remove("over");
   drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); pick(e.dataTransfer.files[0]); };
 
-  function maxBytes() {
-    if (!cfg) return 100 * 1024 * 1024;
-    return (cfg.direct ? cfg.direct_max_mb : cfg.max_mb) * 1024 * 1024;
-  }
-
   function pick(f) {
     if (!f) return;
+    if (!validFileType(f)) {
+      setStatus("Choose an MP4, MOV, WebM, PNG, JPG, or WebP file", "err");
+      return;
+    }
     if (f.size > maxBytes()) {
       setStatus("File is larger than " + Math.round(maxBytes() / 1e6) + "MB", "err");
       return;
@@ -195,13 +214,13 @@
     file = f;
     $("filename").textContent = f.name + " (" + (f.size / 1e6).toFixed(1) + " MB)";
     if (token || (cfg && cfg.optional)) setStatus("");
-    else if (!$("status").className) setStatus("complete the human check below to enable Submit");
+    else if (!$("status").className.includes("err")) setStatus("complete the human check below to enable Submit");
     maybeEnable();
   }
 
   function finishUpload(ok, msg) {
     setStatus(ok ? "✅ " + msg : "❌ " + msg, ok ? "ok" : "err");
-    if (ok) { $("filename").textContent = ""; file = null; }
+    if (ok) { $("filename").textContent = ""; $("file").value = ""; file = null; }
     token = null;
     if (window.turnstile) try { turnstile.reset(); } catch {}
     $("go").disabled = false;
@@ -220,7 +239,7 @@
   }
 
   async function directUpload() {
-    setStatus("preparing upload…");
+    setStatus("preparing upload...");
     const pre = await (await fetch("/api/submit/presign", {
       method: "POST",
       headers: Object.assign({ "Content-Type": "application/json" },
@@ -228,10 +247,10 @@
       body: JSON.stringify({ name: file.name, size: file.size }),
     })).json();
     if (!pre.ok) { finishUpload(false, pre.error || "could not start upload"); return; }
-    setStatus("uploading…");
+    setStatus("uploading...");
     xhrPut(pre.url, file, async (ok) => {
       if (!ok) { finishUpload(false, "upload to storage failed — try again"); return; }
-      setStatus("processing…");
+      setStatus("processing...");
       try {
         const done = await (await fetch("/api/submit/complete", {
           method: "POST",
@@ -273,7 +292,7 @@
         : finishUpload(false, d.error || "upload failed — try again");
     };
     xhr.onerror = () => finishUpload(false, "network error — try again");
-    setStatus("uploading…");
+    setStatus("uploading...");
     xhr.send(file);
   }
 
@@ -282,6 +301,7 @@
     const emailEl = $("f-email");
     if (!emailEl.value.trim() || !emailEl.checkValidity()) { setStatus("a valid email is required", "err"); emailEl.focus(); return; }
     if (!file) { setStatus("choose a file first", "err"); return; }
+    if (!$("f-consent").checked) { setStatus("confirm you made the clip and grant permission first", "err"); $("f-consent").focus(); return; }
     if (!token && !(cfg && cfg.optional)) { setStatus("complete the human check first", "err"); return; }
     $("go").disabled = true;
     $("barwrap").style.display = "block";
@@ -289,7 +309,28 @@
     cfg && cfg.direct ? directUpload() : legacyUpload();
   };
 
+  $("feedback-send").onclick = async () => {
+    const msg = $("feedback-msg").value.trim();
+    const email = $("f-email").value.trim();
+    if (msg.length < 3) { setFeedbackStatus("Write a little more first.", "err"); return; }
+    if (!token && !(cfg && cfg.optional)) { setFeedbackStatus("Complete the human check above first.", "err"); return; }
+    setFeedbackStatus("Sending...");
+    try {
+      const d = await (await fetch("/api/submit/feedback", {
+        method: "POST",
+        headers: Object.assign({ "Content-Type": "application/json" },
+          token ? { "X-Turnstile-Token": token } : {}),
+        body: JSON.stringify({ message: msg, email, page: window.location.pathname }),
+      })).json();
+      if (d.ok) {
+        $("feedback-msg").value = "";
+        setFeedbackStatus("Thanks — message received.", "ok");
+      } else {
+        setFeedbackStatus(d.error || "Something went wrong — try again.", "err");
+      }
+    } catch { setFeedbackStatus("Network error — try again.", "err"); }
+  };
+
   init();
 </script>
-</body>
-</html>
+</body></html>
