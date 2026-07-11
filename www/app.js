@@ -155,19 +155,57 @@
     return track?.filename || fromUrl || "stickwithit-playalong.mp3";
   }
 
-  function renderTrackActions(el, track) {
-    if (!el) return;
+  function gigasectorUrl(track) {
+    const params = new URLSearchParams();
+    if (track?.url) params.set("track", track.url);
+    if (track?.title) params.set("title", track.title);
+    const qs = params.toString();
+    return `/apps/gigasector/${qs ? "?" + qs : ""}`;
+  }
+
+  function renderPlayerShortcuts(track) {
+    const player = $("player")?.closest(".player");
+    if (!player) return;
+    let el = $("player-shortcuts");
     if (!track || !track.url) {
-      el.innerHTML = "";
+      if (el) el.remove();
       return;
     }
-    el.innerHTML = `<a class="btn track-download-btn" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}">Download track</a><a class="btn" href="/apps/gigasector/">Open in Gigasector</a>`;
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "player-shortcuts";
+      el.className = "player-shortcuts";
+      player.append(el);
+    }
+    el.innerHTML = `<a class="player-shortcut" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}">Download track</a><a class="player-shortcut" href="${esc(gigasectorUrl(track))}">Open in Gigasector</a>`;
+  }
+
+  function renderTrackActions(_el, _track) {
+    return;
+  }
+
+  function renderContestPrizes(el, page = {}) {
+    if (!el) return;
+    const prizes = Array.isArray(page.prizes) ? page.prizes.filter((p) => p && (p.text || p.value)) : [];
+    const legacy = page.prize ? `<p class="contest-prize-note">${esc(page.prize)}</p>` : "";
+    if (!prizes.length && !legacy) {
+      el.innerHTML = "";
+      el.hidden = true;
+      return;
+    }
+    el.hidden = false;
+    const rows = prizes.map((p, i) => {
+      const place = p.place || (i === 0 ? "1st" : i === 1 ? "2nd" : i === 2 ? "3rd" : `#${i + 1}`);
+      const value = p.value ? `<span class="contest-prize-value">${esc(p.value)}</span>` : "";
+      return `<li><b>${esc(place)}</b><span>${esc(p.text || "Prize TBA")}</span>${value}</li>`;
+    }).join("");
+    el.innerHTML = `${rows ? `<div class="contest-prize-title">Prizes</div><ol>${rows}</ol>` : ""}${legacy}`;
   }
 
   function renderTrack(el, track) {
     if (!track || !track.url) { el.remove(); return; }
     const lbl = el.dataset.label || "Play-along track";
-    el.innerHTML = `<button class="play" type="button" aria-label="Play the track">▶</button><div class="info"><div class="lbl">${esc(lbl)}</div><div class="t">${esc(track.title || "This month's track")}</div><div class="bar"><i></i></div></div><a class="track-dl" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}">Download</a>`;
+    el.innerHTML = `<button class="play" type="button" aria-label="Play the track">▶</button><div class="info"><div class="lbl">${esc(lbl)}</div><div class="t">${esc(track.title || "This month's track")}</div><div class="bar"><i></i></div></div>`;
     const audio = new Audio(track.url); audio.preload = "none";
     const btn = el.querySelector(".play"), fill = el.querySelector(".bar i");
     btn.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
@@ -248,7 +286,7 @@
     const cd = $("countdown"), tk = $("track"), eb = $("contest-eyebrow"),
           entriesEl = $("vote-rail") || $("vote-grid"), win = $("winner"),
           head = $("contest-headline"), tag = $("contest-tagline"),
-          trackActions = $("contest-track-actions");
+          trackActions = $("contest-track-actions"), prizesEl = $("contest-prizes");
     if (!cd && !tk && !entriesEl && !eb) return;
     let data;
     try { data = await getJSON("/assets/data/contest.json"); }
@@ -257,7 +295,9 @@
     if (eb) setEyebrow(eb, data);
     if (cd) renderCountdown(cd, data.ends_at);
     if (tk) renderTrack(tk, track);
+    renderPlayerShortcuts(track);
     renderTrackActions(trackActions, track);
+    renderContestPrizes(prizesEl, data.page || {});
     if (head && data.page) head.textContent = data.page.headline || "";
     if (tag && data.page) tag.textContent = (data.page.description || [])[0] || "";
     if (entriesEl) renderEntries(entriesEl, data);

@@ -7,21 +7,20 @@
 }
 
 body.vhs-mock {
-  --bg: #030403;
-  --elev: #07100c;
-  --panel: #09120e;
-  --bd: rgba(151, 255, 188, 0.2);
-  --bd2: rgba(151, 255, 188, 0.34);
-  --fg: #f4fff7;
-  --muted: #a9b8ae;
-  --dim: #748279;
-  --acc: #ff4e63;
-  --acc-deep: #7a1c2a;
-  --acc-soft: #ffcf73;
-  --vhs-green: #97ffbc;
-  --vhs-cyan: #6fd7ff;
-  --vhs-amber: #ffcf73;
-  --vhs-red: #ff4e63;
+  --bg: #030303;
+  --elev: #0d0d0f;
+  --panel: #111114;
+  --bd: rgba(230, 57, 70, 0.32);
+  --bd2: rgba(255, 255, 255, 0.34);
+  --fg: #ffffff;
+  --muted: #c8c8cf;
+  --dim: #82828b;
+  --acc: #e63946;
+  --acc-deep: #7f1d24;
+  --acc-soft: #ff5a66;
+  --vhs-red: #e63946;
+  --vhs-white: #ffffff;
+  --vhs-gray: #c8c8cf;
   min-height: 100vh;
   overflow-x: hidden;
   background:
@@ -49,7 +48,7 @@ body.vhs-mock::after {
   z-index: 0;
   background:
     radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.42) 100%),
-    linear-gradient(90deg, rgba(111, 215, 255, 0.035), transparent 18%, transparent 82%, rgba(255, 78, 99, 0.035));
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025), transparent 18%, transparent 82%, rgba(230, 57, 70, 0.045));
 }
 
 body.vhs-mock > * {
@@ -59,9 +58,9 @@ body.vhs-mock > * {
 
 body.vhs-mock .chrome,
 body.vhs-mock .tabbar {
-  background: rgba(2, 5, 4, 0.96);
+  background: rgba(2, 2, 3, 0.96);
   border-color: var(--bd);
-  box-shadow: 0 1px 0 rgba(255, 207, 115, 0.18);
+  box-shadow: 0 1px 0 rgba(230, 57, 70, 0.26);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -86,8 +85,8 @@ body.vhs-mock .steps li::before {
 }
 
 body.vhs-mock .brand {
-  color: var(--vhs-green);
-  text-shadow: 1px 0 rgba(111, 215, 255, 0.55), -1px 0 rgba(255, 78, 99, 0.42), 0 0 10px rgba(151, 255, 188, 0.2);
+  color: var(--vhs-white);
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.45), -1px 0 rgba(230, 57, 70, 0.58), 0 0 10px rgba(230, 57, 70, 0.22);
 }
 
 body.vhs-mock .brand .mk-img {
@@ -104,12 +103,12 @@ body.vhs-mock .desknav a {
 body.vhs-mock .desknav a:hover,
 body.vhs-mock .desknav a[aria-current] {
   border-color: var(--bd2);
-  background: rgba(151, 255, 188, 0.08);
+  background: rgba(230, 57, 70, 0.12);
   color: var(--fg);
 }
 
 body.vhs-mock .desknav a.live {
-  color: var(--vhs-red);
+  color: var(--acc-soft);
 }
 
 body.vhs-mock .desknav a.live .dot,
@@ -119,11 +118,6 @@ body.vhs-mock .tabbar a.live .ic {
 
 body.vhs-mock .page {
   padding-top: clamp(12px, 2vw, 22px);
-}
-
-body.vhs-mock .home-grid {
-  grid-template-areas: "player" "contest" "chat" "vote";
-  gap: 14px;
 }
 
 body.vhs-mock .player,
@@ -141,13 +135,13 @@ body.vhs-mock .pill,
 body.vhs-mock .votecard,
 body.vhs-mock .empty {
   border: 1px solid var(--bd);
-  background: rgba(4, 10, 7, 0.92);
-  box-shadow: inset 0 0 0 1px rgba(255, 207, 115, 0.06), 0 18px 32px rgba(0, 0, 0, 0.26);
+  background: rgba(8, 8, 10, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055), 0 18px 32px rgba(0, 0, 0, 0.26);
 }
 
 body.vhs-mock .player {
   isolation: isolate;
-  border-color: rgba(151, 255, 188, 0.5);
+  border-color: rgba(230, 57, 70, 0.72);
   background: #000;
 }
 
@@ -175,7 +169,7 @@ body.vhs-mock .player::after {
   height: max-content;
   color: #fff;
   font: 400 clamp(0.82rem, 2vw, 1rem) "VCR OSD Mono", "Courier New", monospace;
-  text-shadow: 2px 2px 0 #000, 1px 0 rgba(111, 215, 255, 0.7), -1px 0 rgba(255, 78, 99, 0.55);
+  text-shadow: 2px 2px 0 #000, 1px 0 rgba(255, 255, 255, 0.64), -1px 0 rgba(230, 57, 70, 0.68);
 }
 
 body.vhs-mock .player video,
@@ -191,7 +185,7 @@ body.vhs-mock .badge {
   border-color: rgba(255, 255, 255, 0.34);
   background: rgba(0, 0, 0, 0.68);
   color: #fff;
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   text-shadow: 2px 2px 0 #000;
 }
 
@@ -204,8 +198,7 @@ body.vhs-mock .sound,
 body.vhs-mock .expand,
 body.vhs-mock .submit,
 body.vhs-mock .track .play,
-body.vhs-mock .track .track-dl,
-body.vhs-mock .track-download-btn,
+body.vhs-mock .player-shortcut,
 body.vhs-mock .btn,
 body.vhs-mock .votecard .vb,
 body.vhs-mock .chat .ci .snd {
@@ -215,9 +208,20 @@ body.vhs-mock .chat .ci .snd {
 body.vhs-mock .sound,
 body.vhs-mock .expand {
   z-index: 4;
-  border-color: rgba(151, 255, 188, 0.5);
+  border-color: rgba(255, 255, 255, 0.46);
   background: rgba(0, 0, 0, 0.72);
   color: var(--fg);
+}
+
+body.vhs-mock .player-shortcut {
+  border-color: rgba(230, 57, 70, 0.76);
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--fg);
+  font-family: "VCR OSD Mono", "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000;
 }
 
 body.vhs-mock .chat,
@@ -228,8 +232,8 @@ body.vhs-mock .pill {
 body.vhs-mock .chat .ch,
 body.vhs-mock .sh {
   border-bottom: 1px solid var(--bd);
-  color: var(--vhs-green);
-  text-shadow: 1px 0 rgba(111, 215, 255, 0.45), -1px 0 rgba(255, 78, 99, 0.28);
+  color: var(--vhs-white);
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.34), -1px 0 rgba(230, 57, 70, 0.48);
 }
 
 body.vhs-mock .sh {
@@ -242,7 +246,7 @@ body.vhs-mock .cd .g b {
   font-family: "VCR OSD Mono", "Courier New", monospace;
   font-weight: 400;
   letter-spacing: 0;
-  text-shadow: 1px 0 rgba(111, 215, 255, 0.6), -1px 0 rgba(255, 78, 99, 0.44), 2px 2px 0 #000;
+  text-shadow: 1px 0 rgba(255, 255, 255, 0.5), -1px 0 rgba(230, 57, 70, 0.62), 2px 2px 0 #000;
 }
 
 body.vhs-mock .chat .cm {
@@ -258,14 +262,21 @@ body.vhs-mock .chat .m {
 body.vhs-mock .chat .m b,
 body.vhs-mock .track .lbl,
 body.vhs-mock .eyebrow {
-  color: var(--vhs-amber);
+  color: var(--acc-soft);
+}
+
+body.vhs-mock .eyebrow,
+body.vhs-mock .track .lbl,
+body.vhs-mock .cd .g span,
+body.vhs-mock .sh span {
+  font-size: 0.7rem;
 }
 
 body.vhs-mock .chat .ci input,
 body.vhs-mock .chat .ci .box {
   border-radius: 0;
   border-color: var(--bd2);
-  background: #020302;
+  background: #020203;
   color: var(--fg);
 }
 
@@ -273,10 +284,9 @@ body.vhs-mock .chat .ci .snd,
 body.vhs-mock .submit,
 body.vhs-mock .votecard .vb,
 body.vhs-mock .track .play,
-body.vhs-mock .track .track-dl,
 body.vhs-mock .btn {
-  border: 1px solid rgba(255, 207, 115, 0.68);
-  background: rgba(255, 207, 115, 0.14);
+  border: 1px solid rgba(230, 57, 70, 0.76);
+  background: rgba(230, 57, 70, 0.2);
   color: #fff;
   box-shadow: none;
 }
@@ -285,16 +295,16 @@ body.vhs-mock .pill {
   position: relative;
   padding-top: 18px;
   background:
-    linear-gradient(180deg, rgba(151, 255, 188, 0.08), rgba(3, 4, 3, 0.8)),
-    linear-gradient(90deg, rgba(255, 207, 115, 0.08), transparent 48%, rgba(111, 215, 255, 0.06));
+    linear-gradient(180deg, rgba(230, 57, 70, 0.12), rgba(3, 3, 4, 0.82)),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055), transparent 48%, rgba(230, 57, 70, 0.07));
 }
 
 body.vhs-mock .pill::before {
   content: "REC * CONTEST";
   display: block;
   margin-bottom: 8px;
-  color: var(--vhs-red);
-  font: 400 0.72rem "VCR OSD Mono", "Courier New", monospace;
+  color: var(--acc-soft);
+  font: 400 0.78rem "VCR OSD Mono", "Courier New", monospace;
   text-shadow: 2px 2px 0 #000;
 }
 
@@ -312,12 +322,12 @@ body.vhs-mock .cd .g b {
 }
 
 body.vhs-mock .cd .sep {
-  color: var(--vhs-cyan);
+  color: var(--acc-soft);
   opacity: 0.75;
 }
 
 body.vhs-mock .track {
-  border-color: rgba(151, 255, 188, 0.18);
+  border-color: rgba(255, 255, 255, 0.2);
   background: rgba(0, 0, 0, 0.34);
 }
 
@@ -331,29 +341,23 @@ body.vhs-mock .track .bar {
 }
 
 body.vhs-mock .track .bar i {
-  background: var(--vhs-green);
+  background: var(--acc);
 }
 
 body.vhs-mock .steps li::before {
   border-radius: 0;
-  border-color: rgba(151, 255, 188, 0.42);
+  border-color: rgba(230, 57, 70, 0.64);
   background: rgba(0, 0, 0, 0.3);
-  color: var(--vhs-green);
-}
-
-body.vhs-mock .voterail {
-  grid-auto-columns: minmax(250px, 82%);
-  gap: 12px;
-  padding-bottom: 8px;
+  color: var(--acc-soft);
 }
 
 body.vhs-mock .votecard {
-  background: rgba(3, 8, 6, 0.94);
+  background: rgba(8, 8, 10, 0.94);
 }
 
 body.vhs-mock .votecard .th {
   aspect-ratio: 16 / 9;
-  background: #020302;
+  background: #020203;
 }
 
 body.vhs-mock .votecard .th img,
@@ -367,7 +371,7 @@ body.vhs-mock .drummer-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #020302;
+  background: #020203;
 }
 
 body.vhs-mock .votecard .m strong {
@@ -379,7 +383,7 @@ body.vhs-mock .votecard .m span {
 }
 
 body.vhs-mock .votecard .vb:disabled {
-  border-color: rgba(151, 255, 188, 0.18);
+  border-color: rgba(255, 255, 255, 0.16);
   color: var(--dim);
 }
 
@@ -399,7 +403,7 @@ body.vhs-mock .tabbar a {
 
 body.vhs-mock .tabbar a[aria-current] {
   border-color: var(--bd2);
-  background: rgba(151, 255, 188, 0.08);
+  background: rgba(230, 57, 70, 0.12);
 }
 
 body.vhs-mock .tabbar a .ic {
@@ -414,38 +418,13 @@ body.vhs-mock .tabbar a .ic {
   body.vhs-mock button:hover {
     transform: translate(1px, -1px);
     transition: transform 80ms steps(1, end), border-color 120ms ease, background-color 120ms ease, color 120ms ease;
-    text-shadow: 1px 0 rgba(111, 215, 255, 0.55), -1px 0 rgba(255, 78, 99, 0.4);
+    text-shadow: 1px 0 rgba(255, 255, 255, 0.48), -1px 0 rgba(230, 57, 70, 0.5);
   }
 }
 
 @media (min-width: 860px) {
-  body.vhs-mock .home-grid {
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
-    grid-template-areas: "player contest" "chat vote";
-    align-items: start;
-    gap: 18px;
-  }
-
-  body.vhs-mock .player {
-    align-self: stretch;
-  }
-
   body.vhs-mock .chat .cm {
     min-height: 210px;
-  }
-
-  body.vhs-mock .voterail {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 1180px) {
-  body.vhs-mock .wrap {
-    width: min(1240px, 100%);
-  }
-
-  body.vhs-mock .home-grid {
-    grid-template-columns: minmax(0, 1.5fr) minmax(340px, 0.7fr);
   }
 }
 
@@ -460,13 +439,13 @@ body.vhs-mock .tabbar a .ic {
 
   body.vhs-mock .player::after {
     inset: 9px auto auto 9px;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
   }
 
   body.vhs-mock .badge {
     top: 9px;
     right: 9px;
-    font-size: 0.58rem;
+    font-size: 0.66rem;
   }
 
   body.vhs-mock .cd {

@@ -6,9 +6,9 @@
 <link rel="icon" type="image/png" href="/assets/StickWithItBlack.png" sizes="256x256">
 <title>Stick With It — Live drums &amp; the monthly contest</title>
 <meta name="description" content="Watch live, play along to this month's track, and submit your clip to the contest.">
-<link rel="stylesheet" href="/app.css?v=20260711d">
+<link rel="stylesheet" href="/app.css?v=20260711e">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js" defer></script>
-<script src="/app.js?v=20260711d" defer></script>
+<script src="/app.js?v=20260711e" defer></script>
 <style>
   .home-grid{display:grid;gap:16px;grid-template-columns:1fr;grid-template-areas:"player" "chat" "vote" "contest";}
   @media(min-width:860px){.home-grid{grid-template-columns:1fr 1fr;grid-template-areas:"player player" "chat contest" "vote vote";align-items:start;}}
@@ -53,8 +53,9 @@
       <span class="eyebrow" id="contest-eyebrow">This month's contest</span>
       <div class="cd" id="countdown"></div>
       <div class="track" id="track" data-label="Play-along track"></div>
+      <div class="contest-prizes compact" id="contest-prizes"></div>
       <ol class="steps"><li><b>Play along</b> to the track</li><li><b>Record</b> your take</li><li><b>Submit</b> — right here</li></ol>
-      <a class="submit" href="/submit/">Submit your clip →</a>
+      <a class="submit" href="/contest/">Learn more →</a>
     </aside>
   </div>
 </main>
