@@ -157,6 +157,42 @@
     return track?.filename || fromUrl || "stickwithit-playalong.mp3";
   }
 
+  function isAppleTouchDevice() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function trackMimeType(name = "") {
+    const lower = name.toLowerCase();
+    if (lower.endsWith(".wav")) return "audio/wav";
+    if (lower.endsWith(".m4a")) return "audio/mp4";
+    if (lower.endsWith(".ogg")) return "audio/ogg";
+    return "audio/mpeg";
+  }
+
+  async function saveTrackOnIOS(track, trigger) {
+    const filename = trackDownloadName(track);
+    const original = trigger.textContent;
+    trigger.textContent = "Preparing...";
+    trigger.setAttribute("aria-busy", "true");
+    try {
+      const res = await fetch(track.url, { mode: "cors", cache: "force-cache" });
+      if (!res.ok) throw new Error("Track unavailable");
+      const blob = await res.blob();
+      const file = new File([blob], filename, { type: blob.type || trackMimeType(filename) });
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        await navigator.share({ files: [file], title: track.title || "Stick With It play-along track" });
+      } else {
+        window.open(track.url, "_blank", "noopener");
+      }
+    } catch (err) {
+      if (err && err.name === "AbortError") return;
+      window.open(track.url, "_blank", "noopener");
+    } finally {
+      trigger.textContent = original;
+      trigger.removeAttribute("aria-busy");
+    }
+  }
+
   function gigasectorUrl(track) {
     const params = new URLSearchParams();
     params.set("demo", "1");
@@ -187,10 +223,17 @@
   function renderTrack(el, track) {
     if (!track || !track.url) { el.remove(); return; }
     const lbl = el.dataset.label || "Play-along track";
-    el.innerHTML = `<button class="play" type="button" aria-label="Play the track">▶</button><div class="info"><div class="lbl">${esc(lbl)}</div><div class="t">${esc(track.title || "This month's track")}</div><div class="bar"><i></i></div></div><div class="track-shortcuts"><a class="track-shortcut" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}">Download track</a><a class="track-shortcut" href="${esc(gigasectorUrl(track))}">Open in Gigasector</a></div>`;
+    const downloadText = isAppleTouchDevice() ? "Save track" : "Download track";
+    el.innerHTML = `<button class="play" type="button" aria-label="Play the track">▶</button><div class="info"><div class="lbl">${esc(lbl)}</div><div class="t">${esc(track.title || "This month's track")}</div><div class="bar"><i></i></div></div><div class="track-shortcuts"><a class="track-shortcut" href="${esc(track.url)}" download="${esc(trackDownloadName(track))}" data-track-download>${downloadText}</a><a class="track-shortcut" href="${esc(gigasectorUrl(track))}">Open in Gigasector</a></div>`;
     const audio = new Audio(track.url); audio.preload = "none";
     const btn = el.querySelector(".play"), fill = el.querySelector(".bar i");
+    const download = el.querySelector("[data-track-download]");
     btn.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+    download.addEventListener("click", (event) => {
+      if (!isAppleTouchDevice()) return;
+      event.preventDefault();
+      saveTrackOnIOS(track, download);
+    });
     audio.addEventListener("play", () => { btn.textContent = "❚❚"; });
     audio.addEventListener("pause", () => { btn.textContent = "▶"; });
     audio.addEventListener("ended", () => { btn.textContent = "▶"; fill.style.width = "0%"; });

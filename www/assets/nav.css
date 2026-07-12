@@ -36,6 +36,63 @@ body.swi-live-page .swi-site-header {
   padding-bottom: 5px;
 }
 
+body.swi-app-shell .swi-site-header {
+  display: none;
+}
+
+.swi-tool-backbar {
+  min-height: calc(46px + env(safe-area-inset-top));
+  padding: calc(6px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 6px max(12px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+  border-bottom: 1px solid var(--swi-border-strong);
+  background: rgba(5, 5, 6, 0.94);
+  color: var(--swi-fg);
+  font-family: var(--swi-font);
+}
+
+.swi-tool-backbar a,
+.swi-tool-back {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: var(--swi-muted);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.swi-tool-backbar a:hover,
+.swi-tool-backbar a:focus-visible {
+  color: var(--swi-fg);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.swi-tool-title {
+  min-width: 0;
+  color: var(--swi-fg);
+  font-size: 0.86rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.swi-tool-spacer {
+  width: 70px;
+  flex: 0 0 70px;
+}
+
+html[data-theme="light"] .swi-tool-backbar {
+  background: rgba(255, 255, 255, 0.94);
+}
+
 .swi-nav-inner {
   width: min(1280px, 100%);
   min-height: 38px;
