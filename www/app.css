@@ -89,7 +89,7 @@ img{max-width:100%;}
 /* ---------- contest pill ---------- */
 .pill{display:flex;flex-direction:column;gap:11px;padding:15px;border-radius:14px;border:1px solid rgba(230,57,70,.5);
   background:linear-gradient(155deg,rgba(230,57,70,.17),rgba(230,57,70,.03) 58%,transparent);box-shadow:0 0 34px rgba(230,57,70,.1);}
-.cd{display:flex;align-items:center;justify-content:center;gap:14px;padding:2px 0 4px;}
+.cd{width:fit-content;max-width:100%;margin-inline:auto;display:flex;align-items:center;justify-content:center;gap:14px;padding:2px 0 4px;}
 .cd .g{display:flex;flex-direction:column;align-items:center;}
 .cd .g b{font-size:2.5rem;line-height:1;font-weight:850;color:#fff;letter-spacing:-.02em;}
 .cd .g span{font-size:.57rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:700;margin-top:4px;}

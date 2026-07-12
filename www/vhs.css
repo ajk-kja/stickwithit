@@ -343,12 +343,15 @@ body.vhs-mock .pill::before {
 }
 
 body.vhs-mock .cd {
-  justify-content: flex-start;
+  justify-content: center;
   gap: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 body.vhs-mock .cd .g {
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
 }
 
 body.vhs-mock .cd .g b {
