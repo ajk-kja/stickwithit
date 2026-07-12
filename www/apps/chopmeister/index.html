@@ -833,14 +833,18 @@
 
     const mobileAudioSplash = document.getElementById('mobileAudioSplash');
     const mobileAudioDismiss = document.getElementById('mobileAudioDismiss');
+    const isMobileAudioDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (mobileAudioSplash && mobileAudioDismiss) {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        mobileAudioSplash.classList.add('active');
-      }
       mobileAudioDismiss.addEventListener('click', () => {
         mobileAudioSplash.classList.remove('active');
+        sessionStorage.setItem('chopmeisterMobileAudioSeen', '1');
       });
+    }
+
+    function maybeShowMobileAudioSplash() {
+      if (!mobileAudioSplash || !isMobileAudioDevice) return;
+      if (sessionStorage.getItem('chopmeisterMobileAudioSeen')) return;
+      mobileAudioSplash.classList.add('active');
     }
 
     // ==================== AUDIO ====================
@@ -1260,6 +1264,7 @@
       const dismiss = () => {
         splash.classList.add('hidden');
         localStorage.setItem(SPLASH_STORAGE_KEY, '1');
+        maybeShowMobileAudioSplash();
       };
 
       dismissBtn.addEventListener('click', dismiss);
@@ -1271,27 +1276,13 @@
     }
 
     async function init() {
-      // Load samples first
-      try {
-        await loadSamples();
-      } catch (e) {
-        console.error('Failed to load samples:', e);
-        showToast('Failed to load sounds');
-      }
-      
-      try {
-        await loadSamples();
-      } catch (err) {
-        console.error('Failed to load samples:', err);
-        showToast('Failed to load sounds');
-      }
+      bindEvents();
+      setupSplash();
       if (!loadFromURL()) {
         generateRandomPattern(true);
       } else {
         render();
       }
-      bindEvents();
-      setupSplash();
     }
 
     init();
