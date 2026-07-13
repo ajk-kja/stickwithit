@@ -601,6 +601,18 @@ body.vhs-mock.theme-light .expand {
   text-shadow: none;
 }
 
+body.vhs-mock.theme-light .desknav a[aria-current],
+body.vhs-mock.theme-light .tabbar a[aria-current] {
+  border-color: rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.055);
+  color: var(--fg);
+}
+
+body.vhs-mock.theme-light .desknav a.live[aria-current],
+body.vhs-mock.theme-light .tabbar a.live[aria-current] {
+  color: var(--acc);
+}
+
 body.vhs-mock.theme-light .track,
 body.vhs-mock.theme-light .chat .cm {
   background: rgba(0, 0, 0, 0.035);
