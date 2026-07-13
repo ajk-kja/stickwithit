@@ -75,12 +75,12 @@ body.theme-light .desknav a[aria-current]{background:rgba(0,0,0,.06);box-shadow:
   background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:.64rem;font-weight:850;letter-spacing:.04em;}
 .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--acc);}
 .player-tools{position:absolute;top:9px;left:10px;z-index:4;display:flex;align-items:center;gap:6px;opacity:1;transform:translateY(0);transition:opacity .22s ease,transform .22s ease;}
-.player-tools button{width:30px;height:30px;display:grid;place-items:center;border:1px solid rgba(230,57,70,.58);border-radius:7px;background:rgba(0,0,0,.62);color:#fff;font-size:.85rem;cursor:pointer;}
+.player-tools button{width:30px;height:30px;display:grid;place-items:center;border:1px solid rgba(230,57,70,.58);border-radius:7px;background:rgba(0,0,0,.62);color:#fff;font-size:.85rem;cursor:pointer;opacity:1;transform:translateY(0);transition:opacity .22s ease,transform .22s ease,border-color .16s ease,background-color .16s ease;}
 .player-tools button:hover{border-color:var(--acc-soft);background:rgba(127,29,36,.78);}
 .player-tools button[hidden]{display:none;}
-.player.controls-idle .player-tools{opacity:0;transform:translateY(-4px);pointer-events:none;}
+.player.controls-idle .player-tools button:not(.sound){opacity:0;transform:translateY(-4px);pointer-events:none;}
 .player:focus-within .player-tools{opacity:1;transform:translateY(0);pointer-events:auto;}
-@media(prefers-reduced-motion:reduce){.player-tools{transition:none;}}
+@media(prefers-reduced-motion:reduce){.player-tools,.player-tools button{transition:none;}}
 .sound,.expand,.cast{appearance:none;-webkit-appearance:none;}
 .expand{font-size:.95rem;}
 .cast{font-size:1rem;}

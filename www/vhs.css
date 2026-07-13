@@ -577,6 +577,12 @@ body.vhs-mock.theme-light .blogcard {
   box-shadow: none;
 }
 
+body.vhs-mock.theme-light .chat .ch,
+body.vhs-mock.theme-light .chat .m,
+body.vhs-mock.theme-light .chat .soon {
+  text-shadow: 1px 1px 0 rgba(113, 113, 122, 0.16);
+}
+
 body.vhs-mock.theme-light .chat .ci input,
 body.vhs-mock.theme-light .chat .ci .box,
 body.vhs-mock.theme-light .field input,
