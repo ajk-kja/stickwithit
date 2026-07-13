@@ -518,7 +518,8 @@
     let data; try { data = await getJSON("/assets/data/market.json"); } catch { el.innerHTML = `<div class="empty">Store loading soon.</div>`; return; }
     const products = (data.products || []).filter((p) => p.active !== false);
     if (!products.length) { el.innerHTML = `<div class="empty">New drops soon.</div>`; return; }
-    el.innerHTML = products.map((p) => `<a class="merchcard" href="${esc(p.url || "/store/")}" target="_blank" rel="noopener"><div class="mi">${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : "🛍️"}</div><div class="mb"><b>${esc(p.title)}</b>${p.price ? `<span class="pr">${esc(p.price)}</span>` : ""}${p.blurb ? `<span class="st">${esc(p.blurb)}</span>` : ""}</div></a>`).join("");
+    const shopUrl = `https://${esc(data.shop?.domain || "stick-with-it-shop.fourthwall.com")}/`;
+    el.innerHTML = products.map((p) => `<a class="merchcard" href="${esc(p.url || shopUrl)}" target="_blank" rel="noopener"><div class="mi">${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : "🛍️"}</div><div class="mb"><b>${esc(p.title)}</b>${p.price ? `<span class="pr">${esc(p.price)}</span>` : ""}${p.blurb ? `<span class="st">${esc(p.blurb)}</span>` : ""}</div></a>`).join("");
   }
 
   function initSubmitPreview() {
