@@ -57,6 +57,7 @@
     const video = $("player"); if (!video) return;
     const badge = $("live-badge"), status = $("player-status");
     const castBtn = $("cast-btn");
+    const shell = video.closest(".player");
     let hls = null;
     const setStatus = (m) => { if (status) status.textContent = m || ""; };
     const setLive = (on) => { if (!badge) return; badge.classList.toggle("is-off", !on); badge.innerHTML = `<span class="dot" style="background:${on ? "var(--acc)" : "var(--dim)"}"></span>${on ? "LIVE" : "OFFLINE"}`; };
@@ -84,7 +85,29 @@
       video.addEventListener("volumechange", paint);
       paint();
     }
+    if (shell) initPlayerChrome(shell);
     if (castBtn) initCastButton(video, castBtn);
+  }
+
+  function initPlayerChrome(shell) {
+    let idleTimer = 0;
+    const reveal = () => {
+      shell.classList.remove("controls-idle");
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        if (!shell.matches(":hover") && !shell.contains(document.activeElement)) {
+          shell.classList.add("controls-idle");
+        }
+      }, 2400);
+    };
+    ["pointermove", "pointerdown", "touchstart", "mousemove", "focusin", "keydown"].forEach((eventName) => {
+      shell.addEventListener(eventName, reveal, { passive: true });
+    });
+    shell.addEventListener("mouseleave", () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => shell.classList.add("controls-idle"), 700);
+    });
+    reveal();
   }
 
   function initCastButton(video, btn) {
