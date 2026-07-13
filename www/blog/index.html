@@ -62,9 +62,27 @@
             font-size: 0.85rem;
             color: var(--swi-dim);
         }
+        .home-return {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            margin-top: 2rem;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--swi-accent);
+            border-radius: 6px;
+            color: var(--swi-fg);
+            background: rgba(230, 57, 70, 0.12);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .home-return:hover {
+            background: rgba(230, 57, 70, 0.2);
+        }
         @media (max-width: 600px) {
             .container { padding: 1rem; }
             .post { padding: 1.2rem; }
+            .home-return { width: 100%; }
         }
     </style>
   <link rel="stylesheet" href="/assets/nav.css?v=20260712a">
@@ -125,6 +143,7 @@
                 </a>
             </article>
             </div>
+            <a class="home-return" href="/">← Back to Home</a>
         </main>
     </div>
 </body>
