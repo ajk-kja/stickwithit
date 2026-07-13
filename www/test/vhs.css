@@ -196,7 +196,7 @@ body.vhs-mock .player::after {
 
 body.vhs-mock .player video,
 body.vhs-mock .player .ph {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 body.vhs-mock .badge {
