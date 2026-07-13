@@ -625,6 +625,11 @@ body.vhs-mock.theme-light .chat .cm {
     transition: transform 80ms steps(1, end), border-color 120ms ease, background-color 120ms ease, color 120ms ease;
     text-shadow: 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 0 #000;
   }
+
+  body.vhs-mock.theme-light a:hover,
+  body.vhs-mock.theme-light button:hover {
+    text-shadow: none;
+  }
 }
 
 @media (min-width: 860px) {

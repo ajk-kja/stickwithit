@@ -333,3 +333,12 @@ body.theme-light .desknav a[aria-current]{background:rgba(0,0,0,.06);box-shadow:
 .howcard.cta:hover .arw{transform:translateX(4px);}
 .howcard.cta p{color:rgba(255,255,255,.82);}
 @keyframes cta-border-pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.16);opacity:.72}50%{box-shadow:0 0 0 5px rgba(230,57,70,.08);opacity:1}}
+
+body.theme-light :where(.eyebrow,.chead,.submit-note,.track .lbl,.track-shortcut,.contest-prize-title,.contest-prize-value,.contest-prizes.compact .contest-prize-value,.cd .g b,.cd .sep,.merchcard .pr,.ctxbanner .cd-mini,.archive-card h2,.archive-empty h2,.terms .notice,.terms .toc a,.terms strong,.howcard.cta b,.howcard.cta .arw,.howcard.cta p){
+  color:var(--fg)!important;
+}
+body.theme-light :where(.howcard .n,.steps li::before,.nextsteps li::before){
+  background:rgba(230,57,70,.1)!important;
+  border-color:rgba(230,57,70,.7)!important;
+  color:var(--fg)!important;
+}
