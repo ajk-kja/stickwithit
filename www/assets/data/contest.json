@@ -96,7 +96,7 @@
   ],
   "archive": [],
   "last_winner": {
-    "artist_id": "aaron-ovecka",
+    "artist_id": "frank-de-santis",
     "win_month": "July 2026"
   },
   "giveaways": [
@@ -114,19 +114,19 @@
   "winners": [
     {
       "rank": 1,
-      "entry_id": "20260704-203114-aaron-ovecka-false-prophet",
+      "entry_id": "20260705-151621-frank-de-santis-security-and-compliance",
       "label": "1st"
     },
     {
       "rank": 2,
-      "entry_id": "20260705-151621-frank-de-santis-security-and-compliance",
+      "entry_id": "20260705-153036-doug-court-chosen-one",
       "label": "2nd"
     },
     {
       "rank": 3,
-      "entry_id": "20260705-153036-doug-court-chosen-one",
+      "entry_id": "20260704-203114-aaron-ovecka-false-prophet",
       "label": "3rd"
     }
   ],
-  "updated_at": "2026-07-11T22:01:24.506921Z"
+  "updated_at": "2026-07-13T13:32:42.794773Z"
 }
