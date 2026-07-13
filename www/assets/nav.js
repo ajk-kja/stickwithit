@@ -44,12 +44,11 @@
 
   const LOGO_SRC = "/assets/StickWithItBlack.png";
   const primaryLinks = [
-    { href: "/live/", label: "Live" },
-    { href: "/submit/", label: "Submit" },
+    { href: "/", label: "Live" },
     { href: "/contest/", label: "Contest" },
-    { href: "/drummers/", label: "Artists" },
-    { href: "/blog/", label: "Blog" },
-    { href: "/store/", label: "Store" },
+    { href: "/apps/", label: "Apps" },
+    { href: "/artists/", label: "Artists" },
+    { href: "/more/", label: "More" },
   ];
   const appLinks = [
     { href: "/apps/metrognome/", label: "MetroGnome", note: "Timing" },
@@ -143,24 +142,8 @@
     const desktopNav = document.createElement("nav");
     desktopNav.className = "swi-desktop-nav";
     desktopNav.setAttribute("aria-label", "Primary");
-    primaryLinks.slice(0, 3).forEach((item) => desktopNav.appendChild(link(item, "swi-nav-link")));
+    primaryLinks.forEach((item) => desktopNav.appendChild(link(item, "swi-nav-link")));
 
-    const appsMenu = document.createElement("div");
-    appsMenu.className = "swi-apps-menu";
-    const appsButton = document.createElement("button");
-    appsButton.className = "swi-apps-trigger";
-    appsButton.type = "button";
-    appsButton.textContent = "Apps";
-    appsButton.setAttribute("aria-haspopup", "true");
-    if (normalize(window.location.pathname).startsWith("/apps/")) appsButton.setAttribute("aria-current", "page");
-    const appsPanel = document.createElement("div");
-    appsPanel.className = "swi-apps-panel";
-    appsPanel.setAttribute("role", "menu");
-    appLinks.forEach((item) => appsPanel.appendChild(appLink(item, "swi-app-link")));
-    appsMenu.append(appsButton, appsPanel);
-    desktopNav.appendChild(appsMenu);
-
-    primaryLinks.slice(3).forEach((item) => desktopNav.appendChild(link(item, "swi-nav-link")));
     inner.appendChild(desktopNav);
 
     const navActions = document.createElement("div");
@@ -183,8 +166,7 @@
     mobileNav.hidden = true;
     const primarySection = document.createElement("div");
     primarySection.className = "swi-menu-primary";
-    primaryLinks.slice(0, 3).forEach((item) => primarySection.appendChild(link(item, "swi-mobile-link")));
-    primaryLinks.slice(3).forEach((item) => primarySection.appendChild(link(item, "swi-mobile-link")));
+    primaryLinks.forEach((item) => primarySection.appendChild(link(item, "swi-mobile-link")));
     mobileNav.appendChild(primarySection);
     const section = document.createElement("div");
     section.className = "swi-mobile-section";
