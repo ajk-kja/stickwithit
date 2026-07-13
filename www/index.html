@@ -19,10 +19,17 @@
 <meta name="twitter:title" content="Live drums &amp; the monthly contest">
 <meta name="twitter:description" content="Watch live, play along to this month's track, and submit your clip to the contest.">
 <meta name="twitter:image" content="https://stickwithit.xyz/assets/favicon-256.png">
-<link rel="stylesheet" href="/app.css?v=20260713c">
-<link rel="stylesheet" href="/vhs.css?v=20260713c">
+<link rel="stylesheet" href="/app.css?v=20260713d">
+<link rel="stylesheet" href="/vhs.css?v=20260713d">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js" defer></script>
-<script src="/app.js?v=20260713c" defer></script>
+<script>
+  window.__onGCastApiAvailable = function(available) {
+    window.__swiCastAvailable = available;
+    window.dispatchEvent(new CustomEvent("swi-cast-api", { detail: { available: available } }));
+  };
+</script>
+<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1" defer></script>
+<script src="/app.js?v=20260713d" defer></script>
 <style>
   .home-grid{display:grid;gap:16px;grid-template-columns:1fr;grid-template-areas:"player" "chat" "vote" "contest";}
   @media(min-width:860px){.home-grid{grid-template-columns:1fr 1fr;grid-template-areas:"player player" "chat contest" "vote vote";align-items:start;}}
@@ -41,10 +48,13 @@
 <main class="wrap page">
   <div class="home-grid">
     <div class="ga-player player">
-      <video id="player" playsinline muted autoplay poster="/assets/favicon-256.png"></video>
+      <video id="player" playsinline muted autoplay x-webkit-airplay="allow" poster="/assets/favicon-256.png"></video>
       <span class="badge is-off" id="live-badge"><span class="dot" style="background:var(--dim)"></span>OFFLINE</span>
-      <button class="sound" id="sound-btn" type="button" aria-label="Unmute the live stream" title="Unmute">🔇</button>
-      <button class="expand" id="expand-btn" type="button" aria-label="Fullscreen the player">⤢</button>
+      <div class="player-tools" aria-label="Player controls">
+        <button class="sound" id="sound-btn" type="button" aria-label="Unmute the live stream" title="Unmute">🔇</button>
+        <button class="cast" id="cast-btn" type="button" aria-label="Cast the live stream" title="Cast" hidden>▱</button>
+        <button class="expand" id="expand-btn" type="button" aria-label="Fullscreen the player" title="Fullscreen">⤢</button>
+      </div>
     </div>
 
     <div class="ga-chat chat live-chat" id="live-chat">

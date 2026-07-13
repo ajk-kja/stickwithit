@@ -22,6 +22,7 @@
   function initPlayer() {
     const video = $("player"); if (!video) return;
     const badge = $("live-badge"), status = $("player-status");
+    const castBtn = $("cast-btn");
     let hls = null;
     const setStatus = (m) => { if (status) status.textContent = m || ""; };
     const setLive = (on) => { if (!badge) return; badge.classList.toggle("is-off", !on); badge.innerHTML = `<span class="dot" style="background:${on ? "var(--acc)" : "var(--dim)"}"></span>${on ? "LIVE" : "OFFLINE"}`; };
@@ -49,6 +50,61 @@
       video.addEventListener("volumechange", paint);
       paint();
     }
+    if (castBtn) initCastButton(video, castBtn);
+  }
+
+  function initCastButton(video, btn) {
+    const canAirPlay = () => typeof video.webkitShowPlaybackTargetPicker === "function";
+    const hasRemote = () => video.remote && typeof video.remote.prompt === "function";
+    const hasGoogleCast = () => window.cast && window.chrome && chrome.cast && cast.framework;
+    const configureGoogleCast = () => {
+      if (!hasGoogleCast()) return false;
+      cast.framework.CastContext.getInstance().setOptions({
+        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+      });
+      return true;
+    };
+    const show = () => { btn.hidden = false; };
+    const hide = () => { btn.hidden = true; };
+    const showIfAvailable = () => {
+      if (canAirPlay() || hasRemote() || configureGoogleCast()) show();
+      else hide();
+    };
+    window.addEventListener("swi-cast-api", (event) => {
+      if (event.detail?.available && configureGoogleCast()) show();
+      else showIfAvailable();
+    });
+    if (window.__swiCastAvailable && configureGoogleCast()) show();
+    if (video.remote && typeof video.remote.watchAvailability === "function") {
+      video.remote.watchAvailability((available) => {
+        btn.hidden = !(available || canAirPlay() || hasGoogleCast());
+      }).catch(showIfAvailable);
+    } else {
+      showIfAvailable();
+    }
+    btn.addEventListener("click", async () => {
+      if (canAirPlay()) {
+        video.webkitShowPlaybackTargetPicker();
+        return;
+      }
+      if (hasGoogleCast()) {
+        try {
+          const context = cast.framework.CastContext.getInstance();
+          let session = context.getCurrentSession();
+          if (!session) session = await context.requestSession();
+          const mediaInfo = new chrome.cast.media.MediaInfo(STREAM_URL, "application/x-mpegURL");
+          mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+          mediaInfo.metadata.title = "Stick With It Live";
+          mediaInfo.metadata.subtitle = "Live drums and monthly contest";
+          await session.loadMedia(new chrome.cast.media.LoadRequest(mediaInfo));
+          return;
+        } catch (e) {}
+      }
+      if (hasRemote()) {
+        video.remote.prompt().catch(() => {});
+      }
+    });
   }
 
   /* ---------- live chat ---------- */

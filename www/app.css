@@ -61,8 +61,13 @@ img{max-width:100%;}
 .badge{position:absolute;top:9px;right:10px;display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
   background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:.64rem;font-weight:850;letter-spacing:.04em;}
 .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--acc);}
-.sound{position:absolute;bottom:9px;right:46px;width:30px;height:30px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.28);border-radius:7px;background:rgba(0,0,0,.45);color:#fff;font-size:.85rem;cursor:pointer;}
-.expand{position:absolute;bottom:9px;right:10px;width:30px;height:30px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.28);border-radius:7px;background:rgba(0,0,0,.45);color:#fff;font-size:.95rem;cursor:pointer;}
+.player-tools{position:absolute;top:9px;left:10px;z-index:4;display:flex;align-items:center;gap:6px;}
+.player-tools button{width:30px;height:30px;display:grid;place-items:center;border:1px solid rgba(230,57,70,.58);border-radius:7px;background:rgba(0,0,0,.62);color:#fff;font-size:.85rem;cursor:pointer;}
+.player-tools button:hover{border-color:var(--acc-soft);background:rgba(127,29,36,.78);}
+.player-tools button[hidden]{display:none;}
+.sound,.expand,.cast{appearance:none;-webkit-appearance:none;}
+.expand{font-size:.95rem;}
+.cast{font-size:1rem;}
 
 /* ---------- chatbox ---------- */
 .chat{display:flex;flex-direction:column;border:1px solid var(--bd);border-radius:11px;background:var(--elev);overflow:hidden;}
