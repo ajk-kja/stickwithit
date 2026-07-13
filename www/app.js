@@ -10,12 +10,46 @@
   const cookie = (n) => (document.cookie.split("; ").find((p) => p.startsWith(n + "=")) || "").split("=")[1] || "";
   const setCookie = (n, v) => { const e = new Date(); e.setMonth(e.getMonth() + 2); document.cookie = `${n}=${encodeURIComponent(v)}; expires=${e.toUTCString()}; path=/; SameSite=Lax`; };
   const getJSON = (url) => fetch(`${url}?ts=${Date.now()}`, { cache: "no-store" }).then((r) => r.json());
+  const THEME_KEY = "swi-theme";
   function ytEmbed(url) {
     if (!url) return "";
     const list = (url.match(/[?&]list=([^&]+)/) || [])[1];
     if (list) return `https://www.youtube.com/embed/videoseries?list=${list}`;
     const v = (url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/) || [])[1];
     return v ? `https://www.youtube.com/embed/${v}` : "";
+  }
+
+  /* ---------- theme toggle ---------- */
+  function applyTheme(theme, persist = false) {
+    const next = theme === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    document.body.classList.toggle("theme-light", next === "light");
+    document.querySelectorAll(".theme-toggle input").forEach((input) => {
+      input.checked = next === "light";
+      input.setAttribute("aria-label", next === "light" ? "Use dark mode" : "Use light mode");
+    });
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", next === "light" ? "#f7f7f4" : "#050506");
+    if (persist) {
+      try { localStorage.setItem(THEME_KEY, next); } catch {}
+    }
+  }
+
+  function initThemeToggle() {
+    const host = document.querySelector(".chrome-in");
+    if (host && !host.querySelector(".theme-toggle")) {
+      const label = document.createElement("label");
+      label.className = "theme-toggle";
+      label.title = "Light / dark";
+      label.innerHTML = '<input type="checkbox"><span aria-hidden="true"></span>';
+      host.appendChild(label);
+    }
+    let saved = "dark";
+    try { saved = localStorage.getItem(THEME_KEY) || "dark"; } catch {}
+    applyTheme(saved);
+    document.querySelectorAll(".theme-toggle input").forEach((input) => {
+      input.addEventListener("change", () => applyTheme(input.checked ? "light" : "dark", true));
+    });
   }
 
   /* ---------- live player (home only) ---------- */
@@ -473,5 +507,5 @@
     });
   }
 
-  initPlayer(); initChat(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket(); initSubmitPreview();
+  initThemeToggle(); initPlayer(); initChat(); loadContest(); loadArtists(); loadArtistDetail(); loadMarket(); initSubmitPreview();
 })();

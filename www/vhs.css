@@ -432,6 +432,15 @@ body.vhs-mock .giveaway-card img {
   background: #020203;
 }
 
+body.vhs-mock .merchcard .mi {
+  background: #fff;
+}
+
+body.vhs-mock .merchcard .mi img {
+  object-fit: contain;
+  background: #fff;
+}
+
 body.vhs-mock .field input,
 body.vhs-mock .field textarea {
   border-radius: 0;
@@ -504,6 +513,91 @@ body.vhs-mock .tabbar a .ic {
   height: auto;
   border: 0;
   border-radius: 0;
+}
+
+body.vhs-mock.theme-light {
+  --bg: #f7f7f4;
+  --elev: #ffffff;
+  --panel: #ffffff;
+  --bd: rgba(0, 0, 0, 0.14);
+  --bd2: rgba(0, 0, 0, 0.28);
+  --fg: #08080a;
+  --muted: #3f3f46;
+  --dim: #71717a;
+  --vhs-white: #08080a;
+  --vhs-gray: #3f3f46;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f7f4 58%, #efefeb 100%);
+}
+
+body.vhs-mock.theme-light::before {
+  opacity: 0.035;
+  filter: invert(1);
+}
+
+body.vhs-mock.theme-light::after {
+  background:
+    radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.1) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.025), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.035));
+}
+
+body.vhs-mock.theme-light .chrome,
+body.vhs-mock.theme-light .tabbar {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+body.vhs-mock.theme-light .brand,
+body.vhs-mock.theme-light .sh,
+body.vhs-mock.theme-light .sh h2,
+body.vhs-mock.theme-light .chead,
+body.vhs-mock.theme-light .aname,
+body.vhs-mock.theme-light .feat-hero .nm {
+  text-shadow: none;
+}
+
+body.vhs-mock.theme-light .player {
+  background: #000;
+  border-color: rgba(0, 0, 0, 0.34);
+}
+
+body.vhs-mock.theme-light .chat,
+body.vhs-mock.theme-light .pill,
+body.vhs-mock.theme-light .votecard,
+body.vhs-mock.theme-light .empty,
+body.vhs-mock.theme-light .howcard,
+body.vhs-mock.theme-light .contest-prizes li,
+body.vhs-mock.theme-light .dropzone,
+body.vhs-mock.theme-light .nextcard,
+body.vhs-mock.theme-light .feat-hero,
+body.vhs-mock.theme-light .artistcard,
+body.vhs-mock.theme-light .appcard2,
+body.vhs-mock.theme-light .merchcard,
+body.vhs-mock.theme-light .blogcard {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: none;
+}
+
+body.vhs-mock.theme-light .chat .ci input,
+body.vhs-mock.theme-light .chat .ci .box,
+body.vhs-mock.theme-light .field input,
+body.vhs-mock.theme-light .field textarea {
+  background: #fff;
+  color: var(--fg);
+}
+
+body.vhs-mock.theme-light .badge,
+body.vhs-mock.theme-light .player-tools button,
+body.vhs-mock.theme-light .sound,
+body.vhs-mock.theme-light .cast,
+body.vhs-mock.theme-light .expand {
+  background: rgba(255, 255, 255, 0.86);
+  color: #08080a;
+  text-shadow: none;
+}
+
+body.vhs-mock.theme-light .track,
+body.vhs-mock.theme-light .chat .cm {
+  background: rgba(0, 0, 0, 0.035);
 }
 
 @media (hover: hover) and (pointer: fine) {
