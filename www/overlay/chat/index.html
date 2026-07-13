@@ -52,6 +52,7 @@
     const row = document.createElement("div");
     const source = String(msg.source || "web").replace(/[^a-z]/g, "");
     row.className = "m source-" + source;
+    row.dataset.chatId = String(msg.id);
     const icon = document.createElement("span");
     icon.className = "src";
     icon.innerHTML = icons[source] || icons.web;
@@ -64,18 +65,37 @@
     el.append(row);
     while (el.children.length > 8) el.firstElementChild.remove();
   }
+  function sync(messages) {
+    if (!Array.isArray(messages)) return;
+    const keep = new Set(messages.map((msg) => String(msg && msg.id || "")).filter(Boolean));
+    for (const row of Array.from(el.children)) {
+      const id = row.dataset ? row.dataset.chatId : "";
+      if (id && !keep.has(id)) {
+        row.remove();
+        seen.delete(id);
+      }
+    }
+    messages.forEach(add);
+  }
+  async function refreshMessages() {
+    try {
+      const res = await fetch("/api/chat/recent?ts=" + Date.now(), { cache:"no-store" });
+      const data = await res.json();
+      if (typeof data.overlay_enabled === "boolean") setVisible(data.overlay_enabled);
+      sync(data.messages || []);
+    } catch (e) {}
+  }
   if ("EventSource" in window) {
     const es = new EventSource("/api/chat/events");
     es.onmessage = (ev) => { try { add(JSON.parse(ev.data)); } catch (e) {} };
     es.addEventListener("message", (ev) => { try { add(JSON.parse(ev.data)); } catch (e) {} });
+    es.addEventListener("sync", (ev) => { try { sync((JSON.parse(ev.data) || {}).messages || []); } catch (e) {} });
   } else {
-    fetch("/api/chat/recent", { cache:"no-store" }).then((r) => r.json()).then((d) => {
-      if (typeof d.overlay_enabled === "boolean") setVisible(d.overlay_enabled);
-      (d.messages || []).forEach(add);
-    }).catch(() => {});
+    refreshMessages();
   }
   refreshState();
   setInterval(refreshState, 1500);
+  setInterval(refreshMessages, 15000);
 })();
 </script>
 </body></html>

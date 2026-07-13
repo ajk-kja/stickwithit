@@ -76,12 +76,23 @@
     const saved = localStorage.getItem("swi_chat_name") || "";
     if (saved) nameEl.value = saved.slice(0, 24);
     list.addEventListener("scroll", () => { autoScroll = atBottom(); });
+    function removeMissingMessages(messages) {
+      const keep = new Set((messages || []).map((msg) => String(msg?.id || "")).filter(Boolean));
+      for (const row of Array.from(list.children)) {
+        const id = row.dataset ? row.dataset.chatId : "";
+        if (id && !keep.has(id)) {
+          row.remove();
+          seen.delete(id);
+        }
+      }
+    }
     function addMessage(msg) {
       if (!msg || !msg.id || seen.has(msg.id)) return;
       seen.add(msg.id);
       const wasBottom = atBottom();
       const row = document.createElement("div");
       row.className = `m source-${String(msg.source || "web").replace(/[^a-z]/g, "")}`;
+      row.dataset.chatId = String(msg.id);
       const src = document.createElement("span");
       src.className = "src";
       src.innerHTML = chatIcon(msg.source);
@@ -95,10 +106,18 @@
       while (list.children.length > 200) list.firstElementChild.remove();
       if (wasBottom || autoScroll) scrollDown();
     }
+    function syncMessages(messages) {
+      if (!Array.isArray(messages)) return;
+      const wasBottom = atBottom();
+      removeMissingMessages(messages);
+      messages.forEach(addMessage);
+      if (wasBottom || autoScroll) scrollDown();
+    }
     function connect() {
       if (!("EventSource" in window)) {
         setState("Recent");
-        getJSON("/api/chat/recent").then((d) => (d.messages || []).forEach(addMessage)).catch(() => setState("Offline"));
+        getJSON("/api/chat/recent").then((d) => syncMessages(d.messages || [])).catch(() => setState("Offline"));
+        setInterval(() => getJSON("/api/chat/recent").then((d) => syncMessages(d.messages || [])).catch(() => {}), 5000);
         return;
       }
       const es = new EventSource("/api/chat/events");
@@ -109,7 +128,11 @@
       es.addEventListener("message", (ev) => {
         try { addMessage(JSON.parse(ev.data)); } catch (e) {}
       });
+      es.addEventListener("sync", (ev) => {
+        try { syncMessages((JSON.parse(ev.data) || {}).messages || []); } catch (e) {}
+      });
       es.onerror = () => { setState("Reconnecting"); };
+      setInterval(() => getJSON("/api/chat/recent").then((d) => syncMessages(d.messages || [])).catch(() => {}), 15000);
     }
     form.addEventListener("submit", async (ev) => {
       ev.preventDefault();
