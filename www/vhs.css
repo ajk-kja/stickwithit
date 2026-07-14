@@ -551,7 +551,31 @@ body.vhs-mock.theme-light .sh,
 body.vhs-mock.theme-light .sh h2,
 body.vhs-mock.theme-light .chead,
 body.vhs-mock.theme-light .aname,
-body.vhs-mock.theme-light .feat-hero .nm {
+body.vhs-mock.theme-light .feat-hero .nm,
+body.vhs-mock.theme-light .pill::before,
+body.vhs-mock.theme-light .cd .g b {
+  text-shadow: none;
+}
+
+body.vhs-mock.theme-light :where(
+  .desknav a,
+  .tabbar a,
+  .eyebrow,
+  .badge,
+  .track .lbl,
+  .track-shortcut,
+  .votecard .vb,
+  .submit,
+  .btn,
+  .backbar .back,
+  .backbar .share,
+  .soc,
+  .contest-prize-title,
+  .appcard2 b,
+  .merchcard b,
+  .cd .g span,
+  .steps li::before
+) {
   text-shadow: none;
 }
 
