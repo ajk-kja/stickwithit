@@ -20,8 +20,22 @@
   }
 
   /* ---------- theme toggle ---------- */
+  function fadeThemeSwap(from) {
+    if (!document.body || !from || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const overlay = document.createElement("div");
+    overlay.className = "theme-fade";
+    overlay.style.background = from === "light" ? "#f7f7f4" : "#050506";
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => {
+      overlay.style.opacity = "0";
+    });
+    window.setTimeout(() => overlay.remove(), 560);
+  }
+
   function applyTheme(theme, persist = false) {
     const next = theme === "light" ? "light" : "dark";
+    const prev = document.documentElement.getAttribute("data-theme");
+    fadeThemeSwap(prev && prev !== next ? prev : "");
     document.documentElement.setAttribute("data-theme", next);
     document.body.classList.toggle("theme-light", next === "light");
     document.querySelectorAll(".theme-toggle input").forEach((input) => {

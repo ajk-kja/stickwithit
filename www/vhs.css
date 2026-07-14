@@ -27,6 +27,7 @@ body.vhs-mock {
   background:
     linear-gradient(180deg, #010201 0%, #030403 48%, #050705 100%);
   color: var(--fg);
+  transition: background-color 0.46s ease, color 0.46s ease;
 }
 
 body.vhs-mock::before,
@@ -64,6 +65,7 @@ body.vhs-mock .tabbar {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  transition: background-color 0.46s ease, border-color 0.46s ease, color 0.46s ease, box-shadow 0.46s ease;
 }
 
 body.vhs-mock .chrome {
@@ -623,6 +625,27 @@ body.vhs-mock.theme-light .expand {
   background: rgba(255, 255, 255, 0.86);
   color: #08080a;
   text-shadow: none;
+}
+
+body.vhs-mock.theme-light :where(
+  .chat .ci .snd,
+  .submit,
+  .votecard .vb,
+  .track .play,
+  .track-shortcut,
+  .btn,
+  .soc,
+  .backbar .share,
+  .howcard.cta,
+  .appcard2 .open
+) {
+  background: rgba(230, 57, 70, 0.14);
+  border-color: rgba(230, 57, 70, 0.72);
+  color: var(--fg) !important;
+}
+
+body.vhs-mock.theme-light :where(.chat .ci .snd,.submit,.votecard .vb,.track .play,.appcard2 .open):hover {
+  background: rgba(230, 57, 70, 0.22);
 }
 
 body.vhs-mock.theme-light .desknav a[aria-current],
