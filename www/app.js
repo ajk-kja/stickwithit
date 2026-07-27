@@ -463,7 +463,10 @@
     document.querySelectorAll(".desknav a, .tabbar a").forEach((link) => {
       let path = "";
       try { path = new URL(link.href, location.href).pathname; } catch {}
-      if (/^\/(?:test\/)?contest\/?$/.test(path)) link.hidden = !visible;
+      if (/^\/(?:test\/)?contest\/?$/.test(path)) {
+        link.hidden = !visible;
+        link.style.display = visible ? "" : "none";
+      }
     });
   }
 
