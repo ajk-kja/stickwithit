@@ -29,10 +29,13 @@
   };
 </script>
 <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1" defer></script>
-<script src="/app.js?v=20260713h" defer></script>
+<script src="/app.js?v=20260727a" defer></script>
 <style>
   .home-grid{display:grid;gap:16px;grid-template-columns:1fr;grid-template-areas:"player" "chat" "vote" "contest";}
+  .home-grid.contest-hidden{grid-template-areas:"player" "chat";}
+  .home-grid.contest-hidden .ga-vote,.home-grid.contest-hidden .ga-contest{display:none;grid-area:auto}
   @media(min-width:860px){.home-grid{grid-template-columns:1fr 1fr;grid-template-areas:"player player" "chat contest" "vote vote";align-items:start;}}
+  @media(min-width:860px){.home-grid.contest-hidden{grid-template-areas:"player player" "chat chat";}}
   .ga-player{grid-area:player}.ga-chat{grid-area:chat}.ga-vote{grid-area:vote}.ga-contest{grid-area:contest}
   .ga-chat{min-height:210px}
   #player-status:empty{display:none}

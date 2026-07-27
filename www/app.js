@@ -457,15 +457,33 @@
     list.innerHTML = items.map((g) => `<article class="giveaway-card">${g.image ? `<img src="${esc(g.image)}" alt="">` : ""}<div><b>${esc(g.title || "Giveaway")}</b>${g.description ? `<p>${esc(g.description)}</p>` : ""}<span>${g.end_date ? `Ends ${esc(g.end_date)} · ` : ""}<a href="/contest/terms/">Terms</a></span></div></article>`).join("");
   }
 
+  function setContestPublicVisibility(visible) {
+    document.querySelectorAll(".ga-vote, .ga-contest").forEach((el) => { el.hidden = !visible; });
+    document.querySelector(".home-grid")?.classList.toggle("contest-hidden", !visible);
+    document.querySelectorAll(".desknav a, .tabbar a").forEach((link) => {
+      let path = "";
+      try { path = new URL(link.href, location.href).pathname; } catch {}
+      if (/^\/(?:test\/)?contest\/?$/.test(path)) link.hidden = !visible;
+    });
+  }
+
   async function loadContest() {
     const cd = $("countdown"), tk = $("track"), eb = $("contest-eyebrow"),
           entriesEl = $("vote-rail") || $("vote-grid"), win = $("winner"),
           head = $("contest-headline"), tag = $("contest-tagline"),
           prizesEl = $("contest-prizes");
-    if (!cd && !tk && !entriesEl && !eb) return;
+    const hasContestContent = !!(cd || tk || entriesEl || eb);
     let data;
     try { data = await getJSON("/assets/data/contest.json"); }
-    catch { if (cd) cd.innerHTML = `<div class="g"><b>Soon</b><span>voting opens</span></div>`; if (tk) tk.remove(); if (entriesEl) entriesEl.innerHTML = `<div class="empty">Couldn't load entries.</div>`; return; }
+    catch {
+      if (cd) cd.innerHTML = `<div class="g"><b>Soon</b><span>voting opens</span></div>`;
+      if (tk) tk.remove();
+      if (entriesEl) entriesEl.innerHTML = `<div class="empty">Couldn't load entries.</div>`;
+      return;
+    }
+    const publicVisible = data.public_visible !== false;
+    setContestPublicVisibility(publicVisible);
+    if (!hasContestContent || (!publicVisible && ($("vote-rail") || document.querySelector(".ga-contest")))) return;
     const track = data.page && Array.isArray(data.page.tracks) ? data.page.tracks[0] : null;
     if (eb) setEyebrow(eb, data);
     if (cd) renderCountdown(cd, data.ends_at);

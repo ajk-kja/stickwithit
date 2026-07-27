@@ -1,6 +1,7 @@
 {
   "id": "monthly-july-2026",
   "cadence": "Monthly",
+  "public_visible": false,
   "status_label": "Open",
   "voting_window": "July 2026",
   "ends_at": "2026-08-01T03:59:00.000Z",
