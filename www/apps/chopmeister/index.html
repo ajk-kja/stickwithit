@@ -15,6 +15,7 @@
       --text: var(--swi-fg);
       --text-muted: var(--swi-muted);
       --accent: var(--swi-accent);
+      --playing: #ff1f2d;
       --staff-line: var(--swi-dim);
       --note-fill: var(--swi-fg);
     }
@@ -39,6 +40,9 @@
       display: flex;
       flex-direction: column;
       touch-action: manipulation;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 100% 4px;
     }
 
     .mobile-audio-splash {
@@ -91,12 +95,14 @@
 
     /* Header */
     .header {
+      min-height: 48px;
       padding: 0.5rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--accent);
       flex-shrink: 0;
+      background: var(--surface);
     }
 
     .header-left {
@@ -116,11 +122,11 @@
     }
 
     .header h1 {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1.4px;
     }
 
     .header-right {
@@ -135,7 +141,9 @@
       color: var(--text-muted);
       font-size: 14px;
       cursor: pointer;
-      padding: 4px;
+      width: 44px;
+      height: 44px;
+      padding: 0;
     }
 
     .share-btn:active {
@@ -172,57 +180,54 @@
       flex-direction: column;
       justify-content: center;
       min-height: 0;
+      width: 100%;
+      max-width: 1100px;
+      margin-inline: auto;
     }
 
     /* 5-line staff */
     .staff {
       position: relative;
-      height: 90px;
+      height: 104px;
       background: var(--surface);
-      border-radius: 6px;
       border: 1px solid var(--border);
-      padding: 12px 8px 12px 8px;
+      border-left: 4px solid var(--accent);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+      overflow: hidden;
     }
 
     .staff-lines {
       position: absolute;
-      left: 8px;
-      right: 8px;
-      top: 12px;
-      bottom: 12px;
+      left: 10px;
+      right: 10px;
+      top: 30px;
+      bottom: 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
     .staff-line {
-      height: 1px;
+      height: 1.5px;
       background: var(--staff-line);
     }
 
     /* Notes container */
     .notes-container {
       position: absolute;
-      left: 8px;
-      right: 8px;
-      top: 12px;
-      bottom: 12px;
+      inset: 0 8px;
       display: grid;
-      grid-template-columns: repeat(var(--note-columns, 8), minmax(28px, 1fr));
-      column-gap: 8px;
+      grid-template-columns: repeat(var(--note-columns, 8), minmax(18px, 1fr));
+      column-gap: clamp(1px, 0.8vw, 8px);
       align-items: stretch;
       justify-items: center;
     }
 
     .note-slot {
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
       cursor: pointer;
       position: relative;
-      padding-top: 0;
+      z-index: 2;
     }
 
     .note-slot:active {
@@ -232,46 +237,55 @@
     /* Note element */
     .note {
       position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: top 0.1s ease;
-      padding: 0 10px;
+      width: 30px;
+      height: 18px;
+      left: 50%;
+      top: var(--note-y);
+      transform: translate(-50%, -50%);
+      transition: color 80ms ease;
+      color: var(--note-fill);
     }
 
     .note.ghost::before,
     .note.ghost::after {
-      content: '';
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 16px;
-      font-weight: 600;
+      color: currentColor;
+      font-family: Georgia, serif;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1;
+      z-index: 2;
     }
 
     .note.ghost::before {
       content: '(';
-      left: -4px;
+      left: 1px;
     }
 
     .note.ghost::after {
       content: ')';
-      right: -4px;
+      right: 1px;
     }
 
     .note.ghost .note-head {
-      background: transparent;
-      border: 1px solid var(--note-fill);
+      background: currentColor;
+      border: 0;
     }
 
     /* Accent mark */
     .accent {
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--note-fill);
+      position: absolute;
+      left: 50%;
+      bottom: 15px;
+      transform: translateX(-50%);
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: currentColor;
       line-height: 1;
-      margin-bottom: -2px;
+      z-index: 3;
     }
 
     /* Note head */
@@ -279,8 +293,11 @@
       width: 14px;
       height: 10px;
       border-radius: 50%;
-      background: var(--note-fill);
-      position: relative;
+      background: currentColor;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg);
     }
 
     /* X notehead for hi-hat */
@@ -293,8 +310,9 @@
       justify-content: center;
       font-size: 16px;
       font-weight: bold;
-      color: var(--note-fill);
+      color: currentColor;
       border-radius: 0;
+      transform: translate(-50%, -50%);
     }
 
     .note-head.x-head::before {
@@ -303,47 +321,51 @@
 
     /* Ghost note (parentheses) */
     .note.ghost .note-head {
-      opacity: 0.4;
-      transform: scale(0.85);
+      opacity: 0.82;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(0.82);
     }
 
-    /* Stem */
-    .stem {
-      width: 2px;
-      height: 28px;
-      background: var(--note-fill);
+    /* Stems and beat-group beams are drawn in one lightweight SVG layer. */
+    .beam-layer {
       position: absolute;
-      right: -1px;
-      top: 5px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
     }
 
-    .stem.down {
-      top: auto;
-      bottom: 5px;
-      right: -1px;
+    .beam-stroke {
+      stroke: var(--note-fill);
+      stroke-width: 2;
+      stroke-linecap: square;
+      vector-effect: non-scaling-stroke;
     }
 
-    /* Playing highlight */
-    .note.playing .note-head {
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
+    .beam-stroke.beam {
+      stroke-width: 5;
     }
 
-    .note.playing .note-head.x-head {
-      color: var(--accent);
-      background: transparent;
-      text-shadow: 0 0 10px var(--accent);
+    .beam-stroke.playing {
+      stroke: var(--playing);
     }
 
-    .note.playing .accent {
-      color: var(--accent);
+    /* Playing highlight stays high-contrast in both color schemes. */
+    .note.playing {
+      color: var(--playing);
+      filter: drop-shadow(0 0 4px rgba(255, 31, 45, 0.8));
+    }
+
+    .sticking-slot.playing {
+      color: var(--playing);
     }
 
     /* Sticking row */
     .sticking-row {
       display: grid;
-      grid-template-columns: repeat(var(--note-columns, 8), minmax(28px, 1fr));
-      column-gap: 8px;
+      grid-template-columns: repeat(var(--note-columns, 8), minmax(18px, 1fr));
+      column-gap: clamp(1px, 0.8vw, 8px);
       margin-top: 6px;
       padding: 0 8px;
     }
@@ -356,7 +378,8 @@
       letter-spacing: 0.5px;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 4px 0;
+      min-height: 32px;
+      padding: 7px 0 4px;
     }
 
     .sticking-slot:active {
@@ -401,6 +424,7 @@
       color: var(--text);
       font-size: 12px;
       font-weight: 500;
+      min-height: 44px;
       padding: 8px 12px;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -422,6 +446,8 @@
     .btn-accent {
       background: var(--accent);
       border-color: var(--accent);
+      color: #fff;
+      font-weight: 800;
     }
 
     .btn-accent:active {
@@ -464,11 +490,12 @@
     }
 
     .btn-play {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       font-size: 18px;
       padding: 0;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
     }
 
     /* Toast notification */
@@ -573,7 +600,7 @@
       }
 
       .staff {
-        height: 110px;
+        height: 122px;
       }
 
       .note-head {
@@ -581,8 +608,9 @@
         height: 12px;
       }
 
-      .stem {
-        height: 32px;
+      .staff-lines {
+        top: 34px;
+        bottom: 20px;
       }
 
       .controls {
@@ -619,7 +647,7 @@
       }
 
       .staff {
-        height: 70px;
+        height: 82px;
       }
 
       .note-head {
@@ -627,8 +655,9 @@
         height: 8px;
       }
 
-      .stem {
-        height: 22px;
+      .staff-lines {
+        top: 24px;
+        bottom: 14px;
       }
 
       .sticking-slot {
@@ -643,6 +672,43 @@
 
       footer {
         display: none;
+      }
+    }
+
+    @media (max-width: 430px) {
+      main {
+        padding-inline: 8px;
+      }
+
+      .header {
+        padding-inline: 10px;
+      }
+
+      .header-left {
+        gap: 8px;
+      }
+
+      .staff {
+        border-left-width: 3px;
+      }
+
+      .note {
+        width: 26px;
+      }
+
+      .sticking-slot {
+        font-size: 12px;
+      }
+
+      .control-row:first-child .btn {
+        flex: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -741,17 +807,15 @@
   </footer>
 
   <script>
-    // Standard 5-line staff positions (0 = top line, 4 = bottom line, spaces are 0.5, 1.5, etc.)
-    // Line 0 (top): Hi-hat
-    // Line 2 (middle): Snare
-    // Space 2.5: Tom (between lines 2 and 3, the "A" space)
-    // Line 4 (bottom): Kick
+    // Standard drum-set staff positions (0 = top line, 4 = bottom line).
+    // Hi-hat sits above the staff; snare, floor tom and kick occupy their
+    // conventional third, second and first spaces respectively.
     const DRUMS = {
-      HIHAT:       { name: 'HH', staffPos: 0, sticking: true, xHead: true },
-      SNARE:       { name: 'S',  staffPos: 2, sticking: true, accent: true },
-      SNARE_GHOST: { name: 'g',  staffPos: 2, sticking: true, ghost: true },
+      HIHAT:       { name: 'HH', staffPos: -0.5, sticking: true, xHead: true },
+      SNARE:       { name: 'S',  staffPos: 1.5, sticking: true, accent: true },
+      SNARE_GHOST: { name: 'g',  staffPos: 1.5, sticking: true, ghost: true },
       TOM:         { name: 'T',  staffPos: 2.5, sticking: true },
-      KICK:        { name: 'K',  staffPos: 4, sticking: false }
+      KICK:        { name: 'K',  staffPos: 3.5, sticking: false }
     };
 
     // Cycle order: bottom to top (K → T → ghost → S → HH)
@@ -767,6 +831,7 @@
     let isPlaying = false;
     let playInterval = null;
     let currentNoteIndex = -1;
+    let resizeFrame = null;
     let notes = [];
     const SPLASH_STORAGE_KEY = 'chopmeisterSplashSeen';
 
@@ -922,8 +987,9 @@
     let samplesLoaded = false;
     const samplePaths = {
       kick: 'sounds/kick.mp3',
-      snareGhost: 'sounds/snare-ghost.mp3',
-      snareRimshot: 'sounds/snare-rimshot.mp3',
+      // The two source files were exported under inverted filenames.
+      snareGhost: 'sounds/snare-rimshot.mp3',
+      snareRimshot: 'sounds/snare-ghost.mp3',
       hihat: 'sounds/hihat.mp3',
       tom: 'sounds/tom-floor.mp3'
     };
@@ -1075,6 +1141,92 @@
       return staffTop + (staffPos * lineSpacing);
     }
 
+    function createSvgElement(tag, attributes = {}) {
+      const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+      return element;
+    }
+
+    function drawBeams(container) {
+      const previousLayer = container.querySelector('.beam-layer');
+      if (previousLayer) previousLayer.remove();
+
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      if (!width || !height || !notes.length) return;
+
+      const layer = createSvgElement('svg', {
+        class: 'beam-layer',
+        viewBox: `0 0 ${width} ${height}`,
+        preserveAspectRatio: 'none',
+        'aria-hidden': 'true'
+      });
+      const slots = Array.from(container.querySelectorAll('.note-slot'));
+
+      // Eighth notes are beamed by beat: two subdivisions per quarter note.
+      for (let groupStart = 0; groupStart < notes.length; groupStart += 2) {
+        const groupEnd = Math.min(groupStart + 2, notes.length);
+        const groupIndices = [];
+        for (let index = groupStart; index < groupEnd; index += 1) {
+          groupIndices.push(index);
+        }
+
+        const noteYs = groupIndices.map(index => getYPosition(DRUMS[notes[index].drum].staffPos));
+        const beamY = Math.max(7, Math.min(...noteYs) - 20);
+        const stemXs = groupIndices.map(index => {
+          const slot = slots[index];
+          return slot.offsetLeft + (slot.offsetWidth / 2) + 7;
+        });
+
+        groupIndices.forEach((index, groupIndex) => {
+          const stem = createSvgElement('line', {
+            class: `beam-stroke${index === currentNoteIndex ? ' playing' : ''}`,
+            x1: stemXs[groupIndex],
+            y1: noteYs[groupIndex],
+            x2: stemXs[groupIndex],
+            y2: beamY,
+            'data-note-index': index
+          });
+          layer.appendChild(stem);
+        });
+
+        if (groupIndices.length > 1) {
+          layer.appendChild(createSvgElement('line', {
+            class: 'beam-stroke beam',
+            x1: stemXs[0],
+            y1: beamY,
+            x2: stemXs[stemXs.length - 1],
+            y2: beamY
+          }));
+        } else {
+          layer.appendChild(createSvgElement('path', {
+            class: 'beam-stroke beam',
+            d: `M ${stemXs[0]} ${beamY} q 10 4 8 13`,
+            fill: 'none'
+          }));
+        }
+      }
+
+      container.prepend(layer);
+    }
+
+    function updatePlayingState(index) {
+      document.querySelectorAll('.note.playing, .sticking-slot.playing').forEach(element => {
+        element.classList.remove('playing');
+      });
+      document.querySelectorAll('.beam-stroke.playing').forEach(element => {
+        element.classList.remove('playing');
+      });
+
+      if (index < 0) return;
+      const noteElement = document.querySelector(`.note[data-note-index="${index}"]`);
+      const stickingElement = document.querySelector(`.sticking-slot[data-note-index="${index}"]`);
+      const stemElement = document.querySelector(`.beam-stroke[data-note-index="${index}"]`);
+      if (noteElement) noteElement.classList.add('playing');
+      if (stickingElement) stickingElement.classList.add('playing');
+      if (stemElement) stemElement.classList.add('playing');
+    }
+
     function render() {
       calculateStaffGeometry();
       
@@ -1087,6 +1239,8 @@
       
       container.innerHTML = '';
       stickingRow.innerHTML = '';
+      const noteFragment = document.createDocumentFragment();
+      const stickingFragment = document.createDocumentFragment();
 
       notes.forEach((note, index) => {
         const drum = DRUMS[note.drum];
@@ -1097,6 +1251,7 @@
 
         const noteEl = document.createElement('div');
         noteEl.className = 'note';
+        noteEl.dataset.noteIndex = index;
         if (drum.ghost) noteEl.classList.add('ghost');
         if (index === currentNoteIndex) noteEl.classList.add('playing');
 
@@ -1116,34 +1271,30 @@
         }
         noteEl.appendChild(head);
 
-        // Stem
-        const stem = document.createElement('div');
-        stem.className = 'stem';
-        // Stem goes up for notes below middle, down for notes above
-        if (drum.staffPos <= 2) {
-          stem.classList.add('down');
-        }
-        head.appendChild(stem);
-
-        // Position
+        // Anchor the center of every head to the staff independently of marks.
         const yPos = getYPosition(drum.staffPos);
-        noteEl.style.top = yPos + 'px';
-        noteEl.style.transform = 'translateY(-50%)';
+        noteEl.style.setProperty('--note-y', `${yPos}px`);
 
         slot.appendChild(noteEl);
-        container.appendChild(slot);
+        noteFragment.appendChild(slot);
 
         // Sticking
         const stickingEl = document.createElement('div');
         stickingEl.className = 'sticking-slot';
+        stickingEl.dataset.noteIndex = index;
         if (!drum.sticking) stickingEl.classList.add('kick');
+        if (index === currentNoteIndex) stickingEl.classList.add('playing');
         stickingEl.textContent = note.sticking;
         stickingEl.onclick = (e) => {
           e.stopPropagation();
           cycleSticking(index);
         };
-        stickingRow.appendChild(stickingEl);
+        stickingFragment.appendChild(stickingEl);
       });
+
+      container.appendChild(noteFragment);
+      stickingRow.appendChild(stickingFragment);
+      drawBeams(container);
 
       document.getElementById('noteCountDisplay').textContent = noteCount;
       document.getElementById('notesValue').textContent = noteCount;
@@ -1212,7 +1363,7 @@
         if (!notes.length) return;
         currentNoteIndex = (currentNoteIndex + 1) % notes.length;
         playSound(notes[currentNoteIndex].drum);
-        render();
+        updatePlayingState(currentNoteIndex);
       }
       
       playNext();
@@ -1227,7 +1378,7 @@
         clearInterval(playInterval);
         playInterval = null;
       }
-      render();
+      updatePlayingState(-1);
     }
 
     async function togglePlayback() {
@@ -1256,7 +1407,13 @@
         }
       });
       
-      window.addEventListener('resize', render);
+      window.addEventListener('resize', () => {
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = null;
+          render();
+        });
+      });
     }
 
     function setupSplash() {
