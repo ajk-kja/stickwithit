@@ -391,10 +391,10 @@
             letter-spacing: 1px;
             background: var(--accent);
             color: var(--bg);
-            transition: all 0.15s;
+            transition: background-color 0.15s, color 0.15s;
         }
 
-        .play-btn:active { transform: scale(0.98); }
+        .play-btn:active { filter: brightness(0.92); }
         .play-btn.playing { background: var(--accent); }
 
         .save-btn {
@@ -719,7 +719,12 @@
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
         @media (min-width: 500px) {
-            .tab-content, .tabs { max-width: 400px; margin-left: auto; margin-right: auto; }
+            .tab-content, .tabs {
+                width: 100%;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
 
         @media (max-height: 620px) {
