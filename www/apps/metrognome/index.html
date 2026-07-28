@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/assets/favicon-256.png" sizes="256x256">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="icon" type="image/png" href="/assets/favicon-256.png" sizes="256x256">
     <link rel="shortcut icon" href="/assets/favicon-256.png">
+    <link rel="apple-touch-icon" href="/assets/favicon-256.png">
+    <link rel="manifest" href="/apps/metrognome/manifest.webmanifest">
     <title>MetroGnome | Stick With It</title>
     <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MetroGnome">
     <style>
         :root {
             --bg: var(--swi-bg);
@@ -17,16 +21,48 @@
             --text: var(--swi-fg);
             --text-muted: var(--swi-muted);
             --accent: var(--swi-accent);
+            --flash-color: rgba(255,255,255,0.58);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
+        html {
+            overscroll-behavior: none;
+        }
+
         html, body {
             height: 100%;
+            height: 100svh;
+            min-height: 100%;
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             background: var(--bg);
             color: var(--text);
+        }
+
+        body {
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 450;
+            pointer-events: none;
+            background: var(--flash-color);
+            opacity: 0;
+            transition: opacity 90ms ease-out;
+        }
+
+        body.beat-flash::after {
+            opacity: 1;
+            transition-duration: 0ms;
+        }
+
+        html[data-theme="light"] {
+            --flash-color: rgba(0,0,0,0.34);
         }
 
         /* Mobile Usage Splash */
@@ -80,8 +116,12 @@
         }
         .app {
             height: 100%;
+            height: 100svh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
         /* Header */
@@ -96,6 +136,11 @@
         .header a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
         .header h1 { font-size: 1rem; font-weight: 600; }
 
+        .tool-theme {
+            flex: 0 0 70px;
+            justify-content: flex-end;
+        }
+
         /* Tabs - Segmented Control */
         .tabs {
             display: flex;
@@ -108,6 +153,7 @@
 
         .tab {
             flex: 1;
+            min-height: 44px;
             padding: 0.6rem;
             background: none;
             border: none;
@@ -131,9 +177,14 @@
             flex-direction: column;
             padding: 0 1rem;
             min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: none;
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
 
         .tab-content.active { display: flex; }
+        .tab-content::-webkit-scrollbar { display: none; }
 
         /* Beat Grid Container - Fixed Height */
         .beat-container {
@@ -141,16 +192,22 @@
             border-radius: 16px;
             padding: 1rem;
             flex-shrink: 0;
-            height: 140px;
+            height: clamp(100px, 21dvh, 140px);
             display: flex;
             align-items: flex-end;
-            justify-content: center;
+            justify-content: safe center;
             gap: 6px;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scrollbar-width: none;
         }
+
+        .beat-container::-webkit-scrollbar { display: none; }
 
         /* Beat Faders */
         .beat-fader {
             flex: 1;
+            min-width: 18px;
             max-width: 50px;
             height: 100%;
             background: var(--surface-2);
@@ -160,9 +217,13 @@
             overflow: hidden;
             border: 2px solid transparent;
             transition: border-color 0.15s;
+            touch-action: manipulation;
         }
 
-        .beat-fader.level-3 { border-color: var(--text); }
+        .beat-fader.level-3 {
+            border-color: var(--text);
+            box-shadow: inset 0 0 0 1px var(--bg);
+        }
 
         .beat-fill {
             position: absolute;
@@ -178,7 +239,9 @@
         .beat-fader.level-2 .beat-fill { height: 66%; background: #888; }
         .beat-fader.level-3 .beat-fill { height: 100%; background: var(--accent); border-radius: 4px; }
 
-        .beat-fader.playing .beat-fill { filter: brightness(1.3); }
+        .beat-fader.playing {
+            box-shadow: inset 0 0 0 2px var(--text);
+        }
 
         .beat-num {
             position: absolute;
@@ -210,12 +273,12 @@
         /* BPM Section */
         .bpm-section {
             text-align: center;
-            padding: 1rem 0;
+            padding: clamp(0.45rem, 2dvh, 1rem) 0;
             flex-shrink: 0;
         }
 
         .bpm-value {
-            font-size: 5rem;
+            font-size: clamp(3.6rem, 11dvh, 5rem);
             font-weight: 200;
             line-height: 1;
             font-variant-numeric: tabular-nums;
@@ -239,6 +302,7 @@
             height: 44px;
             -webkit-appearance: none;
             background: transparent;
+            touch-action: pan-x;
         }
 
         input[type="range"]::-webkit-slider-runnable-track {
@@ -331,7 +395,7 @@
         }
 
         .play-btn:active { transform: scale(0.98); }
-        .play-btn.playing { background: var(--text); }
+        .play-btn.playing { background: var(--accent); }
 
         .save-btn {
             flex: 1;
@@ -367,6 +431,8 @@
             padding: 1.5rem;
             width: 100%;
             max-width: 340px;
+            max-height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            overflow-y: auto;
         }
 
         .popup-header {
@@ -540,20 +606,32 @@
         .pl-bpm { font-size: 1.4rem; font-weight: 300; color: var(--accent); }
 
         .pl-actions { display: none; gap: 0.5rem; }
-        .editing .pl-actions { display: flex; }
+        .editing .playlist-item {
+            flex-wrap: wrap;
+            cursor: default;
+        }
+        .editing .pl-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
         .editing .pl-bpm { display: none; }
 
         .pl-action {
-            width: 36px;
-            height: 36px;
+            width: 100%;
+            min-width: 0;
+            height: 44px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.76rem;
+            font-weight: 700;
         }
 
+        .pl-action.move,
         .pl-action.rename { background: var(--surface-2); color: var(--text); }
         .pl-action.delete { background: rgba(230,57,70,0.2); color: var(--accent); }
+        .pl-action:disabled { opacity: 0.35; cursor: default; }
 
         .add-item {
             display: none;
@@ -625,7 +703,7 @@
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 1.5rem;
+            bottom: max(1.5rem, env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%) translateY(80px);
             background: var(--surface);
@@ -642,6 +720,44 @@
 
         @media (min-width: 500px) {
             .tab-content, .tabs { max-width: 400px; margin-left: auto; margin-right: auto; }
+        }
+
+        @media (max-height: 620px) {
+            .tabs { margin-bottom: 0.5rem; }
+            .beat-container { height: 96px; padding: 0.65rem; }
+            .bpm-section { padding: 0.3rem 0; }
+            .bpm-value { font-size: 3.2rem; }
+            .slider-container,
+            .controls-row { padding-block: 0.2rem; }
+            .settings-btn, .flash-btn { height: 46px; }
+            .btn-row { padding-top: 0.25rem; }
+            .play-btn, .save-btn { padding: 0.9rem; }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            #metro-tab.active {
+                display: grid;
+                grid-template-columns: minmax(180px, 1fr) minmax(190px, 1fr);
+                grid-template-rows: auto auto auto;
+                column-gap: 1rem;
+                align-content: start;
+            }
+            .beat-container { grid-row: 1 / 4; height: min(160px, calc(100dvh - 150px)); }
+            .bpm-section, .slider-container, .controls-row, .btn-row { grid-column: 2; }
+            .bpm-section { padding-top: 0; }
+            .bpm-value { font-size: 2.8rem; }
+            .slider-container { padding: 0; }
+            .controls-row, .btn-row { gap: 0.45rem; }
+            .settings-btn, .flash-btn { height: 44px; font-size: 0.85rem; }
+            .play-btn, .save-btn { padding: 0.65rem; font-size: 0.9rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
         }
     </style>
   <link rel="stylesheet" href="/assets/nav.css?v=20260712a">
@@ -667,7 +783,11 @@
     <header class="header swi-tool-backbar">
         <a class="swi-tool-back" href="/apps/">← Apps</a>
         <h1 class="swi-tool-title">MetroGnome</h1>
-        <div class="swi-tool-spacer" aria-hidden="true"></div>
+        <label class="swi-theme-switch tool-theme">
+            <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
+            <i aria-hidden="true"></i>
+            <span class="swi-theme-label">Theme</span>
+        </label>
     </header>
 
     <nav class="tabs">
@@ -685,16 +805,16 @@
         </div>
 
         <div class="slider-container">
-            <input type="range" id="bpmSlider" min="30" max="300" value="120">
+            <input type="range" id="bpmSlider" min="30" max="300" value="120" aria-label="Tempo in beats per minute">
         </div>
 
         <div class="controls-row">
             <button class="settings-btn" id="settingsBtn">⚙️ Settings</button>
-            <button class="flash-btn" id="flashBtn">💡 Flash</button>
+            <button class="flash-btn" id="flashBtn" aria-pressed="false">💡 Flash</button>
         </div>
 
         <div class="btn-row">
-            <button class="play-btn" id="playBtn">Start</button>
+            <button class="play-btn" id="playBtn" aria-pressed="false">Start</button>
             <button class="save-btn" id="saveBtn">Save</button>
         </div>
     </div>
@@ -777,12 +897,14 @@
 <script>
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
+let noiseBuffer = null;
 
 function getAudioContext() {
     if (!AudioContextClass) return null;
     if (!audioCtx) {
         try {
             audioCtx = new AudioContextClass();
+            noiseBuffer = null;
         } catch (err) {
             console.error('Unable to create AudioContext', err);
             audioCtx = null;
@@ -827,6 +949,7 @@ async function ensureAudioReady() {
         console.warn('Audio context close failed', err);
     }
     audioCtx = null;
+    noiseBuffer = null;
     ctx = getAudioContext();
     if (!ctx) return false;
     if (needsResume(ctx.state) && typeof ctx.resume === 'function') {
@@ -840,6 +963,14 @@ async function ensureAudioReady() {
     return ctx.state === 'running';
 }
 
+function getNoiseBuffer(ctx) {
+    if (noiseBuffer && noiseBuffer.sampleRate === ctx.sampleRate) return noiseBuffer;
+    const bufferSize = Math.ceil(ctx.sampleRate * 0.1);
+    noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    return noiseBuffer;
+}
 
 const state = {
     playing: false,
@@ -855,10 +986,18 @@ const state = {
     nextTime: 0,
     timer: null,
     animFrame: null,
-    playStartCtxTime: 0
+    visualQueue: [],
+    activeBeat: -1,
+    activeBeatTime: 0
 };
 
-let playlist = JSON.parse(localStorage.getItem('mg-playlist') || '[]');
+let playlist = [];
+try {
+    const storedPlaylist = JSON.parse(localStorage.getItem('mg-playlist') || '[]');
+    playlist = Array.isArray(storedPlaylist) ? storedPlaylist : [];
+} catch {
+    playlist = [];
+}
 let editing = false;
 let renameIdx = null;
 
@@ -884,18 +1023,37 @@ const renameModal = $('renameModal');
 const renameInput = $('renameInput');
 const toast = $('toast');
 const splash = document.getElementById('mobileSplash');
-let fallbackStartTime = 0;
 const splashDismiss = document.getElementById('splashDismiss');
 if (splash && splashDismiss) {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
+    let guideSeen = false;
+    try { guideSeen = localStorage.getItem('mg-mobile-guide-v2') === '1'; } catch {}
+    if (isMobile && !guideSeen) {
         splash.classList.add('active');
     }
     splashDismiss.addEventListener('click', () => {
         splash.classList.remove('active');
+        try { localStorage.setItem('mg-mobile-guide-v2', '1'); } catch {}
     });
 }
 
+const toolThemeSwitch = $('toolThemeSwitch');
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+function syncLocalThemeControl() {
+    const theme = document.documentElement.dataset.theme || 'dark';
+    toolThemeSwitch.checked = theme === 'light';
+    toolThemeSwitch.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`);
+    if (themeMeta) themeMeta.content = theme === 'light' ? '#f7f7f8' : '#050506';
+}
+
+toolThemeSwitch.addEventListener('change', () => {
+    const theme = toolThemeSwitch.checked ? 'light' : 'dark';
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('swi-theme', theme); } catch {}
+    syncLocalThemeControl();
+});
+window.addEventListener('swi-theme-change', syncLocalThemeControl);
+document.addEventListener('DOMContentLoaded', syncLocalThemeControl, { once: true });
 
 // Audio
 
@@ -937,14 +1095,7 @@ function playClick(time, level) {
         gain.connect(ctx.destination);
         noiseGain.connect(ctx.destination);
         
-        // Noise buffer for snare
-        const bufferSize = ctx.sampleRate * 0.1;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            data[i] = Math.random() * 2 - 1;
-        }
-        noise.buffer = buffer;
+        noise.buffer = getNoiseBuffer(ctx);
         
         osc.type = 'triangle';
         osc.frequency.value = 200;
@@ -970,13 +1121,7 @@ function playClick(time, level) {
         filter.connect(gain);
         gain.connect(ctx.destination);
         
-        const bufferSize = ctx.sampleRate * 0.05;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            data[i] = Math.random() * 2 - 1;
-        }
-        noise.buffer = buffer;
+        noise.buffer = getNoiseBuffer(ctx);
         
         filter.type = 'highpass';
         filter.frequency.value = 7000;
@@ -1014,7 +1159,8 @@ function buildBeats() {
     }
     
     for (let i = 0; i < state.beats; i++) {
-        const el = document.createElement('div');
+        const el = document.createElement('button');
+        el.type = 'button';
         el.className = `beat-fader level-${state.levels[i]}`;
         el.dataset.idx = i;
         el.innerHTML = `
@@ -1022,9 +1168,15 @@ function buildBeats() {
             <div class="beat-progress"></div>
             <div class="beat-num">${i + 1}</div>
         `;
+        updateBeatAria(el, i);
         el.addEventListener('click', () => cycleLevel(i));
         beatContainer.appendChild(el);
     }
+}
+
+function updateBeatAria(el, i) {
+    const levelNames = ['off', 'quiet', 'medium', 'accent'];
+    el.setAttribute('aria-label', `Beat ${i + 1}, ${levelNames[state.levels[i]]}. Tap to change level.`);
 }
 
 function cycleLevel(i) {
@@ -1033,6 +1185,7 @@ function cycleLevel(i) {
     state.levels[i] = map[state.levels[i]];
     const el = beatContainer.children[i];
     el.className = `beat-fader level-${state.levels[i]}`;
+    updateBeatAria(el, i);
 }
 
 function updateBeatVisuals(beatIdx, progress) {
@@ -1069,12 +1222,10 @@ function scheduleNote() {
     const ctx = getAudioContext();
     if (!ctx) return;
     if (state.curSub === 0) {
+        const beatIdx = state.curBeat;
         const lvl = state.levels[state.curBeat];
         playClick(state.nextTime, lvl);
-        const delay = Math.max(0, (state.nextTime - ctx.currentTime) * 1000);
-        setTimeout(() => {
-            if (state.playing && state.flash && lvl > 0) flash();
-        }, delay);
+        state.visualQueue.push({ time: state.nextTime, beatIdx, level: lvl });
     } else {
         playSubClick(state.nextTime);
     }
@@ -1093,22 +1244,39 @@ function advance() {
 function animate() {
     if (!state.playing) return;
     const ctx = getAudioContext();
-    const now = ctx ? ctx.currentTime : performance.now() / 1000;
-    const base = ctx && state.playStartCtxTime ? state.playStartCtxTime : fallbackStartTime;
-    const elapsed = now - base;
-    const secPerBeat = 60 / state.bpm;
-    const measure = secPerBeat * state.beats;
-    const normalized = ((elapsed % measure) + measure) % measure;
-    const exact = normalized / secPerBeat;
-    const idx = Math.floor(exact) % Math.max(1, state.beats);
-    const pct = (exact - idx) * 100;
-    updateBeatVisuals(idx, pct);
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    let latest = null;
+    while (state.visualQueue.length && state.visualQueue[0].time <= now + 0.008) {
+        latest = state.visualQueue.shift();
+    }
+    if (latest) {
+        state.activeBeat = latest.beatIdx;
+        state.activeBeatTime = latest.time;
+        if (state.flash && latest.level > 0) flash();
+    }
+    if (state.activeBeat >= 0) {
+        const pct = Math.min(100, Math.max(0, (now - state.activeBeatTime) / (60 / state.bpm) * 100));
+        updateBeatVisuals(state.activeBeat, pct);
+    }
     state.animFrame = requestAnimationFrame(animate);
 }
 
 function flash() {
-    document.body.style.background = 'var(--surface-2)';
-    setTimeout(() => document.body.style.background = '', 60);
+    document.body.classList.remove('beat-flash');
+    void document.body.offsetWidth;
+    document.body.classList.add('beat-flash');
+    setTimeout(() => document.body.classList.remove('beat-flash'), 95);
+}
+
+let wakeLock = null;
+async function requestWakeLock() {
+    if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+    } catch (err) {
+        console.info('Screen wake lock unavailable', err);
+    }
 }
 
 function beginPlayback() {
@@ -1118,12 +1286,16 @@ function beginPlayback() {
     state.curBeat = 0;
     state.curSub = 0;
     state.nextTime = ctx.currentTime;
-    state.playStartCtxTime = ctx.currentTime;
-    fallbackStartTime = performance.now() / 1000;
+    state.visualQueue = [];
+    state.activeBeat = -1;
+    state.activeBeatTime = 0;
     playBtn.textContent = 'Stop';
     playBtn.classList.add('playing');
+    playBtn.setAttribute('aria-pressed', 'true');
+    scheduler();
     state.timer = setInterval(scheduler, LOOK);
     state.animFrame = requestAnimationFrame(animate);
+    requestWakeLock();
 }
 
 async function startMetronome() {
@@ -1139,11 +1311,18 @@ async function startMetronome() {
 
 function stopMetronome() {
     state.playing = false;
-    state.playStartCtxTime = 0;
     clearInterval(state.timer);
     cancelAnimationFrame(state.animFrame);
+    state.visualQueue = [];
+    state.activeBeat = -1;
     playBtn.textContent = 'Start';
     playBtn.classList.remove('playing');
+    playBtn.setAttribute('aria-pressed', 'false');
+    document.body.classList.remove('beat-flash');
+    if (wakeLock) {
+        wakeLock.release().catch(() => {});
+        wakeLock = null;
+    }
     resetVisuals();
 }
 
@@ -1152,6 +1331,26 @@ function togglePlayback() {
 }
 
 // Playlist
+function persistPlaylist() {
+    try {
+        localStorage.setItem('mg-playlist', JSON.stringify(playlist));
+        return true;
+    } catch (err) {
+        console.warn('Unable to save playlist', err);
+        showToast('Could not save on this device');
+        return false;
+    }
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
 function saveCurrent() {
     playlist.push({
         name: `${state.bpm} BPM - ${state.beats}/${state.noteVal}`,
@@ -1161,8 +1360,7 @@ function saveCurrent() {
         subdiv: state.subdiv,
         levels: [...state.levels]
     });
-    localStorage.setItem('mg-playlist', JSON.stringify(playlist));
-    showToast('Saved!');
+    if (persistPlaylist()) showToast('Saved!');
 }
 
 function loadItem(i) {
@@ -1171,7 +1369,7 @@ function loadItem(i) {
     state.beats = p.beats;
     state.noteVal = p.noteVal;
     state.subdiv = p.subdiv;
-    state.levels = [...p.levels];
+    state.levels = Array.isArray(p.levels) ? p.levels.map(level => Math.max(0, Math.min(3, Number(level) || 0))) : [];
     bpmValue.textContent = state.bpm;
     bpmSlider.value = state.bpm;
     tsTop.textContent = state.beats;
@@ -1186,13 +1384,22 @@ function loadItem(i) {
 
 function deleteItem(i) {
     playlist.splice(i, 1);
-    localStorage.setItem('mg-playlist', JSON.stringify(playlist));
+    persistPlaylist();
+    renderPlaylist();
+    showToast('Deleted');
+}
+
+function moveItem(from, to) {
+    if (from === to || from < 0 || to < 0 || from >= playlist.length || to >= playlist.length) return;
+    const [item] = playlist.splice(from, 1);
+    playlist.splice(to, 0, item);
+    persistPlaylist();
     renderPlaylist();
 }
 
 function renameItem(i, name) {
     playlist[i].name = name;
-    localStorage.setItem('mg-playlist', JSON.stringify(playlist));
+    persistPlaylist();
     renderPlaylist();
 }
 
@@ -1210,13 +1417,15 @@ function renderPlaylist() {
         el.className = 'playlist-item';
         el.innerHTML = `
             <div class="pl-info">
-                <div class="pl-name">${p.name}</div>
-                <div class="pl-details">${p.beats}/${p.noteVal} • Sub ${p.subdiv}</div>
+                <div class="pl-name">${escapeHtml(p.name)}</div>
+                <div class="pl-details">${escapeHtml(p.beats)}/${escapeHtml(p.noteVal)} • Sub ${escapeHtml(p.subdiv)}</div>
             </div>
-            <div class="pl-bpm">${p.bpm}</div>
+            <div class="pl-bpm">${escapeHtml(p.bpm)}</div>
             <div class="pl-actions">
-                <button class="pl-action rename" data-i="${i}">✏️</button>
-                <button class="pl-action delete" data-i="${i}">🗑️</button>
+                <button class="pl-action move up" data-i="${i}" aria-label="Move ${escapeHtml(p.name)} up" ${i === 0 ? 'disabled' : ''}>↑ Up</button>
+                <button class="pl-action move down" data-i="${i}" aria-label="Move ${escapeHtml(p.name)} down" ${i === playlist.length - 1 ? 'disabled' : ''}>↓ Down</button>
+                <button class="pl-action rename" data-i="${i}" aria-label="Rename ${escapeHtml(p.name)}">Rename</button>
+                <button class="pl-action delete" data-i="${i}" aria-label="Delete ${escapeHtml(p.name)}">Delete</button>
             </div>
         `;
         if (!editing) el.addEventListener('click', () => loadItem(i));
@@ -1245,6 +1454,20 @@ function renderPlaylist() {
             deleteItem(+b.dataset.i);
         });
     });
+
+    playlistList.querySelectorAll('.pl-action.up').forEach(b => {
+        b.addEventListener('click', e => {
+            e.stopPropagation();
+            moveItem(+b.dataset.i, +b.dataset.i - 1);
+        });
+    });
+
+    playlistList.querySelectorAll('.pl-action.down').forEach(b => {
+        b.addEventListener('click', e => {
+            e.stopPropagation();
+            moveItem(+b.dataset.i, +b.dataset.i + 1);
+        });
+    });
 }
 
 function showToast(msg) {
@@ -1271,6 +1494,7 @@ settingsPopup.addEventListener('click', e => {
 flashBtn.addEventListener('click', () => {
     state.flash = !state.flash;
     flashBtn.classList.toggle('active', state.flash);
+    flashBtn.setAttribute('aria-pressed', String(state.flash));
 });
 
 document.querySelectorAll('.time-btn').forEach(b => {
@@ -1280,7 +1504,11 @@ document.querySelectorAll('.time-btn').forEach(b => {
             state.beats = Math.max(1, Math.min(16, state.beats + (d === 'up' ? 1 : -1)));
             tsTop.textContent = state.beats;
             buildBeats();
-            if (state.playing) { state.curBeat = 0; animStart = null; }
+            if (state.playing) {
+                state.curBeat = 0;
+                state.visualQueue = [];
+                state.activeBeat = -1;
+            }
         } else {
             const vals = [1, 2, 4, 8, 16];
             const idx = vals.indexOf(state.noteVal);
@@ -1337,6 +1565,19 @@ document.addEventListener('keydown', e => {
         togglePlayback();
     }
 });
+
+document.addEventListener('visibilitychange', () => {
+    if (state.playing && document.visibilityState === 'visible') {
+        ensureAudioReady().then(ready => {
+            if (!ready || !state.playing) return;
+            state.nextTime = audioCtx.currentTime;
+            state.visualQueue = [];
+            requestWakeLock();
+        });
+    }
+});
+
+window.addEventListener('pagehide', stopMetronome);
 
 // Init
 buildBeats();

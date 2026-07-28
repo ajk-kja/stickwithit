@@ -1,0 +1,20 @@
+{
+  "name": "MetroGnome by Stick With It",
+  "short_name": "MetroGnome",
+  "description": "A mobile-first metronome and tempo playlist for drummers.",
+  "id": "/apps/metrognome/",
+  "start_url": "/apps/metrognome/",
+  "scope": "/apps/metrognome/",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/favicon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
