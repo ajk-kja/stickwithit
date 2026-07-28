@@ -21,7 +21,7 @@
             --text: var(--swi-fg);
             --text-muted: var(--swi-muted);
             --accent: var(--swi-accent);
-            --flash-color: rgba(255,255,255,0.58);
+            --flash-color: rgba(255,255,255,0.34);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -62,7 +62,7 @@
         }
 
         html[data-theme="light"] {
-            --flash-color: rgba(0,0,0,0.34);
+            --flash-color: rgba(0,0,0,0.5);
         }
 
         /* Mobile Usage Splash */
@@ -1071,12 +1071,18 @@ function playClick(time, level) {
     const ctx = getAudioContext();
     if (!ctx) return;
     
-    // Level 3 (accent): 8bit Kick Drum
+    // Level 3 (accent): low kick plus a soft cross-stick transient
     if (level === 3) {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
+        const stick = ctx.createBufferSource();
+        const stickFilter = ctx.createBiquadFilter();
+        const stickGain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
+        stick.connect(stickFilter);
+        stickFilter.connect(stickGain);
+        stickGain.connect(ctx.destination);
         
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(150, time);
@@ -1084,9 +1090,18 @@ function playClick(time, level) {
         
         gain.gain.setValueAtTime(1.0, time);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+        stick.buffer = getNoiseBuffer(ctx);
+        stickFilter.type = 'bandpass';
+        stickFilter.frequency.setValueAtTime(1800, time);
+        stickFilter.Q.setValueAtTime(2.5, time);
+        stickGain.gain.setValueAtTime(0.18, time);
+        stickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
         
         osc.start(time);
         osc.stop(time + 0.15);
+        stick.start(time);
+        stick.stop(time + 0.035);
     }
     // Level 2 (medium): 8bit Snare
     else if (level === 2) {
