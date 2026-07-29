@@ -66,6 +66,34 @@
       letter-spacing: 0.08em;
     }
 
+    .tool-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .tool-action {
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .tool-action:hover,
+    .tool-action:focus-visible {
+      color: var(--accent);
+      background: color-mix(in srgb, var(--text) 7%, transparent);
+    }
+
     .tabs {
       margin: 0 1.25rem 1.25rem;
       background: var(--surface-2);
@@ -515,6 +543,43 @@
       border-color: #ff7373;
       background: rgba(255, 115, 115, 0.1);
     }
+    .help-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 700;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.74);
+    }
+
+    .help-modal[hidden] { display: none; }
+
+    .help-card {
+      width: min(360px, 100%);
+      padding: 20px;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--text);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .help-card h2 { margin: 0 0 8px; font-size: 1.2rem; }
+    .help-card p { margin: 0 0 10px; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+    .help-card ol { margin: 0 0 16px; padding-left: 20px; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
+    .help-card button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
   </style>
   <link rel="stylesheet" href="/assets/nav.css?v=20260712a">
   <script src="/assets/nav.js?v=20260707b" defer></script>
@@ -525,7 +590,15 @@
     <div class="header swi-tool-backbar">
       <a class="swi-tool-back" href="/apps/">← Apps</a>
       <span class="swi-tool-title">Rudimentor</span>
-      <span class="swi-tool-spacer" aria-hidden="true"></span>
+      <div class="tool-actions">
+        <button class="tool-action" id="helpBtn" type="button" title="How to use Rudimentor" aria-label="How to use Rudimentor">?</button>
+        <button class="tool-action" id="shareBtn" type="button" title="Share Rudimentor" aria-label="Share Rudimentor">↗</button>
+        <label class="swi-theme-switch">
+          <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
+          <i aria-hidden="true"></i>
+          <span class="swi-theme-label">Theme</span>
+        </label>
+      </div>
     </div>
     <div class="tabs">
       <button class="tab-btn active" data-view="mentor">Mentor</button>
@@ -611,6 +684,19 @@
         <div class="quiz-feedback" id="quizFeedback"></div>
         <div class="quiz-choices" id="quizChoices"></div>
       </div>
+    </section>
+  </div>
+
+  <div class="help-modal" id="helpModal" hidden>
+    <section class="help-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <h2 id="helpTitle">Using Rudimentor</h2>
+      <p>Study a rudiment, hear it, then test your recognition.</p>
+      <ol>
+        <li>Choose a difficulty and rudiment in <strong>Mentor</strong>.</li>
+        <li>Set tempo and swing, then press <strong>Play</strong>.</li>
+        <li>Use Grid Mode to practice accents, or switch to <strong>Quiz</strong>.</li>
+      </ol>
+      <button id="helpClose" type="button">Got it</button>
     </section>
   </div>
 
@@ -714,6 +800,49 @@
     };
 
     let audioCtx = null;
+
+    const toolThemeSwitch = document.getElementById('toolThemeSwitch');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    function syncLocalThemeControl() {
+      const theme = document.documentElement.dataset.theme || 'dark';
+      toolThemeSwitch.checked = theme === 'light';
+      toolThemeSwitch.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`);
+      if (themeMeta) themeMeta.content = theme === 'light' ? '#f7f7f8' : '#050506';
+    }
+
+    toolThemeSwitch.addEventListener('change', () => {
+      const theme = toolThemeSwitch.checked ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      try { localStorage.setItem('swi-theme', theme); } catch {}
+      window.dispatchEvent(new CustomEvent('swi-theme-change', { detail: { theme } }));
+      syncLocalThemeControl();
+    });
+    window.addEventListener('swi-theme-change', syncLocalThemeControl);
+    document.addEventListener('DOMContentLoaded', syncLocalThemeControl, { once: true });
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      const data = { title: document.title, url: window.location.href };
+      try {
+        if (navigator.share) await navigator.share(data);
+        else await navigator.clipboard.writeText(data.url);
+      } catch (error) {
+        if (error.name !== 'AbortError') console.warn('Unable to share', error);
+      }
+    });
+
+    const helpModal = document.getElementById('helpModal');
+    const closeHelp = () => { helpModal.hidden = true; };
+    document.getElementById('helpBtn').addEventListener('click', () => {
+      helpModal.hidden = false;
+      document.getElementById('helpClose').focus();
+    });
+    document.getElementById('helpClose').addEventListener('click', closeHelp);
+    helpModal.addEventListener('click', event => {
+      if (event.target === helpModal) closeHelp();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeHelp();
+    });
 
     function init() {
       renderTierOptions();

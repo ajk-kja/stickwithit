@@ -132,34 +132,34 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 4px;
     }
 
-    .share-btn {
-      background: none;
-      border: none;
+    .tool-action {
+      display: inline-grid;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      border-radius: 8px;
       color: var(--text-muted);
-      font-size: 14px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 800;
       cursor: pointer;
       width: 44px;
       height: 44px;
       padding: 0;
     }
 
-    .share-btn:active {
+    .tool-action:hover,
+    .tool-action:focus-visible,
+    .tool-action:active {
       color: var(--accent);
+      background: color-mix(in srgb, var(--text) 7%, transparent);
     }
 
-    .bpm-display {
-      font-size: 0.95rem;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .bpm-label {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      margin-left: 2px;
+    .header-theme {
+      min-width: 48px;
     }
 
     /* Main content */
@@ -439,6 +439,12 @@
       transform: scale(0.98);
     }
 
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .btn-icon {
       font-size: 13px;
     }
@@ -475,11 +481,11 @@
     }
 
     .btn-group .btn-value {
-      min-width: 44px;
+      min-width: 50px;
       font-variant-numeric: tabular-nums;
       pointer-events: none;
-      font-weight: 600;
-      font-size: 11px;
+      font-weight: 800;
+      font-size: 16px;
     }
 
     /* Play button */
@@ -546,7 +552,7 @@
       left: 0;
       background: rgba(0, 0, 0, 0.75);
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
       padding: 12px;
       z-index: 200;
@@ -577,6 +583,13 @@
       margin-top: 0;
       font-size: 20px;
       margin-bottom: 12px;
+    }
+
+    .chop-splash__card p {
+      margin: 0 0 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     .chop-splash__card ul {
@@ -626,6 +639,30 @@
         width: 56px;
         height: 56px;
         font-size: 20px;
+      }
+    }
+
+    @media (min-width: 720px) and (min-height: 650px) {
+      .controls {
+        width: min(520px, 100%);
+        margin-inline: auto;
+        gap: 14px;
+      }
+
+      .control-row {
+        gap: 12px;
+      }
+
+      .control-row:first-child .btn {
+        width: 150px;
+      }
+
+      .btn-group {
+        width: 150px;
+      }
+
+      .play-section {
+        padding-top: 2px;
       }
     }
 
@@ -718,15 +755,16 @@
 </head>
 <body>
   <div class="chop-splash" id="chopSplash">
-    <div class="chop-splash__card">
-      <h2>Welcome to Chopmeister</h2>
-      <p>Build quick chops in three steps:</p>
+    <div class="chop-splash__card" role="dialog" aria-modal="true" aria-labelledby="chopHelpTitle">
+      <h2 id="chopHelpTitle">Welcome to Chopmeister</h2>
+      <p>Build, hear, and share a drum phrase.</p>
       <ul>
-        <li><strong>Pattern</strong> shuffles the R/L/K sticking only.</li>
-        <li><strong>Drums</strong> re-orchestrates the hits across the kit.</li>
-        <li>Tap <strong>Share</strong> to copy a link with your current groove.</li>
+        <li>Tap a <strong>note</strong> to move it around the kit; tap <strong>R/L</strong> to change the hand.</li>
+        <li><strong>Pattern</strong> changes sticking. <strong>Drums</strong> changes orchestration.</li>
+        <li>Use the counters for phrase length and tempo, then press <strong>Play</strong>.</li>
+        <li><strong>Share</strong> sends this exact chop and tempo, or copies its link.</li>
       </ul>
-      <button class="btn btn-accent chop-splash__cta" id="chopSplashDismiss">Let's go</button>
+      <button class="btn btn-accent chop-splash__cta" id="chopSplashDismiss">Got it</button>
     </div>
   </div>
   <div class="mobile-audio-splash" id="mobileAudioSplash">
@@ -747,11 +785,13 @@
       <h1 class="swi-tool-title">Chopmeister</h1>
     </div>
     <div class="header-right">
-      <button class="share-btn" id="shareBtn" title="Copy link">🔗</button>
-      <div>
-        <span class="bpm-display" id="bpmDisplay">120</span>
-        <span class="bpm-label">BPM</span>
-      </div>
+      <button class="tool-action" id="helpBtn" type="button" title="How to use Chopmeister" aria-label="How to use Chopmeister">?</button>
+      <button class="tool-action" id="shareBtn" type="button" title="Share this chop" aria-label="Share this chop">↗</button>
+      <label class="swi-theme-switch header-theme">
+        <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
+        <i aria-hidden="true"></i>
+        <span class="swi-theme-label">Theme</span>
+      </label>
     </div>
   </header>
 
@@ -865,7 +905,7 @@
           newNotes.push({ drum: drumKey, sticking });
         }
         
-        if (newNotes.length < 1 || newNotes.length > 16) return false;
+        if (newNotes.length < 4 || newNotes.length > 16) return false;
         
         bpm = newBpm;
         notes = newNotes;
@@ -886,13 +926,19 @@
       return hash && decodeState(hash);
     }
 
-    function copyLink() {
+    async function copyLink() {
       updateURL();
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        showToast('Link copied!');
-      }).catch(() => {
-        showToast('Copy failed');
-      });
+      const data = { title: document.title, url: window.location.href };
+      try {
+        if (navigator.share) {
+          await navigator.share(data);
+        } else {
+          await navigator.clipboard.writeText(data.url);
+          showToast('Link copied!');
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') showToast('Unable to share');
+      }
     }
 
     function showToast(msg) {
@@ -1163,19 +1209,26 @@
       });
       const slots = Array.from(container.querySelectorAll('.note-slot'));
 
-      // Eighth notes are beamed by beat: two subdivisions per quarter note.
-      for (let groupStart = 0; groupStart < notes.length; groupStart += 2) {
-        const groupEnd = Math.min(groupStart + 2, notes.length);
+      // Four-note runs are sixteenth-note groups (double beam); pairs use one beam.
+      for (let groupStart = 0; groupStart < notes.length;) {
+        const remaining = notes.length - groupStart;
+        const groupSize = remaining >= 4 ? 4 : remaining >= 2 ? 2 : 1;
+        const groupEnd = groupStart + groupSize;
         const groupIndices = [];
         for (let index = groupStart; index < groupEnd; index += 1) {
           groupIndices.push(index);
         }
 
-        const noteYs = groupIndices.map(index => getYPosition(DRUMS[notes[index].drum].staffPos));
+        const noteheads = groupIndices.map(index => slots[index].querySelector('.note-head'));
+        const containerRect = container.getBoundingClientRect();
+        const noteYs = noteheads.map(notehead => {
+          const rect = notehead.getBoundingClientRect();
+          return rect.top - containerRect.top + (rect.height / 2);
+        });
         const beamY = Math.max(7, Math.min(...noteYs) - 20);
-        const stemXs = groupIndices.map(index => {
-          const slot = slots[index];
-          return slot.offsetLeft + (slot.offsetWidth / 2) + 7;
+        const stemXs = noteheads.map(notehead => {
+          const rect = notehead.getBoundingClientRect();
+          return rect.right - containerRect.left - 1;
         });
 
         groupIndices.forEach((index, groupIndex) => {
@@ -1198,6 +1251,15 @@
             x2: stemXs[stemXs.length - 1],
             y2: beamY
           }));
+          if (groupIndices.length === 4) {
+            layer.appendChild(createSvgElement('line', {
+              class: 'beam-stroke beam',
+              x1: stemXs[0],
+              y1: beamY + 8,
+              x2: stemXs[stemXs.length - 1],
+              y2: beamY + 8
+            }));
+          }
         } else {
           layer.appendChild(createSvgElement('path', {
             class: 'beam-stroke beam',
@@ -1205,6 +1267,7 @@
             fill: 'none'
           }));
         }
+        groupStart = groupEnd;
       }
 
       container.prepend(layer);
@@ -1298,13 +1361,14 @@
 
       document.getElementById('noteCountDisplay').textContent = noteCount;
       document.getElementById('notesValue').textContent = noteCount;
-      document.getElementById('bpmDisplay').textContent = bpm;
       document.getElementById('bpmValue').textContent = bpm;
+      document.getElementById('notesMinus').disabled = noteCount <= 4;
+      document.getElementById('notesPlus').disabled = noteCount >= 16;
     }
 
     function changeNoteCount(delta) {
       const newCount = noteCount + delta;
-      if (newCount < 1 || newCount > 16) return;
+      if (newCount < 4 || newCount > 16) return;
       
       if (delta > 0) {
         const drumKeys = Object.keys(DRUMS);
@@ -1399,6 +1463,26 @@
       document.getElementById('bpmPlus').onclick = () => changeBpm(5);
       document.getElementById('playBtn').onclick = () => togglePlayback();
       document.getElementById('shareBtn').onclick = copyLink;
+      document.getElementById('helpBtn').onclick = () => {
+        document.getElementById('chopSplash').classList.remove('hidden');
+        document.getElementById('chopSplashDismiss').focus();
+      };
+
+      const themeSwitch = document.getElementById('toolThemeSwitch');
+      const syncThemeSwitch = () => {
+        const theme = document.documentElement.dataset.theme || 'dark';
+        themeSwitch.checked = theme === 'light';
+        themeSwitch.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`);
+      };
+      themeSwitch.onchange = () => {
+        const theme = themeSwitch.checked ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('swi-theme', theme); } catch {}
+        window.dispatchEvent(new CustomEvent('swi-theme-change', { detail: { theme } }));
+        syncThemeSwitch();
+      };
+      window.addEventListener('swi-theme-change', syncThemeSwitch);
+      syncThemeSwitch();
 
       document.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
@@ -1435,6 +1519,9 @@
         if (event.target === splash) {
           dismiss();
         }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') dismiss();
       });
     }
 

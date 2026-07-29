@@ -106,6 +106,61 @@
     html[data-theme="light"] #app .text-gray-500 {
       color: var(--swi-muted) !important;
     }
+    .swi-tool-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .swi-tool-action {
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--swi-accent);
+      font: 800 1rem/1 var(--swi-font);
+      cursor: pointer;
+    }
+    .swi-tool-action:hover,
+    .swi-tool-action:focus-visible {
+      color: var(--swi-accent);
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .swi-help-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 700;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.74);
+    }
+    .swi-help-modal[hidden] { display: none; }
+    .swi-help-card {
+      width: min(360px, 100%);
+      padding: 20px;
+      border: 1px solid var(--swi-border-strong);
+      border-radius: 12px;
+      background: var(--swi-panel);
+      color: var(--swi-fg);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      font-family: var(--swi-font);
+    }
+    .swi-help-card h2 { margin: 0 0 8px; font-size: 1.2rem; }
+    .swi-help-card p { margin: 0 0 10px; color: var(--swi-muted); font-size: 0.86rem; line-height: 1.45; }
+    .swi-help-card ol { margin: 0 0 16px; padding-left: 20px; color: var(--swi-muted); font-size: 0.86rem; line-height: 1.5; list-style: decimal; }
+    .swi-help-card button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--swi-accent);
+      color: #fff;
+      font: 800 0.9rem/1 var(--swi-font);
+      cursor: pointer;
+    }
   </style>
   <link rel="stylesheet" href="/assets/nav.css?v=20260712a">
   <script src="/assets/nav.js?v=20260707b" defer></script>
@@ -115,8 +170,73 @@
   <header class="swi-tool-backbar">
     <a class="swi-tool-back" href="/apps/">← Apps</a>
     <strong class="swi-tool-title">Gigasector</strong>
-    <span class="swi-tool-spacer" aria-hidden="true"></span>
+    <div class="swi-tool-actions">
+      <button class="swi-tool-action" id="helpBtn" type="button" title="How to use Gigasector" aria-label="How to use Gigasector">?</button>
+      <button class="swi-tool-action" id="shareBtn" type="button" title="Share Gigasector" aria-label="Share Gigasector">↗</button>
+      <label class="swi-theme-switch">
+        <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
+        <i aria-hidden="true"></i>
+        <span class="swi-theme-label">Theme</span>
+      </label>
+    </div>
   </header>
   <div id="app"></div>
+  <div class="swi-help-modal" id="helpModal" hidden>
+    <section class="swi-help-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <h2 id="helpTitle">Using Gigasector</h2>
+      <p>Build a rehearsal setlist with track-specific section markers.</p>
+      <ol>
+        <li>Upload an audio track, then open it in Player.</li>
+        <li>Set A/B for the intro and C/D for the outro at the playhead.</li>
+        <li>Use the Setlist arrows to arrange tracks in performance order.</li>
+      </ol>
+      <button id="helpClose" type="button">Got it</button>
+    </section>
+  </div>
+  <script>
+    (() => {
+      const themeSwitch = document.getElementById('toolThemeSwitch');
+      const helpModal = document.getElementById('helpModal');
+      const syncTheme = () => {
+        const theme = document.documentElement.dataset.theme || 'dark';
+        themeSwitch.checked = theme === 'light';
+        themeSwitch.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`);
+      };
+      themeSwitch.addEventListener('change', () => {
+        const theme = themeSwitch.checked ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('swi-theme', theme); } catch {}
+        window.dispatchEvent(new CustomEvent('swi-theme-change', { detail: { theme } }));
+        syncTheme();
+      });
+      window.addEventListener('swi-theme-change', syncTheme);
+      document.addEventListener('DOMContentLoaded', syncTheme, { once: true });
+
+      document.getElementById('shareBtn').addEventListener('click', async () => {
+        const data = { title: document.title, url: window.location.href };
+        try {
+          if (navigator.share) await navigator.share(data);
+          else {
+            await navigator.clipboard.writeText(data.url);
+            document.getElementById('shareBtn').title = 'Link copied';
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') console.warn('Unable to share', error);
+        }
+      });
+      const closeHelp = () => { helpModal.hidden = true; };
+      document.getElementById('helpBtn').addEventListener('click', () => {
+        helpModal.hidden = false;
+        document.getElementById('helpClose').focus();
+      });
+      document.getElementById('helpClose').addEventListener('click', closeHelp);
+      helpModal.addEventListener('click', event => {
+        if (event.target === helpModal) closeHelp();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeHelp();
+      });
+    })();
+  </script>
 </body>
 </html>

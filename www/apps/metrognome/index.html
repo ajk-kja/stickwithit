@@ -136,9 +136,69 @@
         .header a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
         .header h1 { font-size: 1rem; font-weight: 600; }
 
-        .tool-theme {
-            flex: 0 0 70px;
-            justify-content: flex-end;
+        .tool-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .tool-action {
+            width: 44px;
+            height: 44px;
+            display: inline-grid;
+            place-items: center;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .tool-action:hover,
+        .tool-action:focus-visible {
+            color: var(--accent);
+            background: color-mix(in srgb, var(--text) 7%, transparent);
+        }
+
+        .help-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 700;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.74);
+        }
+
+        .help-modal[hidden] { display: none; }
+
+        .help-card {
+            width: min(360px, 100%);
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+        }
+
+        .help-card h2 { margin: 0 0 8px; font-size: 1.2rem; }
+        .help-card p { margin: 0 0 10px; color: var(--text-muted); font-size: 0.86rem; line-height: 1.45; }
+        .help-card ol { margin: 0 0 16px; padding-left: 20px; color: var(--text-muted); font-size: 0.86rem; line-height: 1.5; }
+        .help-card button {
+            width: 100%;
+            min-height: 44px;
+            border: 0;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
         }
 
         /* Tabs - Segmented Control */
@@ -788,11 +848,15 @@
     <header class="header swi-tool-backbar">
         <a class="swi-tool-back" href="/apps/">← Apps</a>
         <h1 class="swi-tool-title">MetroGnome</h1>
-        <label class="swi-theme-switch tool-theme">
-            <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
-            <i aria-hidden="true"></i>
-            <span class="swi-theme-label">Theme</span>
-        </label>
+        <div class="tool-actions">
+            <button class="tool-action" id="helpBtn" type="button" title="How to use MetroGnome" aria-label="How to use MetroGnome">?</button>
+            <button class="tool-action" id="shareBtn" type="button" title="Share MetroGnome" aria-label="Share MetroGnome">↗</button>
+            <label class="swi-theme-switch">
+                <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
+                <i aria-hidden="true"></i>
+                <span class="swi-theme-label">Theme</span>
+            </label>
+        </div>
     </header>
 
     <nav class="tabs">
@@ -834,6 +898,19 @@
             <div class="playlist-empty">No saved tempos yet</div>
         </div>
     </div>
+</div>
+
+<div class="help-modal" id="helpModal" hidden>
+    <section class="help-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <h2 id="helpTitle">Using MetroGnome</h2>
+        <p>Set a tempo, shape the pulse, and save it for later.</p>
+        <ol>
+            <li>Set BPM with the slider, then press <strong>Start</strong>.</li>
+            <li>Use <strong>Settings</strong> for time signature and subdivision.</li>
+            <li>Enable <strong>Flash</strong> for a visual pulse; save useful tempos to your playlist.</li>
+        </ol>
+        <button id="helpClose" type="button">Got it</button>
+    </section>
 </div>
 
 <!-- Settings Popup -->
@@ -1043,6 +1120,7 @@ if (splash && splashDismiss) {
 }
 
 const toolThemeSwitch = $('toolThemeSwitch');
+const helpModal = $('helpModal');
 const themeMeta = document.querySelector('meta[name="theme-color"]');
 function syncLocalThemeControl() {
     const theme = document.documentElement.dataset.theme || 'dark';
@@ -1059,6 +1137,32 @@ toolThemeSwitch.addEventListener('change', () => {
 });
 window.addEventListener('swi-theme-change', syncLocalThemeControl);
 document.addEventListener('DOMContentLoaded', syncLocalThemeControl, { once: true });
+
+$('shareBtn').addEventListener('click', async () => {
+    const data = { title: document.title, url: window.location.href };
+    try {
+        if (navigator.share) await navigator.share(data);
+        else {
+            await navigator.clipboard.writeText(data.url);
+            showToast('Link copied');
+        }
+    } catch (error) {
+        if (error.name !== 'AbortError') showToast('Unable to share');
+    }
+});
+
+const closeHelp = () => { helpModal.hidden = true; };
+$('helpBtn').addEventListener('click', () => {
+    helpModal.hidden = false;
+    $('helpClose').focus();
+});
+$('helpClose').addEventListener('click', closeHelp);
+helpModal.addEventListener('click', event => {
+    if (event.target === helpModal) closeHelp();
+});
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeHelp();
+});
 
 // Audio
 
