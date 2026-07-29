@@ -130,11 +130,44 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
             flex-shrink: 0;
         }
 
         .header a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
         .header h1 { font-size: 1rem; font-weight: 600; }
+
+        .tool-header-left {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tool-header-left .swi-tool-title {
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .tool-brand {
+            position: absolute;
+            left: 50%;
+            top: calc(6px + env(safe-area-inset-top));
+            width: 34px;
+            height: 34px;
+            padding: 0 !important;
+            display: grid !important;
+            place-items: center;
+            transform: translateX(-50%);
+            border-radius: 8px;
+        }
+
+        .tool-brand img {
+            width: 17px;
+            height: 34px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(230, 57, 70, 0.22));
+        }
 
         .tool-actions {
             display: flex;
@@ -787,6 +820,13 @@
             }
         }
 
+        @media (max-width: 430px) {
+            .tool-header-left { gap: 2px; }
+            .tool-header-left .swi-tool-back { padding-inline: 6px; }
+            .tool-header-left .swi-tool-title { font-size: 0.78rem; }
+            .tool-back-label { display: none; }
+        }
+
         @media (max-height: 620px) {
             .tabs { margin-bottom: 0.5rem; }
             .beat-container { height: 96px; padding: 0.65rem; }
@@ -846,8 +886,13 @@
 
 <div class="app">
     <header class="header swi-tool-backbar">
-        <a class="swi-tool-back" href="/apps/">← Apps</a>
-        <h1 class="swi-tool-title">MetroGnome</h1>
+        <div class="tool-header-left">
+            <a class="swi-tool-back" href="/apps/" aria-label="Back to apps">←<span class="tool-back-label"> Apps</span></a>
+            <h1 class="swi-tool-title">MetroGnome</h1>
+        </div>
+        <a class="tool-brand" href="/" aria-label="Stick With It home">
+            <img src="/assets/StickWithItBlack.png" alt="">
+        </a>
         <div class="tool-actions">
             <button class="tool-action" id="helpBtn" type="button" title="How to use MetroGnome" aria-label="How to use MetroGnome">?</button>
             <button class="tool-action" id="shareBtn" type="button" title="Share MetroGnome" aria-label="Share MetroGnome">↗</button>
