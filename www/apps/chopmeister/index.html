@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="/assets/favicon-256.png" sizes="256x256">
   <link rel="shortcut icon" href="/assets/favicon-256.png">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Chopmeister | Stick With It</title>
   <meta name="theme-color" content="#000000">
   <style>
@@ -36,6 +36,7 @@
 
     html, body {
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -49,6 +50,8 @@
       background-image:
         linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
       background-size: 100% 4px;
+      padding-right: env(safe-area-inset-right);
+      padding-left: env(safe-area-inset-left);
     }
 
     .mobile-audio-splash {
@@ -58,7 +61,11 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding:
+        max(1.5rem, env(safe-area-inset-top))
+        max(1.5rem, env(safe-area-inset-right))
+        max(1.5rem, env(safe-area-inset-bottom))
+        max(1.5rem, env(safe-area-inset-left));
       z-index: 600;
     }
     .mobile-audio-splash.active {
@@ -102,7 +109,10 @@
     /* Header */
     .header {
       min-height: 48px;
-      padding: 0.5rem 1rem;
+      padding:
+        max(0.5rem, env(safe-area-inset-top))
+        1rem
+        0.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -168,6 +178,13 @@
       width: 44px;
       height: 44px;
       padding: 0;
+    }
+
+    .tool-icon {
+      display: block;
+      width: 19px;
+      height: 19px;
+      object-fit: contain;
     }
 
     .tool-action:hover,
@@ -436,7 +453,7 @@
       min-height: 44px;
       padding: 8px 12px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -461,7 +478,11 @@
     }
 
     .btn-icon {
-      font-size: 13px;
+      display: block;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      object-fit: contain;
     }
 
     .btn-accent {
@@ -519,7 +540,7 @@
       border: none;
       border-radius: 0;
       flex: 1;
-      min-width: 36px;
+      min-width: 44px;
       padding: 8px 5px;
     }
 
@@ -551,10 +572,17 @@
       box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
     }
 
+    .play-icon {
+      display: block;
+      width: 21px;
+      height: 21px;
+      object-fit: contain;
+    }
+
     /* Toast notification */
     .toast {
       position: fixed;
-      bottom: 60px;
+      bottom: max(60px, calc(12px + env(safe-area-inset-bottom)));
       left: 50%;
       transform: translateX(-50%);
       background: var(--surface);
@@ -584,7 +612,11 @@
       z-index: 500;
       display: grid;
       place-items: center;
-      padding: 16px;
+      padding:
+        max(16px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(16px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
       background: rgba(0, 0, 0, 0.76);
     }
 
@@ -681,7 +713,7 @@
 
     /* Footer */
     footer {
-      padding: 6px 16px;
+      padding: 6px 16px max(6px, env(safe-area-inset-bottom));
       text-align: center;
       border-top: 1px solid var(--border);
       flex-shrink: 0;
@@ -699,7 +731,7 @@
 
     .chop-splash {
       position: fixed;
-      top: 45px;
+      top: calc(45px + env(safe-area-inset-top));
       right: 0;
       bottom: 0;
       left: 0;
@@ -796,6 +828,10 @@
     }
 
     @media (min-width: 720px) and (min-height: 650px) {
+      main {
+        padding-inline: clamp(24px, 4vw, 64px);
+      }
+
       .controls {
         width: min(520px, 100%);
         margin-inline: auto;
@@ -884,6 +920,12 @@
         gap: 8px;
       }
 
+      .header-left .swi-tool-back {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+      }
+
       .staff {
         border-left-width: 3px;
       }
@@ -907,6 +949,25 @@
 
       .share-sheet__card {
         max-height: calc(100dvh - 16px);
+      }
+
+      .share-sheet__actions,
+      .share-sheet__save {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .control-row {
+        gap: 6px;
+      }
+
+      .btn {
+        padding-inline: 8px;
+      }
+
+      .btn-group .btn-value {
+        min-width: 44px;
       }
     }
 
@@ -955,7 +1016,7 @@
     <img class="header-logo" src="/assets/StickWithItBlack.png" alt="Stick With It">
     <div class="header-right">
       <button class="tool-action" id="helpBtn" type="button" title="How to use Chopmeister" aria-label="How to use Chopmeister">?</button>
-      <button class="tool-action" id="shareBtn" type="button" title="Share this chop" aria-label="Share this chop">↗</button>
+      <button class="tool-action" id="shareBtn" type="button" title="Share this chop" aria-label="Share this chop"><img class="tool-icon" src="./icons/share.svg" alt="" aria-hidden="true"></button>
       <label class="swi-theme-switch header-theme">
         <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
         <i aria-hidden="true"></i>
@@ -981,11 +1042,11 @@
 
     <div class="controls">
       <div class="control-row">
-        <button class="btn" id="randomPattern" title="Randomize Pattern">
-          <span class="btn-icon">🎲</span> Pattern
+        <button class="btn" id="randomPattern" title="Randomize Pattern" aria-label="Randomize sticking pattern">
+          <img class="btn-icon" src="./icons/dice.svg" alt="" aria-hidden="true"> Pattern
         </button>
-        <button class="btn" id="randomOrchestration" title="Randomize Orchestration">
-          <span class="btn-icon">🥁</span> Drums
+        <button class="btn" id="randomOrchestration" title="Randomize Orchestration" aria-label="Randomize drum orchestration">
+          <img class="btn-icon" src="./icons/drum.svg" alt="" aria-hidden="true"> Drums
         </button>
       </div>
 
@@ -1003,7 +1064,9 @@
       </div>
 
       <div class="play-section">
-        <button class="btn btn-accent btn-play" id="playBtn">▶</button>
+        <button class="btn btn-accent btn-play" id="playBtn" aria-label="Play chop" aria-pressed="false">
+          <img class="play-icon" id="playBtnIcon" src="./icons/play.svg" alt="" aria-hidden="true">
+        </button>
       </div>
     </div>
   </main>
@@ -1924,7 +1987,10 @@
       }
       if (!notes.length) return;
       isPlaying = true;
-      document.getElementById('playBtn').textContent = '⏹';
+      const playButton = document.getElementById('playBtn');
+      document.getElementById('playBtnIcon').src = './icons/stop.svg';
+      playButton.setAttribute('aria-label', 'Stop chop');
+      playButton.setAttribute('aria-pressed', 'true');
       currentNoteIndex = -1;
       
       // Eighth-note timing: reschedule each hit so BPM changes preserve position.
@@ -1941,7 +2007,10 @@
 
     function stopPlayback() {
       isPlaying = false;
-      document.getElementById('playBtn').textContent = '▶';
+      const playButton = document.getElementById('playBtn');
+      document.getElementById('playBtnIcon').src = './icons/play.svg';
+      playButton.setAttribute('aria-label', 'Play chop');
+      playButton.setAttribute('aria-pressed', 'false');
       currentNoteIndex = -1;
       if (playInterval) {
         clearTimeout(playInterval);

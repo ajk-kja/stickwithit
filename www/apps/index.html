@@ -8,9 +8,80 @@
 <link rel="stylesheet" href="/app.css?v=20260713l">
 <link rel="stylesheet" href="/vhs.css?v=20260713l">
 <script src="/app.js?v=20260727b" defer></script>
-</head><body class="vhs-mock">
+<style>
+  .apps-page .appcard2 {
+    min-width: 0;
+    min-height: 44px;
+  }
+  .apps-page .brand {
+    min-height: 44px;
+  }
+  .apps-page .appcard2 .bd {
+    min-width: 0;
+  }
+  .apps-page .appcard2 .nt {
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .apps-page .tabbar .ic {
+    border: 0;
+  }
+  .apps-page .tabbar .ic img {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+  .apps-page .tabbar a.live .ic {
+    animation: none;
+  }
+  .apps-page.theme-light .tabbar a:not(.live) .ic img {
+    filter: invert(1);
+  }
+  @media (max-width: 430px) {
+    .apps-page .brand {
+      min-width: 0;
+      gap: 7px;
+      font-size: clamp(0.72rem, 3.6vw, 0.92rem);
+      line-height: 1.1;
+    }
+    .apps-page .brand .mk-img {
+      flex: 0 0 auto;
+    }
+    .apps-page .appgrid2 {
+      gap: 10px;
+    }
+    .apps-page .appcard2 .bd {
+      padding: 10px;
+    }
+  }
+  @media (max-width: 370px) {
+    .apps-page .brand {
+      font-size: 0.69rem;
+    }
+    .apps-page .appcard2 b {
+      font-size: 0.82rem;
+    }
+    .apps-page .appcard2 .nt {
+      font-size: 0.68rem;
+    }
+  }
+  @media (min-width: 1200px) {
+    .apps-page .appgrid2 {
+      gap: 16px;
+    }
+    .apps-page .appcard2 .bd {
+      padding: 14px 15px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .apps-page .appcard2 {
+      transition: none;
+    }
+  }
+</style>
+</head><body class="vhs-mock apps-page">
 <header class="chrome"><div class="chrome-in">
-  <a class="brand" href="/"><img class="mk-img" src="/assets/StickWithItBlack.png" alt="" height="30" style="height:30px;width:auto" decoding="async">Stick With It</a>
+  <a class="brand" href="/"><img class="mk-img" src="/assets/StickWithItBlack.png" alt="" height="30" style="height:30px;width:auto" decoding="async">Stick With It | Keep Going!</a>
   <nav class="desknav">
     <a class="live" href="/"><span class="dot"></span>LIVE</a>
     <a href="/contest/">Contest</a><a href="/apps/" aria-current="page">Apps</a><a href="/artists/">Artists</a><a href="/more/">More</a>
@@ -29,11 +100,11 @@
   </div>
 </main>
 
-<nav class="tabbar">
-  <a class="live" href="/"><span class="ic">●</span>LIVE</a>
-  <a href="/contest/"><span class="ic">◎</span>Contest</a>
-  <a href="/apps/" aria-current="page"><span class="ic">▦</span>Apps</a>
-  <a href="/artists/"><span class="ic">♪</span>Artists</a>
-  <a href="/more/"><span class="ic">≡</span>More</a>
+<nav class="tabbar" aria-label="Primary">
+  <a class="live" href="/"><span class="ic"><img src="/apps/assets/icons/live.svg" alt="" aria-hidden="true"></span>LIVE</a>
+  <a href="/contest/"><span class="ic"><img src="/apps/assets/icons/contest.svg" alt="" aria-hidden="true"></span>Contest</a>
+  <a href="/apps/" aria-current="page"><span class="ic"><img src="/apps/assets/icons/apps.svg" alt="" aria-hidden="true"></span>Apps</a>
+  <a href="/artists/"><span class="ic"><img src="/apps/assets/icons/artists.svg" alt="" aria-hidden="true"></span>Artists</a>
+  <a href="/more/"><span class="ic"><img src="/apps/assets/icons/more.svg" alt="" aria-hidden="true"></span>More</a>
 </nav>
 </body></html>

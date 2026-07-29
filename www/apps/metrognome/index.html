@@ -74,7 +74,11 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding:
+                max(1.5rem, env(safe-area-inset-top))
+                max(1.5rem, env(safe-area-inset-right))
+                max(1.5rem, env(safe-area-inset-bottom))
+                max(1.5rem, env(safe-area-inset-left));
             z-index: 500;
         }
         .mobile-splash.active {
@@ -100,6 +104,7 @@
         }
         .mobile-splash button {
             width: 100%;
+            min-height: 44px;
             border: none;
             border-radius: 12px;
             padding: 0.9rem;
@@ -126,7 +131,8 @@
 
         /* Header */
         .header {
-            padding: 0.75rem 1rem;
+            min-height: calc(56px + env(safe-area-inset-top));
+            padding: calc(0.5rem + env(safe-area-inset-top)) 1rem 0.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -195,6 +201,13 @@
         .tool-action:focus-visible {
             color: var(--accent);
             background: color-mix(in srgb, var(--text) 7%, transparent);
+        }
+
+        .tool-icon {
+            display: block;
+            width: 19px;
+            height: 19px;
+            object-fit: contain;
         }
 
         .help-modal {
@@ -454,6 +467,14 @@
 
         .settings-btn:active, .flash-btn:active { background: var(--surface); }
 
+        .control-icon {
+            display: block;
+            width: 21px;
+            height: 21px;
+            flex: 0 0 21px;
+            object-fit: contain;
+        }
+
         .flash-btn {
             color: var(--text-muted);
         }
@@ -510,10 +531,14 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.85);
-            z-index: 100;
+            z-index: 600;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding:
+                max(1.5rem, env(safe-area-inset-top))
+                max(1.5rem, env(safe-area-inset-right))
+                max(1.5rem, env(safe-area-inset-bottom))
+                max(1.5rem, env(safe-area-inset-left));
         }
 
         .popup-overlay.active { display: flex; }
@@ -538,8 +563,8 @@
         .popup-title { font-size: 1.1rem; font-weight: 600; }
 
         .popup-close {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border: none;
             background: var(--surface-2);
             color: var(--text);
@@ -630,7 +655,17 @@
         .subdiv-notes {
             display: flex;
             gap: 2px;
-            font-size: 1.2rem;
+            width: 100%;
+            height: 24px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .subdiv-notes img {
+            display: block;
+            width: 100%;
+            height: 24px;
+            object-fit: contain;
         }
 
         .subdiv-label {
@@ -747,10 +782,14 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.85);
-            z-index: 200;
+            z-index: 650;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding:
+                max(1.5rem, env(safe-area-inset-top))
+                max(1.5rem, env(safe-area-inset-right))
+                max(1.5rem, env(safe-area-inset-bottom))
+                max(1.5rem, env(safe-area-inset-left));
         }
 
         .modal-overlay.active { display: flex; }
@@ -911,8 +950,8 @@
             border-radius: 10px;
             font-size: 0.9rem;
             opacity: 0;
-            transition: all 0.3s;
-            z-index: 50;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 800;
             border: 1px solid var(--border);
         }
 
@@ -921,7 +960,7 @@
         @media (min-width: 500px) {
             .tab-content, .tabs {
                 width: 100%;
-                max-width: 400px;
+                max-width: 520px;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -929,9 +968,50 @@
 
         @media (max-width: 430px) {
             .tool-header-left { gap: 2px; }
-            .tool-header-left .swi-tool-back { padding-inline: 6px; }
+            .tool-header-left .swi-tool-back {
+                display: inline-flex;
+                min-width: 44px;
+                min-height: 44px;
+                align-items: center;
+                justify-content: center;
+                padding-inline: 6px;
+            }
             .tool-header-left .swi-tool-title { font-size: 0.78rem; }
             .tool-back-label { display: none; }
+            .tool-brand { width: 44px; height: 44px; }
+            .tabs { margin-inline: 0.75rem; }
+            .tab-content { padding-inline: 0.75rem; }
+            .editing .pl-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .playlist-item { gap: 0.75rem; padding: 0.875rem; }
+        }
+
+        @media (max-width: 370px) {
+            .header { padding-inline: 0.5rem; }
+            .tool-actions { gap: 0; }
+            .tool-action { width: 44px; }
+            .settings-btn, .flash-btn { gap: 0.35rem; font-size: 0.9rem; }
+            .controls-row, .btn-row { gap: 0.5rem; }
+            .subdiv-options { gap: 0.35rem; }
+            .subdiv-opt { padding: 5px; }
+        }
+
+        @media (min-width: 780px) and (min-height: 650px) {
+            .tab-content, .tabs {
+                max-width: 720px;
+            }
+
+            .beat-container {
+                height: 160px;
+                padding-inline: 1.5rem;
+            }
+
+            .bpm-value {
+                font-size: 5.5rem;
+            }
+
+            .playlist-item {
+                padding-inline: 1.25rem;
+            }
         }
 
         @media (max-height: 620px) {
@@ -1002,7 +1082,7 @@
         </a>
         <div class="tool-actions">
             <button class="tool-action" id="helpBtn" type="button" title="How to use MetroGnome" aria-label="How to use MetroGnome">?</button>
-            <button class="tool-action" id="shareBtn" type="button" title="Share MetroGnome" aria-label="Share MetroGnome">↗</button>
+            <button class="tool-action" id="shareBtn" type="button" title="Share MetroGnome" aria-label="Share MetroGnome"><img class="tool-icon" src="./icons/share.svg" alt="" aria-hidden="true"></button>
             <label class="swi-theme-switch">
                 <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
                 <i aria-hidden="true"></i>
@@ -1030,8 +1110,8 @@
         </div>
 
         <div class="controls-row">
-            <button class="settings-btn" id="settingsBtn">⚙️ Settings</button>
-            <button class="flash-btn" id="flashBtn" aria-pressed="false">💡 Flash</button>
+            <button class="settings-btn" id="settingsBtn"><img class="control-icon" src="./icons/gear.svg" alt="" aria-hidden="true"> Settings</button>
+            <button class="flash-btn" id="flashBtn" aria-pressed="false"><img class="control-icon" src="./icons/light-bulb.svg" alt="" aria-hidden="true"> Flash</button>
         </div>
 
         <div class="btn-row">
@@ -1070,7 +1150,7 @@
     <div class="popup">
         <div class="popup-header">
             <span class="popup-title">Settings</span>
-            <button class="popup-close" id="popupClose">×</button>
+            <button class="popup-close" id="popupClose" aria-label="Close settings">×</button>
         </div>
 
         <div class="popup-section">
@@ -1093,20 +1173,20 @@
         <div class="popup-section">
             <div class="popup-label">Subdivision</div>
             <div class="subdiv-options" id="subdivOptions">
-                <button class="subdiv-opt active" data-sub="1">
-                    <div class="subdiv-notes">♩</div>
+                <button class="subdiv-opt active" data-sub="1" aria-label="Quarter-note subdivision">
+                    <div class="subdiv-notes"><img src="./icons/subdivision-quarter.svg" alt="" aria-hidden="true"></div>
                     <div class="subdiv-label">1</div>
                 </button>
-                <button class="subdiv-opt" data-sub="2">
-                    <div class="subdiv-notes">♪♪</div>
+                <button class="subdiv-opt" data-sub="2" aria-label="Eighth-note subdivision">
+                    <div class="subdiv-notes"><img src="./icons/subdivision-eighths.svg" alt="" aria-hidden="true"></div>
                     <div class="subdiv-label">2</div>
                 </button>
-                <button class="subdiv-opt" data-sub="3">
-                    <div class="subdiv-notes">♪♪♪</div>
+                <button class="subdiv-opt" data-sub="3" aria-label="Triplet subdivision">
+                    <div class="subdiv-notes"><img src="./icons/subdivision-triplets.svg" alt="" aria-hidden="true"></div>
                     <div class="subdiv-label">3</div>
                 </button>
-                <button class="subdiv-opt" data-sub="4">
-                    <div class="subdiv-notes">♬♬</div>
+                <button class="subdiv-opt" data-sub="4" aria-label="Sixteenth-note subdivision">
+                    <div class="subdiv-notes"><img src="./icons/subdivision-sixteenths.svg" alt="" aria-hidden="true"></div>
                     <div class="subdiv-label">4</div>
                 </button>
             </div>

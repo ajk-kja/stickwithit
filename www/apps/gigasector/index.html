@@ -7,13 +7,29 @@
   <link rel="shortcut icon" href="/assets/favicon-256.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Gigasector ✂️</title>
+  <title>Gigasector</title>
   <script src="/apps/gigasector/assets/swi-demo-preload.js?v=20260711a"></script>
-  <script type="module" crossorigin src="/apps/gigasector/assets/index-BAP3KXkZ.js?v=20260729b"></script>
+  <script>try { sessionStorage.setItem('warned', 'true'); } catch {}</script>
+  <script type="module" crossorigin src="/apps/gigasector/assets/index-BAP3KXkZ.js?v=20260729d"></script>
   <link rel="stylesheet" crossorigin href="/apps/gigasector/assets/index-BdEcQAfC.css">
   <style>
     :root {
-      --swi-toolbar-h: 46px;
+      --swi-toolbar-h: 56px;
+      --gigasector-warning-h: 32px;
+      --gigasector-loop-idle: rgba(255, 255, 255, 0.1);
+      --gigasector-loop-active: rgba(230, 57, 70, 0.34);
+      --gigasector-marker-idle: rgba(255, 255, 255, 0.52);
+      --gigasector-marker-active: rgba(255, 255, 255, 1);
+      --gigasector-marker-idle-fg: #171717;
+      --gigasector-marker-active-fg: #171717;
+    }
+    html[data-theme="light"] {
+      --gigasector-loop-idle: rgba(17, 24, 39, 0.08);
+      --gigasector-loop-active: rgba(230, 57, 70, 0.24);
+      --gigasector-marker-idle: rgba(31, 41, 55, 0.55);
+      --gigasector-marker-active: #b91c2a;
+      --gigasector-marker-idle-fg: #fff;
+      --gigasector-marker-active-fg: #fff;
     }
     html,
     body {
@@ -27,14 +43,78 @@
       flex-direction: column;
       margin: 0;
       color: var(--swi-fg);
+      overscroll-behavior: none;
+    }
+    body.swi-gigasector-page > .swi-tool-backbar {
+      position: relative;
     }
     #app {
       width: 100%;
-      height: calc(100svh - var(--swi-toolbar-h) - env(safe-area-inset-top));
-      height: calc(100dvh - var(--swi-toolbar-h) - env(safe-area-inset-top));
+      height: calc(100svh - var(--swi-toolbar-h) - var(--gigasector-warning-h) - env(safe-area-inset-top));
+      height: calc(100dvh - var(--swi-toolbar-h) - var(--gigasector-warning-h) - env(safe-area-inset-top));
       min-height: 0;
       flex: 1 1 auto;
       overflow: hidden;
+    }
+    #app > .flex > .bg-dark:first-child {
+      display: none;
+    }
+    #app > .flex > .border-t.flex.bg-darker {
+      position: relative;
+      z-index: 30;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    #app .flex {
+      min-width: 0;
+    }
+    #app .song-item,
+    #app .song-item > .flex,
+    #app .song-select-area {
+      min-width: 0;
+      overflow: hidden;
+    }
+    .toast {
+      width: max-content;
+      max-width: calc(100vw - 24px) !important;
+      bottom: calc(64px + env(safe-area-inset-bottom)) !important;
+      overflow-wrap: anywhere;
+    }
+    .gigasector-emoji {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      flex: 0 0 auto;
+      margin-inline: 0.08em;
+      object-fit: contain;
+      vertical-align: -0.14em;
+    }
+    #app .loop-toggle-btn .gigasector-emoji {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      vertical-align: middle;
+    }
+    #app #play-btn .gigasector-emoji,
+    #app #pause-btn .gigasector-emoji {
+      filter: brightness(0) invert(1);
+    }
+    .swi-tool-action .gigasector-toolbar-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+    #app [role="button"]:focus-visible {
+      outline: 2px solid var(--swi-accent);
+      outline-offset: 3px;
+    }
+    #app .loop-region {
+      background-color: var(--gigasector-loop-idle) !important;
+    }
+    #app .loop-region[data-active="true"] {
+      background-color: var(--gigasector-loop-active) !important;
+      box-shadow:
+        inset 2px 0 0 color-mix(in srgb, var(--swi-accent) 76%, transparent),
+        inset -2px 0 0 color-mix(in srgb, var(--swi-accent) 76%, transparent);
     }
     @media (max-width: 640px) {
       #app .bg-dark.px-3.py-2 {
@@ -72,6 +152,13 @@
       #app #setlist-container > div {
         min-height: 0;
       }
+      #app #player-container .grid-cols-2,
+      #app #markers-container .grid {
+        gap: 0.5rem;
+      }
+      #app #player-container .bg-dark.px-3.py-2 {
+        padding-inline: 0.6rem;
+      }
     }
     @media (max-height: 720px) {
       #app .waveform-section {
@@ -84,6 +171,35 @@
       #app .text-6xl {
         font-size: 2.6rem;
         line-height: 1;
+      }
+    }
+    @media (min-width: 768px) {
+      #app > .flex {
+        width: min(100%, 1120px);
+        margin-inline: auto;
+        border-inline: 1px solid var(--swi-border);
+      }
+      #app #player-container > .flex {
+        width: min(100%, 960px);
+        margin-inline: auto;
+        border-inline: 1px solid var(--swi-border);
+      }
+      #app #setlist-container > .flex {
+        width: min(100%, 880px);
+        margin-inline: auto;
+        border-inline: 1px solid var(--swi-border);
+      }
+      #app .waveform-section {
+        height: clamp(150px, 20svh, 180px) !important;
+        max-height: 180px;
+      }
+      #app #player-container .overflow-y-auto > .px-3.py-3,
+      #app #markers-container > div {
+        width: min(100%, 760px);
+        margin-inline: auto;
+      }
+      #app #upload-container .max-w-md {
+        max-width: 32rem;
       }
     }
     html[data-theme="light"] #app .bg-dark,
@@ -235,11 +351,78 @@
         column-gap: 0.4rem;
         row-gap: 0.15rem;
       }
+      #app #markers-container .text-xs {
+        font-size: 0.7rem;
+      }
+      #app #bpm-mode-manual,
+      #app #bpm-mode-auto {
+        padding-inline: 0.65rem;
+      }
     }
     .swi-tool-actions {
       display: flex;
       align-items: center;
       gap: 2px;
+    }
+    .gigasector-header-left {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .gigasector-header-left .swi-tool-title {
+      white-space: nowrap;
+      text-align: left;
+    }
+    .gigasector-header-left .swi-tool-back {
+      min-height: 44px;
+    }
+    .gigasector-brand {
+      position: absolute;
+      left: 50%;
+      top: calc(6px + env(safe-area-inset-top));
+      width: 44px;
+      height: 44px;
+      padding: 0 !important;
+      display: grid !important;
+      place-items: center;
+      transform: translateX(-50%);
+      border-radius: 8px;
+    }
+    .gigasector-brand img {
+      width: 17px;
+      height: 34px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(230, 57, 70, 0.22));
+    }
+    .gigasector-session-warning {
+      min-height: var(--gigasector-warning-h);
+      margin: 0;
+      padding: 7px max(12px, env(safe-area-inset-right)) 6px max(12px, env(safe-area-inset-left));
+      flex: 0 0 auto;
+      border-bottom: 1px solid var(--swi-border);
+      background: var(--swi-panel);
+      color: var(--swi-muted);
+      font: 700 0.72rem/1.35 var(--swi-font);
+      text-align: center;
+      white-space: nowrap;
+    }
+    @media (max-width: 430px) {
+      .gigasector-header-left {
+        gap: 2px;
+      }
+      .gigasector-header-left .swi-tool-back {
+        padding-inline: 6px;
+      }
+      .gigasector-header-left .swi-tool-title {
+        font-size: 0.78rem;
+        max-width: 74px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .gigasector-session-warning {
+        font-size: 0.68rem;
+      }
     }
     .swi-tool-action {
       width: 44px;
@@ -291,6 +474,22 @@
       font: 800 0.9rem/1 var(--swi-font);
       cursor: pointer;
     }
+    @media (prefers-reduced-motion: reduce) {
+      #app *,
+      #app *::before,
+      #app *::after,
+      .swi-tool-backbar *,
+      .swi-help-modal * {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      #loading-spinner .spinner-dot {
+        animation: none !important;
+        border-top-color: rgba(230, 57, 70, 0.3) !important;
+      }
+    }
   </style>
   <link rel="stylesheet" href="/assets/nav.css?v=20260712a">
   <script src="/assets/nav.js?v=20260707b" defer></script>
@@ -298,11 +497,16 @@
 </head>
 <body class="swi-gigasector-page">
   <header class="swi-tool-backbar">
-    <a class="swi-tool-back" href="/apps/">← Apps</a>
-    <strong class="swi-tool-title">Gigasector</strong>
+    <div class="gigasector-header-left">
+      <a class="swi-tool-back" href="/apps/">← Apps</a>
+      <h1 class="swi-tool-title">Gigasector ✂️</h1>
+    </div>
+    <a class="gigasector-brand" href="/" aria-label="Stick With It home">
+      <img src="/assets/StickWithItBlack.png" alt="">
+    </a>
     <div class="swi-tool-actions">
       <button class="swi-tool-action" id="helpBtn" type="button" title="How to use Gigasector" aria-label="How to use Gigasector">?</button>
-      <button class="swi-tool-action" id="shareBtn" type="button" title="Share Gigasector" aria-label="Share Gigasector">↗</button>
+      <button class="swi-tool-action" id="shareBtn" type="button" title="Share Gigasector" aria-label="Share Gigasector"><img class="gigasector-toolbar-icon" src="/apps/gigasector/assets/emoji/share.svg" alt="" aria-hidden="true"></button>
       <label class="swi-theme-switch">
         <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
         <i aria-hidden="true"></i>
@@ -310,6 +514,7 @@
       </label>
     </div>
   </header>
+  <p class="gigasector-session-warning" role="note">⚠️ Stored on this device — refresh clears progress.</p>
   <div id="app"></div>
   <div class="swi-help-modal" id="helpModal" hidden>
     <section class="swi-help-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
@@ -327,6 +532,114 @@
     (() => {
       const themeSwitch = document.getElementById('toolThemeSwitch');
       const helpModal = document.getElementById('helpModal');
+      const emojiAssets = new Map([
+        ['✂️', 'scissors.svg'],
+        ['⚠️', 'warning.svg'],
+        ['📌', 'pushpin.svg'],
+        ['📄', 'document.svg'],
+        ['🔄', 'repeat.svg'],
+        ['🎵', 'music-note.svg'],
+        ['📍', 'round-pushpin.svg'],
+        ['🗑️', 'wastebasket.svg'],
+        ['▶', 'play.svg'],
+        ['⏸', 'pause.svg']
+      ]);
+      const emojiPattern = /(✂️|⚠️|📌|📄|🔄|🎵|📍|🗑️|▶|⏸)/gu;
+      const replaceEmojiNode = node => {
+        if (node.parentElement?.closest('script, style, noscript, textarea')) return;
+        emojiPattern.lastIndex = 0;
+        if (!node.nodeValue || !emojiPattern.test(node.nodeValue)) return;
+        emojiPattern.lastIndex = 0;
+        const fragment = document.createDocumentFragment();
+        for (const part of node.nodeValue.split(emojiPattern)) {
+          const asset = emojiAssets.get(part);
+          if (!asset) {
+            fragment.append(part);
+            continue;
+          }
+          const image = document.createElement('img');
+          image.className = 'gigasector-emoji';
+          image.src = `/apps/gigasector/assets/emoji/${asset}`;
+          image.alt = '';
+          image.setAttribute('aria-hidden', 'true');
+          image.decoding = 'async';
+          fragment.append(image);
+        }
+        const loopButton = node.parentElement?.closest('.loop-toggle-btn');
+        if (loopButton) {
+          loopButton.setAttribute('aria-label', loopButton.dataset.loop === 'ab' ? 'Toggle intro loop' : 'Toggle outro loop');
+        }
+        node.replaceWith(fragment);
+      };
+      const replaceEmojiIcons = root => {
+        if (root.nodeType === Node.TEXT_NODE) {
+          replaceEmojiNode(root);
+          return;
+        }
+        if (root.nodeType !== Node.ELEMENT_NODE) return;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(replaceEmojiNode);
+      };
+      const matchingElements = (root, selector) => {
+        if (root.nodeType !== Node.ELEMENT_NODE) return [];
+        return [...(root.matches(selector) ? [root] : []), ...root.querySelectorAll(selector)];
+      };
+      const enhanceControls = root => {
+        const labels = {
+          'play-btn': 'Play track',
+          'pause-btn': 'Pause track',
+          'bpm-down': 'Decrease BPM',
+          'bpm-up': 'Increase BPM',
+          'bpm-input': 'Beats per minute',
+          'speed-slider': 'Playback speed',
+          'marker-a-btn': 'Set marker A at playhead',
+          'marker-b-btn': 'Set marker B at playhead',
+          'marker-c-btn': 'Set marker C at playhead',
+          'marker-d-btn': 'Set marker D at playhead',
+          'reset-markers-btn': 'Reset all markers'
+        };
+        for (const [id, label] of Object.entries(labels)) {
+          matchingElements(root, `#${id}`).forEach(element => element.setAttribute('aria-label', label));
+        }
+        matchingElements(root, '#drop-zone').forEach(dropZone => {
+          if (dropZone.dataset.keyboardReady) return;
+          dropZone.dataset.keyboardReady = 'true';
+          dropZone.setAttribute('role', 'button');
+          dropZone.setAttribute('tabindex', '0');
+          dropZone.setAttribute('aria-label', 'Choose an audio file');
+          dropZone.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              dropZone.click();
+            }
+          });
+        });
+        matchingElements(root, '.song-select-area').forEach(song => {
+          if (song.dataset.keyboardReady) return;
+          song.dataset.keyboardReady = 'true';
+          song.setAttribute('role', 'button');
+          song.setAttribute('tabindex', '0');
+          song.setAttribute('aria-label', `Load ${song.querySelector('h3')?.textContent.trim() || 'song'}`);
+          song.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              song.click();
+            }
+          });
+        });
+      };
+      replaceEmojiIcons(document.body);
+      enhanceControls(document.body);
+      new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            replaceEmojiIcons(node);
+            enhanceControls(node);
+          }
+        }
+      }).observe(document.body, { childList: true, subtree: true });
       const syncTheme = () => {
         const theme = document.documentElement.dataset.theme || 'dark';
         themeSwitch.checked = theme === 'light';
