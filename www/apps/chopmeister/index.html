@@ -278,7 +278,7 @@
     .accent {
       position: absolute;
       left: 50%;
-      bottom: 15px;
+      top: var(--accent-top);
       transform: translateX(-50%);
       font-family: Arial, sans-serif;
       font-size: 18px;
@@ -1208,6 +1208,8 @@
         'aria-hidden': 'true'
       });
       const slots = Array.from(container.querySelectorAll('.note-slot'));
+      const containerRect = container.getBoundingClientRect();
+      let referenceBeamY = null;
 
       // Four-note runs are sixteenth-note groups (double beam); pairs use one beam.
       for (let groupStart = 0; groupStart < notes.length;) {
@@ -1220,12 +1222,14 @@
         }
 
         const noteheads = groupIndices.map(index => slots[index].querySelector('.note-head'));
-        const containerRect = container.getBoundingClientRect();
         const noteYs = noteheads.map(notehead => {
           const rect = notehead.getBoundingClientRect();
           return rect.top - containerRect.top + (rect.height / 2);
         });
-        const beamY = Math.max(7, Math.min(...noteYs) - 20);
+        if (referenceBeamY === null) {
+          referenceBeamY = Math.max(7, Math.min(...noteYs) - 20);
+        }
+        const beamY = referenceBeamY;
         const stemXs = noteheads.map(notehead => {
           const rect = notehead.getBoundingClientRect();
           return rect.right - containerRect.left - 1;
@@ -1318,11 +1322,17 @@
         if (drum.ghost) noteEl.classList.add('ghost');
         if (index === currentNoteIndex) noteEl.classList.add('playing');
 
+        // Anchor the center of every head to the staff independently of marks.
+        const yPos = getYPosition(drum.staffPos);
+        noteEl.style.setProperty('--note-y', `${yPos}px`);
+
         // Accent mark for full snare
         if (drum.accent) {
           const accent = document.createElement('div');
           accent.className = 'accent';
           accent.textContent = '>';
+          // Keep accents in a consistent foreground row above the top staff line.
+          accent.style.setProperty('--accent-top', `${staffTop - yPos - 9}px`);
           noteEl.appendChild(accent);
         }
 
@@ -1333,10 +1343,6 @@
           head.classList.add('x-head');
         }
         noteEl.appendChild(head);
-
-        // Anchor the center of every head to the staff independently of marks.
-        const yPos = getYPosition(drum.staffPos);
-        noteEl.style.setProperty('--note-y', `${yPos}px`);
 
         slot.appendChild(noteEl);
         noteFragment.appendChild(slot);
