@@ -188,7 +188,7 @@
     /* 5-line staff */
     .staff {
       position: relative;
-      height: 104px;
+      height: 136px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 4px solid var(--accent);
@@ -200,7 +200,7 @@
       position: absolute;
       left: 10px;
       right: 10px;
-      top: 30px;
+      top: 62px;
       bottom: 18px;
       display: flex;
       flex-direction: column;
@@ -613,7 +613,7 @@
       }
 
       .staff {
-        height: 122px;
+        height: 154px;
       }
 
       .note-head {
@@ -622,7 +622,7 @@
       }
 
       .staff-lines {
-        top: 34px;
+        top: 66px;
         bottom: 20px;
       }
 
@@ -684,7 +684,7 @@
       }
 
       .staff {
-        height: 82px;
+        height: 114px;
       }
 
       .note-head {
@@ -693,7 +693,7 @@
       }
 
       .staff-lines {
-        top: 24px;
+        top: 56px;
         bottom: 14px;
       }
 
@@ -848,10 +848,10 @@
 
   <script>
     // Standard drum-set staff positions (0 = top line, 4 = bottom line).
-    // Hi-hat sits above the staff; snare, floor tom and kick occupy their
+    // Hi-hat sits on the top line; snare, floor tom and kick occupy their
     // conventional third, second and first spaces respectively.
     const DRUMS = {
-      HIHAT:       { name: 'HH', staffPos: -0.5, sticking: true, xHead: true },
+      HIHAT:       { name: 'HH', staffPos: 0, sticking: true, xHead: true },
       SNARE:       { name: 'S',  staffPos: 1.5, sticking: true, accent: true },
       SNARE_GHOST: { name: 'g',  staffPos: 1.5, sticking: true, ghost: true },
       TOM:         { name: 'T',  staffPos: 2.5, sticking: true },
@@ -870,6 +870,7 @@
     let bpm = 120;
     let isPlaying = false;
     let playInterval = null;
+    let playbackStep = null;
     let currentNoteIndex = -1;
     let resizeFrame = null;
     let notes = [];
@@ -969,6 +970,7 @@
     let audioContext = null;
 
     const audioBuffers = {};
+    const activeVoices = new Set();
     function getAudioContext() {
       if (!AudioContextClass) return null;
       if (!audioContext) {
@@ -1063,10 +1065,49 @@
       const source = ctx.createBufferSource();
       source.buffer = audioBuffers[bufferKey];
       const gainNode = ctx.createGain();
-      gainNode.gain.value = gain;
+      const now = ctx.currentTime;
+      const intervalSeconds = 60 / bpm / 2;
+      const gateSeconds = Math.min(
+        source.buffer.duration,
+        Math.max(0.08, Math.min(0.32, intervalSeconds * 0.88))
+      );
+      const attackSeconds = Math.min(0.004, gateSeconds * 0.08);
+      const fadeSeconds = Math.min(0.055, gateSeconds * 0.35);
+      const fadeStart = now + gateSeconds - fadeSeconds;
+
+      gainNode.gain.setValueAtTime(0.0001, now);
+      gainNode.gain.linearRampToValueAtTime(gain, now + attackSeconds);
+      gainNode.gain.setValueAtTime(gain, fadeStart);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, now + gateSeconds);
       source.connect(gainNode);
       gainNode.connect(ctx.destination);
-      source.start(0);
+      const voice = { source, gainNode };
+      activeVoices.add(voice);
+      source.onended = () => {
+        activeVoices.delete(voice);
+        source.disconnect();
+        gainNode.disconnect();
+      };
+      source.start(now);
+      source.stop(now + gateSeconds + 0.005);
+    }
+
+    function fadeActiveVoices(duration = 0.025) {
+      const ctx = audioContext;
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      activeVoices.forEach(({ source, gainNode }) => {
+        try {
+          if (typeof gainNode.gain.cancelAndHoldAtTime === 'function') {
+            gainNode.gain.cancelAndHoldAtTime(now);
+          } else {
+            gainNode.gain.cancelScheduledValues(now);
+            gainNode.gain.setValueAtTime(Math.max(0.0001, gainNode.gain.value), now);
+          }
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+          source.stop(now + duration + 0.005);
+        } catch {}
+      });
     }
 
     function playSound(drum) {
@@ -1332,7 +1373,7 @@
           accent.className = 'accent';
           accent.textContent = '>';
           // Keep accents in a consistent foreground row above the top staff line.
-          accent.style.setProperty('--accent-top', `${staffTop - yPos - 9}px`);
+          accent.style.setProperty('--accent-top', `${staffTop - yPos - 43}px`);
           noteEl.appendChild(accent);
         }
 
@@ -1400,9 +1441,10 @@
       updateURL();
       render();
       
-      if (isPlaying) {
-        stopPlayback();
-        startPlayback();
+      if (isPlaying && playbackStep) {
+        fadeActiveVoices(0.012);
+        if (playInterval) clearTimeout(playInterval);
+        playInterval = setTimeout(playbackStep, (60 / bpm / 2) * 1000);
       }
     }
 
@@ -1426,18 +1468,16 @@
       document.getElementById('playBtn').textContent = '⏹';
       currentNoteIndex = -1;
       
-      // 8th note timing: 2 notes per beat
-      const intervalMs = (60 / bpm / 2) * 1000;
-      
-      function playNext() {
-        if (!notes.length) return;
+      // Eighth-note timing: reschedule each hit so BPM changes preserve position.
+      playbackStep = () => {
+        if (!isPlaying || !notes.length) return;
         currentNoteIndex = (currentNoteIndex + 1) % notes.length;
         playSound(notes[currentNoteIndex].drum);
         updatePlayingState(currentNoteIndex);
-      }
+        playInterval = setTimeout(playbackStep, (60 / bpm / 2) * 1000);
+      };
       
-      playNext();
-      playInterval = setInterval(playNext, intervalMs);
+      playbackStep();
     }
 
     function stopPlayback() {
@@ -1445,9 +1485,11 @@
       document.getElementById('playBtn').textContent = '▶';
       currentNoteIndex = -1;
       if (playInterval) {
-        clearInterval(playInterval);
+        clearTimeout(playInterval);
         playInterval = null;
       }
+      playbackStep = null;
+      fadeActiveVoices();
       updatePlayingState(-1);
     }
 
