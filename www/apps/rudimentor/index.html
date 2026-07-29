@@ -20,11 +20,18 @@
       --muted: var(--swi-muted);
       --accent: var(--swi-accent);
       --accent-blue: #3c98ff;
+      --accent-soft: rgba(230, 57, 70, 0.12);
+      --control-border: rgba(230, 57, 70, 0.42);
       --shadow: rgba(0, 0, 0, 0.65);
       font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    [data-theme="light"] {
+      --accent-soft: rgba(190, 24, 38, 0.09);
+      --control-border: rgba(190, 24, 38, 0.48);
+    }
 
     body {
       margin: 0;
@@ -60,6 +67,7 @@
     }
 
     .header a {
+      min-height: 44px;
       color: var(--muted);
       text-decoration: none;
       font-size: 0.85rem;
@@ -77,10 +85,10 @@
       height: 44px;
       display: inline-grid;
       place-items: center;
-      border: 0;
+      border: 1px solid var(--control-border);
       border-radius: 8px;
-      background: transparent;
-      color: var(--muted);
+      background: var(--accent-soft);
+      color: var(--accent);
       font-family: inherit;
       font-size: 1rem;
       font-weight: 800;
@@ -90,8 +98,8 @@
 
     .tool-action:hover,
     .tool-action:focus-visible {
-      color: var(--accent);
-      background: color-mix(in srgb, var(--text) 7%, transparent);
+      color: #fff;
+      background: var(--accent);
     }
 
     .tabs {
@@ -105,7 +113,8 @@
     }
 
     .tab-btn {
-      border: none;
+      min-height: 44px;
+      border: 1px solid transparent;
       background: transparent;
       color: var(--muted);
       font-size: 0.9rem;
@@ -120,7 +129,8 @@
     .tab-btn.active {
       background: var(--surface);
       color: var(--text);
-      box-shadow: inset 0 0 0 1px var(--border-strong);
+      border-color: var(--control-border);
+      box-shadow: inset 0 -2px 0 var(--accent);
     }
 
     .panel-wrapper {
@@ -165,8 +175,9 @@
 
     select {
       width: 100%;
+      min-height: 44px;
       border-radius: 14px;
-      border: 1px solid var(--border-strong);
+      border: 1px solid var(--control-border);
       background: var(--surface);
       color: var(--text);
       padding: 0.65rem 0.75rem;
@@ -322,16 +333,39 @@
     input[type="range"] {
       -webkit-appearance: none;
       width: 100%;
+      height: 44px;
+      margin: 0;
+      background: transparent;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
       height: 6px;
       border-radius: 999px;
-      background: var(--border);
-      outline: none;
+      background: var(--control-border);
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: 20px;
       height: 20px;
+      margin-top: -7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(230,57,70,0.25);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: var(--control-border);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: 0;
       border-radius: 50%;
       background: var(--accent);
       box-shadow: 0 0 0 4px rgba(230,57,70,0.25);
@@ -345,9 +379,10 @@
 
     .switch {
       flex: 1;
+      min-height: 44px;
       border-radius: 16px;
-      border: 1px solid var(--border-strong);
-      background: var(--surface);
+      border: 1px solid var(--control-border);
+      background: var(--accent-soft);
       color: var(--muted);
       padding: 0.65rem 0.75rem;
       font-size: 0.85rem;
@@ -359,6 +394,7 @@
     .switch.active {
       border-color: var(--accent);
       color: var(--text);
+      box-shadow: inset 0 -2px 0 var(--accent);
     }
 
     .grid-block {
@@ -381,9 +417,10 @@
     }
 
     .grid-btn {
+      min-height: 44px;
       border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      border: 1px solid var(--control-border);
+      background: var(--accent-soft);
       color: var(--text);
       padding: 0.6rem 0;
       font-weight: 600;
@@ -420,10 +457,11 @@
     }
 
     .chip {
+      min-height: 44px;
       padding: 0.4rem 0.8rem;
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      border: 1px solid var(--control-border);
+      background: var(--accent-soft);
       color: var(--muted);
       font-size: 0.75rem;
       letter-spacing: 0.08em;
@@ -434,6 +472,7 @@
     .chip.active {
       border-color: var(--accent);
       color: var(--text);
+      box-shadow: inset 0 -2px 0 var(--accent);
     }
 
     .score-grid {
@@ -489,14 +528,15 @@
     .ghost-btn {
       flex: 0 0 auto;
       min-width: 96px;
+      min-height: 44px;
       border-radius: 14px;
       padding: 0.5rem 0.9rem;
       font-size: 0.8rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      border: 1px solid var(--border);
-      background: transparent;
+      border: 1px solid var(--control-border);
+      background: var(--accent-soft);
       color: var(--text);
     }
 
@@ -522,9 +562,10 @@
     }
 
     .quiz-choice {
+      min-height: 44px;
       border-radius: 16px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      border: 1px solid var(--control-border);
+      background: var(--accent-soft);
       color: var(--text);
       padding: 0.75rem 0.9rem;
       font-size: 0.85rem;
@@ -532,6 +573,54 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    button:hover:not(:disabled),
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      border-color: var(--accent);
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .hand-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.9rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .hand-key-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hand-key-swatch {
+      width: 12px;
+      height: 12px;
+      flex: 0 0 12px;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      background: currentColor;
+    }
+
+    .hand-key-right { color: var(--accent); }
+    .hand-key-left { color: var(--accent-blue); }
+
+    .quiz-sheet .note-head.hand-right {
+      fill: var(--accent);
+      stroke: rgba(255, 255, 255, 0.36);
+      stroke-width: 1;
+    }
+
+    .quiz-sheet .note-head.hand-left {
+      fill: var(--accent-blue);
+      stroke: rgba(255, 255, 255, 0.36);
+      stroke-width: 1;
     }
 
     .quiz-choice.correct {
@@ -543,6 +632,7 @@
       border-color: #ff7373;
       background: rgba(255, 115, 115, 0.1);
     }
+
     .help-modal {
       position: fixed;
       inset: 0;
@@ -580,6 +670,35 @@
       cursor: pointer;
     }
 
+    @media (max-width: 430px) {
+      .app-shell { padding: 0.75rem; }
+      .header { padding: 0.5rem 0.25rem 0.25rem; }
+      .swi-tool-title { font-size: 0.88rem; }
+      .tool-actions { gap: 4px; }
+      .swi-theme-label { display: none; }
+      .tabs { margin: 0 0 0.75rem; border-radius: 14px; }
+      .panel-wrapper { padding: 0 0 1rem; }
+      .stack-card { padding: 0.85rem; border-radius: 16px; }
+      .selector-row { gap: 0.6rem; }
+      .selector { min-width: 130px; }
+      .sheet-card, .quiz-sheet { padding: 0.75rem; border-radius: 16px; }
+      .sheet-meta { align-items: flex-start; flex-direction: column; gap: 0.25rem; }
+      .sticking-track { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4rem; }
+      .sticking-cell { padding-inline: 0.2rem; }
+      .quiz-header { align-items: flex-start; flex-direction: column; }
+      .chip-row { width: 100%; }
+      .chip { flex: 1; padding-inline: 0.35rem; }
+      .score-tile { padding: 0.55rem 0.25rem; }
+      .score-tile strong { font-size: 1.5rem; }
+      .quiz-choices { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
   <link rel="stylesheet" href="/assets/nav.css?v=20260712a">
   <script src="/assets/nav.js?v=20260707b" defer></script>
@@ -679,6 +798,10 @@
             <div class="grid-label">Identify the rudiment</div>
             <button class="ghost-btn" id="skipBtn">Skip</button>
           </div>
+          <div class="hand-key" aria-label="Sticking color key">
+            <span class="hand-key-item hand-key-right"><i class="hand-key-swatch" aria-hidden="true"></i>Red note = right hand</span>
+            <span class="hand-key-item hand-key-left"><i class="hand-key-swatch" aria-hidden="true"></i>Blue note = left hand</span>
+          </div>
           <div class="sheet-canvas quiz-sheet-canvas" id="quizSheet"></div>
         </div>
         <div class="quiz-feedback" id="quizFeedback"></div>
@@ -709,14 +832,14 @@
       { id: 'single-stroke-roll', name: 'Single Stroke Roll', tier: 'easy', sticking: ['R','L','R','L','R','L','R','L'] },
       { id: 'single-stroke-four', name: 'Single Stroke Four', tier: 'easy', sticking: ['R','L','R','L'] },
       { id: 'single-stroke-seven', name: 'Single Stroke Seven', tier: 'easy', sticking: ['R','L','R','L','R','L','R'] },
-      { id: 'multiple-bounce-roll', name: 'Multiple Bounce Roll', tier: 'easy', sticking: ['R','R','R','L','L','L','R','R'] },
-      { id: 'triple-stroke-roll', name: 'Triple Stroke Roll', tier: 'easy', sticking: ['R','R','R','L','L','L','R','R'] },
+      { id: 'multiple-bounce-roll', name: 'Multiple Bounce Roll', tier: 'easy', sticking: ['bR','bL','bR','bL'] },
+      { id: 'triple-stroke-roll', name: 'Triple Stroke Roll', tier: 'easy', sticking: ['R','R','R','L','L','L','R','R','R','L','L','L'] },
       { id: 'double-stroke-open-roll', name: 'Double Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R','L','L'] },
       { id: 'five-stroke-roll', name: 'Five Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R'] },
-      { id: 'six-stroke-roll', name: 'Six Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R'] },
+      { id: 'six-stroke-roll', name: 'Six Stroke Roll', tier: 'easy', sticking: ['R','L','L','R','R','L'] },
       { id: 'seven-stroke-roll', name: 'Seven Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R','L'] },
       { id: 'nine-stroke-roll', name: 'Nine Stroke Roll', tier: 'easy', sticking: ['R','R','L','L','R','R','L','L','R'] },
-      { id: 'ten-stroke-roll', name: 'Ten Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R'] },
+      { id: 'ten-stroke-roll', name: 'Ten Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','L'] },
       { id: 'eleven-stroke-roll', name: 'Eleven Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L'] },
       { id: 'thirteen-stroke-roll', name: 'Thirteen Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L','L','R'] },
       { id: 'fifteen-stroke-roll', name: 'Fifteen Stroke Roll', tier: 'medium', sticking: ['R','R','L','L','R','R','L','L','R','R','L','L','R','R','L'] },
@@ -725,30 +848,41 @@
       { id: 'double-paradiddle', name: 'Double Paradiddle', tier: 'easy', sticking: ['R','L','R','L','R','R','L','R','L','R','L','L'] },
       { id: 'triple-paradiddle', name: 'Triple Paradiddle', tier: 'medium', sticking: ['R','L','R','L','R','L','R','R','L','R','L','R','L','R','L','L'] },
       { id: 'paradiddle-diddle', name: 'Paradiddle-Diddle', tier: 'medium', sticking: ['R','L','R','R','L','L','R','L','R','R','L','L'] },
-      { id: 'flam', name: 'Flam', tier: 'medium', sticking: ['fR','R','fL','L'] },
+      { id: 'flam', name: 'Flam', tier: 'medium', sticking: ['fR','fL'] },
       { id: 'flam-accent', name: 'Flam Accent', tier: 'medium', sticking: ['fR','L','R','fL','R','L'] },
-      { id: 'flam-tap', name: 'Flam Tap', tier: 'medium', sticking: ['fR','R','fL','L','fR','R','fL','L'] },
+      { id: 'flam-tap', name: 'Flam Tap', tier: 'medium', sticking: ['fR','R','fL','L'] },
       { id: 'flamacue', name: 'Flamacue', tier: 'medium', sticking: ['fR','L','R','L','fL','R','L','R'] },
       { id: 'flam-paradiddle', name: 'Flam Paradiddle', tier: 'medium', sticking: ['fR','L','R','R','fL','R','L','L'] },
       { id: 'single-flammed-mill', name: 'Single Flammed Mill', tier: 'hard', sticking: ['fR','R','L','R','fL','L','R','L'] },
       { id: 'flam-paradiddle-diddle', name: 'Flam Paradiddle-Diddle', tier: 'hard', sticking: ['fR','L','R','R','L','L','fL','R','L','L','R','R'] },
       { id: 'pataflafla', name: 'Pataflafla', tier: 'hard', sticking: ['fR','L','fL','R','fR','L','fL','R'] },
       { id: 'swiss-army-triplet', name: 'Swiss Army Triplet', tier: 'hard', sticking: ['fR','R','L','fL','L','R'] },
-      { id: 'inverted-flam-tap', name: 'Inverted Flam Tap', tier: 'hard', sticking: ['R','fL','L','R','fR','R','L'] },
-      { id: 'flam-drag', name: 'Flam Drag', tier: 'hard', sticking: ['fR','L','dR','R','fL','R','dL','L'] },
-      { id: 'drag', name: 'Drag (Ruff)', tier: 'hard', sticking: ['dR','R','dL','L'] },
-      { id: 'single-drag-tap', name: 'Single Drag Tap', tier: 'hard', sticking: ['dR','R','L','dL','L','R'] },
-      { id: 'double-drag-tap', name: 'Double Drag Tap', tier: 'hard', sticking: ['dR','R','L','dL','L','R','dR','R','L','dL','L','R'] },
-      { id: 'lesson-25', name: 'Lesson 25', tier: 'hard', sticking: ['dR','L','R','R','dL','R','L','L'] },
-      { id: 'single-dragadiddle', name: 'Single Dragadiddle', tier: 'hard', sticking: ['dR','R','L','R','R','dL','L','R','L','L'] },
-      { id: 'drag-paradiddle-1', name: 'Drag Paradiddle #1', tier: 'hard', sticking: ['dR','R','L','R','R','dL','L','R','L','L'] },
-      { id: 'drag-paradiddle-2', name: 'Drag Paradiddle #2', tier: 'hard', sticking: ['dR','R','L','R','L','dL','L','R','R'] },
-      { id: 'single-ratamacue', name: 'Single Ratamacue', tier: 'hard', sticking: ['dR','R','L','R','R','dL','L','R','L','L'] },
-      { id: 'double-ratamacue', name: 'Double Ratamacue', tier: 'hard', sticking: ['dR','R','L','R','R','L','R','R','dL','L','R','L','L','R','L','L'] },
-      { id: 'triple-ratamacue', name: 'Triple Ratamacue', tier: 'hard', sticking: ['dR','R','L','R','R','L','R','R','L','R','R','dL','L','R','L','L','R','L','L','R','L','L'] }
+      { id: 'inverted-flam-tap', name: 'Inverted Flam Tap', tier: 'hard', sticking: ['R','fR','L','fL'] },
+      { id: 'flam-drag', name: 'Flam Drag', tier: 'hard', sticking: ['fR','dR','R','fL','dL','L'] },
+      { id: 'drag', name: 'Drag (Ruff)', tier: 'hard', sticking: ['dR','dL'] },
+      { id: 'single-drag-tap', name: 'Single Drag Tap', tier: 'hard', sticking: ['dR','L','dL','R'] },
+      { id: 'double-drag-tap', name: 'Double Drag Tap', tier: 'hard', sticking: ['dR','dR','L','dL','dL','R'] },
+      { id: 'lesson-25', name: 'Lesson 25', tier: 'hard', sticking: ['dR','L','R','dL','R','L'] },
+      { id: 'single-dragadiddle', name: 'Single Dragadiddle', tier: 'hard', sticking: ['R','R','L','R','R','L','L'] },
+      { id: 'drag-paradiddle-1', name: 'Drag Paradiddle #1', tier: 'hard', sticking: ['R','dR','L','R','R','L','dL','R','L','L'] },
+      { id: 'drag-paradiddle-2', name: 'Drag Paradiddle #2', tier: 'hard', sticking: ['R','dR','dR','L','R','R','L','dL','dL','R','L','L'] },
+      { id: 'single-ratamacue', name: 'Single Ratamacue', tier: 'hard', sticking: ['dR','L','R','dL','R','L'] },
+      { id: 'double-ratamacue', name: 'Double Ratamacue', tier: 'hard', sticking: ['dR','dR','L','R','dL','dL','R','L'] },
+      { id: 'triple-ratamacue', name: 'Triple Ratamacue', tier: 'hard', sticking: ['dR','dR','dR','L','R','dL','dL','dL','R','L'] }
     ];
 
     const NOTATION_PRESETS = {};
+
+    // Keep source verification separate from UI behavior. Exact duplicates are
+    // surfaced at startup so a source-backed PAS/Vic Firth audit can resolve
+    // them without silently changing academic sticking.
+    const STICKING_REFERENCE_STATUS = {
+      sources: [
+        'https://ae.vicfirth.com/education/40-essential-rudiments/',
+        'https://pas.org/wp-content/uploads/2024/04/pas-rudiments.pdf'
+      ],
+      verified: false
+    };
 
     const state = {
       tier: 'easy',
@@ -1103,13 +1237,13 @@
       });
 
       if (symbol.startsWith('f')) {
-        drawGraceNote(noteGroup, x - 18, y + 1, 'flam');
+        drawGraceNote(noteGroup, x - 18, y + 1, 'flam', getHand(symbol));
       } else if (symbol.startsWith('d')) {
-        drawGraceNote(noteGroup, x - 24, y + 1, 'drag');
+        drawGraceNote(noteGroup, x - 24, y + 1, 'drag', getHand(symbol));
       }
 
       const head = createSvgElement('ellipse', {
-        class: 'note-head',
+        class: `note-head hand-${getHand(symbol)}`,
         cx: x,
         cy: y,
         rx: 7.8,
@@ -1126,6 +1260,17 @@
         'stroke-width': 1.8,
         'stroke-linecap': 'round'
       }));
+      if (symbol.startsWith('b')) {
+        noteGroup.appendChild(createSvgElement('line', {
+          x1: x + 1,
+          y1: y - 12,
+          x2: x + 13,
+          y2: y - 18,
+          stroke: '#d7d7de',
+          'stroke-width': 2.4,
+          'stroke-linecap': 'round'
+        }));
+      }
 
       if (showAnnotations) {
         const label = createSvgElement('text', {
@@ -1145,8 +1290,9 @@
       return noteGroup;
     }
 
-    function drawGraceNote(parent, x, y, type) {
+    function drawGraceNote(parent, x, y, type, primaryHand) {
       const count = type === 'drag' ? 2 : 1;
+      const graceColor = primaryHand === 'right' ? '#3c98ff' : '#e63946';
       for (let i = 0; i < count; i += 1) {
         const gx = x + i * 8;
         parent.appendChild(createSvgElement('ellipse', {
@@ -1155,7 +1301,7 @@
           rx: 4.4,
           ry: 3,
           transform: `rotate(-18 ${gx} ${y})`,
-          fill: '#8c8d98'
+          fill: graceColor
         }));
         parent.appendChild(createSvgElement('line', {
           x1: gx + 4,
@@ -1199,17 +1345,24 @@
         const hand = symbol.toUpperCase().includes('R') ? 'hand-right' : 'hand-left';
         cell.className = `sticking-cell ${hand}`;
         cell.textContent = formatSymbol(symbol);
+        cell.setAttribute('aria-label', describeSymbol(symbol));
         if (symbol.startsWith('f')) {
           const flam = document.createElement('span');
           flam.className = 'ghost';
-          flam.textContent = 'flam';
+          flam.textContent = `${getOppositeHandLetter(symbol).toLowerCase()} grace`;
           cell.appendChild(flam);
         }
         if (symbol.startsWith('d')) {
           const drag = document.createElement('span');
           drag.className = 'ghost';
-          drag.textContent = 'drag';
+          drag.textContent = `${getOppositeHandLetter(symbol).toLowerCase().repeat(2)} drag`;
           cell.appendChild(drag);
+        }
+        if (symbol.startsWith('b')) {
+          const buzz = document.createElement('span');
+          buzz.className = 'ghost';
+          buzz.textContent = 'buzz';
+          cell.appendChild(buzz);
         }
         els.stickingTrack.appendChild(cell);
         return cell;
@@ -1217,7 +1370,24 @@
     }
 
     function formatSymbol(symbol) {
-      return symbol.toUpperCase().includes('R') ? 'R' : 'L';
+      return getHand(symbol) === 'right' ? 'R' : 'L';
+    }
+
+    function getHand(symbol) {
+      return String(symbol).toUpperCase().includes('R') ? 'right' : 'left';
+    }
+
+    function getOppositeHandLetter(symbol) {
+      return getHand(symbol) === 'right' ? 'L' : 'R';
+    }
+
+    function describeSymbol(symbol) {
+      const primary = getHand(symbol);
+      const grace = primary === 'right' ? 'left' : 'right';
+      if (symbol.startsWith('f')) return `${grace} grace note into ${primary} flam primary`;
+      if (symbol.startsWith('d')) return `two ${grace} drag notes into ${primary} primary`;
+      if (symbol.startsWith('b')) return `${primary} multiple-bounce stroke`;
+      return `${primary} stroke`;
     }
 
     function togglePlayback() {
@@ -1262,7 +1432,8 @@
         note.classList.add('active');
         if (accent) note.classList.add('accented');
       }
-      if (state.metronome) tick(accent);
+      playStroke(rudiment.sticking[idx], accent);
+      if (state.metronome && countLabel === '1') playMetronome(accent);
       const duration = stepDuration(countIndex);
       state.subdivisionIndex = (countIndex + 1) % COUNT_LABELS.length;
       state.stepTimer = setTimeout(() => {
@@ -1281,19 +1452,56 @@
       return longBeat ? sixteenth * (1 + swingRatio) : sixteenth * (1 - swingRatio);
     }
 
-    function tick(accent = false) {
+    function getAudioContext() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
+      if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+      return audioCtx;
+    }
+
+    function connectWithPan(source, destination, panValue) {
+      const context = getAudioContext();
+      if (typeof context.createStereoPanner !== 'function') {
+        source.connect(destination);
+        return;
+      }
+      const panner = context.createStereoPanner();
+      panner.pan.value = panValue;
+      source.connect(panner).connect(destination);
+    }
+
+    function playStroke(symbol, accent = false) {
+      const context = getAudioContext();
+      const hand = getHand(symbol);
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      const now = context.currentTime;
+
+      // Different pitch and timbre remain distinguishable on mono phone speakers;
+      // stereo-capable browsers additionally place each hand toward its side.
+      osc.type = hand === 'right' ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(hand === 'right' ? 920 : 610, now);
+      gain.gain.setValueAtTime(accent ? 0.22 : 0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+      connectWithPan(osc, gain, hand === 'right' ? 0.72 : -0.72);
+      gain.connect(context.destination);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    }
+
+    function playMetronome(accent = false) {
+      const context = getAudioContext();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'square';
-      osc.frequency.value = accent ? 1400 : 900;
-      gain.gain.value = accent ? 0.25 : 0.12;
-      osc.connect(gain).connect(audioCtx.destination);
-      const now = audioCtx.currentTime;
+      osc.frequency.value = accent ? 1500 : 1250;
+      const now = context.currentTime;
+      gain.gain.setValueAtTime(accent ? 0.11 : 0.07, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+      osc.connect(gain).connect(context.destination);
       osc.start(now);
-      osc.stop(now + 0.08);
+      osc.stop(now + 0.04);
     }
 
     function renderGridAccentButtons() {
@@ -1343,7 +1551,7 @@
         clearTimeout(state.quizAdvanceTimer);
         state.quizAdvanceTimer = null;
       }
-      const pool = getRudimentsByTier(state.quizTier);
+      const pool = getQuizEligiblePool(getRudimentsByTier(state.quizTier));
       if (!pool.length) return;
       state.quizPrompt = pool[Math.floor(Math.random() * pool.length)];
       state.quizChoices = buildQuizChoices(pool, state.quizPrompt);
@@ -1356,7 +1564,10 @@
     }
 
     function buildQuizChoices(pool, answer) {
-      const incorrect = pool.filter(r => r.id !== answer.id);
+      const answerFingerprint = getQuizFingerprint(answer);
+      const incorrect = pool.filter(r => (
+        r.id !== answer.id && getQuizFingerprint(r) !== answerFingerprint
+      ));
       const picks = [];
       while (picks.length < 3 && incorrect.length) {
         const idx = Math.floor(Math.random() * incorrect.length);
@@ -1364,6 +1575,20 @@
       }
       const options = [...picks, answer];
       return options.sort(() => Math.random() - 0.5);
+    }
+
+    function getQuizFingerprint(rudiment) {
+      const notation = getNotationMeta(rudiment.id);
+      return `${notation.duration || '16'}:${rudiment.sticking.join('|')}`;
+    }
+
+    function getQuizEligiblePool(pool) {
+      const fingerprintCounts = pool.reduce((counts, rudiment) => {
+        const fingerprint = getQuizFingerprint(rudiment);
+        counts.set(fingerprint, (counts.get(fingerprint) || 0) + 1);
+        return counts;
+      }, new Map());
+      return pool.filter(rudiment => fingerprintCounts.get(getQuizFingerprint(rudiment)) === 1);
     }
 
     function renderQuizQuestion() {
@@ -1424,8 +1649,36 @@
       return RUDIMENT_LIBRARY.find(r => r.id === state.rudimentId);
     }
 
+    function auditRudimentLibrary() {
+      const seenIds = new Set();
+      const fingerprintOwners = new Map();
+      const issues = [];
+
+      RUDIMENT_LIBRARY.forEach(rudiment => {
+        if (seenIds.has(rudiment.id)) issues.push(`Duplicate id: ${rudiment.id}`);
+        seenIds.add(rudiment.id);
+        if (!rudiment.sticking.length || rudiment.sticking.some(symbol => !/^[fdb]?[RL]$/i.test(symbol))) {
+          issues.push(`Unsupported sticking token: ${rudiment.id}`);
+        }
+        const fingerprint = getQuizFingerprint(rudiment);
+        if (fingerprintOwners.has(fingerprint)) {
+          issues.push(`Quiz-identical patterns: ${fingerprintOwners.get(fingerprint)} / ${rudiment.id}`);
+        } else {
+          fingerprintOwners.set(fingerprint, rudiment.id);
+        }
+      });
+
+      if (!STICKING_REFERENCE_STATUS.verified || issues.length) {
+        console.info('Rudimentor sticking audit pending source verification.', {
+          sources: STICKING_REFERENCE_STATUS.sources,
+          issues
+        });
+      }
+    }
+
     window.addEventListener('beforeunload', () => stopPulse());
 
+    auditRudimentLibrary();
     init();
   </script>
 </body>
