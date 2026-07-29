@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Gigasector ✂️</title>
   <script src="/apps/gigasector/assets/swi-demo-preload.js?v=20260711a"></script>
-  <script type="module" crossorigin src="/apps/gigasector/assets/index-BAP3KXkZ.js?v=20260711b"></script>
+  <script type="module" crossorigin src="/apps/gigasector/assets/index-BAP3KXkZ.js?v=20260729b"></script>
   <link rel="stylesheet" crossorigin href="/apps/gigasector/assets/index-BdEcQAfC.css">
   <style>
     :root {
@@ -105,6 +105,86 @@
     html[data-theme="light"] #app .text-gray-400,
     html[data-theme="light"] #app .text-gray-500 {
       color: var(--swi-muted) !important;
+    }
+    #app button:not(:disabled) {
+      border: 1px solid color-mix(in srgb, var(--swi-accent) 72%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--swi-accent) 12%, transparent);
+    }
+    #app button:not(:disabled):not(.bg-accent):not(.bg-red-600) {
+      background-color: color-mix(in srgb, var(--swi-accent) 22%, var(--swi-panel)) !important;
+      color: var(--swi-fg);
+    }
+    #app button:not(:disabled):hover,
+    #app button:not(:disabled):focus-visible {
+      border-color: var(--swi-accent);
+      background-color: color-mix(in srgb, var(--swi-accent) 34%, var(--swi-panel)) !important;
+    }
+    #app button.bg-accent:not(:disabled),
+    #app button.bg-red-600:not(:disabled) {
+      border-color: color-mix(in srgb, #fff 28%, var(--swi-accent));
+      box-shadow: 0 2px 10px color-mix(in srgb, var(--swi-accent) 28%, transparent);
+    }
+    #app .delete-btn:not(:disabled) {
+      color: #ff6670 !important;
+      background-color: color-mix(in srgb, var(--swi-accent) 14%, var(--swi-panel)) !important;
+    }
+    #app #confirm-delete:not(:disabled) {
+      background-color: #b91c1c !important;
+      border-color: #fca5a5;
+    }
+    #app button:focus-visible,
+    .swi-tool-action:focus-visible {
+      outline: 2px solid var(--swi-accent);
+      outline-offset: 2px;
+    }
+    #app button:disabled {
+      opacity: 0.34;
+      cursor: not-allowed;
+    }
+    #app .move-song-btn {
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--swi-accent);
+      font-weight: 900;
+      line-height: 1;
+    }
+    #app .song-select-area {
+      min-height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #app .marker-set-btn,
+    #app .loop-toggle-btn,
+    #app #bpm-down,
+    #app #bpm-up,
+    #app #detect-bpm-btn,
+    #app #reset-markers-btn {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    @media (max-width: 430px) {
+      #app .song-item > .flex {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      #app .setlist-item-actions {
+        gap: 2px;
+        margin-left: 0.35rem;
+      }
+      #app .delete-btn,
+      #app .move-song-btn {
+        width: 44px;
+        min-width: 44px;
+      }
+      #app .song-select-area > .mt-1 {
+        flex-wrap: wrap;
+        column-gap: 0.4rem;
+        row-gap: 0.15rem;
+      }
     }
     .swi-tool-actions {
       display: flex;
