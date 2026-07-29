@@ -1705,6 +1705,7 @@
       const slots = Array.from(container.querySelectorAll('.note-slot'));
       const containerRect = container.getBoundingClientRect();
       let referenceBeamY = null;
+      const minimumStemLength = Math.max(16, lineSpacing * 1.25);
 
       // Four-note runs are sixteenth-note groups (double beam); pairs use one beam.
       for (let groupStart = 0; groupStart < notes.length;) {
@@ -1722,7 +1723,12 @@
           return rect.top - containerRect.top + (rect.height / 2);
         });
         if (referenceBeamY === null) {
-          referenceBeamY = Math.max(7, Math.min(...noteYs) - 20);
+          // Reserve a clear stem lane above the staff so low opening notes
+          // cannot drag every group's shared beam down into the notation.
+          referenceBeamY = Math.max(
+            7,
+            Math.min(staffTop - minimumStemLength, Math.min(...noteYs) - 20)
+          );
         }
         const beamY = referenceBeamY;
         const stemXs = noteheads.map(notehead => {
