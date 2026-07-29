@@ -106,6 +106,40 @@
     html[data-theme="light"] #app .text-gray-500 {
       color: var(--swi-muted) !important;
     }
+    html[data-theme="light"] #app input[type="range"]::-webkit-slider-runnable-track {
+      border: 1px solid #858791;
+      background: #b8bac1;
+    }
+    html[data-theme="light"] #app input[type="range"]::-webkit-slider-thumb {
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px rgba(190, 24, 38, 0.28);
+    }
+    html[data-theme="light"] #app input[type="range"]::-moz-range-track {
+      border: 1px solid #858791;
+      background: #b8bac1;
+    }
+    html[data-theme="light"] #app input[type="range"]::-moz-range-progress {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--swi-accent);
+    }
+    html[data-theme="light"] #app input[type="range"]::-moz-range-thumb {
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px rgba(190, 24, 38, 0.28);
+    }
+    html[data-theme="light"] #app input[type="checkbox"] + div {
+      border: 1px solid #7d7f89;
+      background: #b8bac1 !important;
+    }
+    html[data-theme="light"] #app input[type="checkbox"]:checked + div {
+      border-color: #a91725;
+      background: var(--swi-accent) !important;
+    }
+    #app input[type="range"]:focus-visible,
+    #app input[type="checkbox"]:focus-visible + div {
+      outline: 2px solid var(--swi-accent);
+      outline-offset: 3px;
+    }
     #app button:not(:disabled) {
       border: 1px solid color-mix(in srgb, var(--swi-accent) 72%, transparent);
       box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--swi-accent) 12%, transparent);
@@ -140,6 +174,22 @@
     #app button:disabled {
       opacity: 0.34;
       cursor: not-allowed;
+    }
+    html[data-theme="light"] #app button:disabled {
+      border: 1px solid #b9bac1;
+      background: #ededf0 !important;
+      color: #686a75 !important;
+      opacity: 0.72;
+    }
+    html[data-theme="light"] #app button.bg-accent:not(:disabled),
+    html[data-theme="light"] #app button.bg-red-600:not(:disabled) {
+      border-color: #8f1420;
+      background: #b91c2a !important;
+      color: #fff !important;
+    }
+    html[data-theme="light"] .swi-theme-switch i {
+      border-color: #8b8c95;
+      background: #ececef;
     }
     #app .move-song-btn {
       width: 44px;

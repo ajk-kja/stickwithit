@@ -793,6 +793,113 @@
         .modal-btn.cancel { background: var(--surface-2); color: var(--text); }
         .modal-btn.confirm { background: var(--accent); color: var(--bg); }
 
+        /* Light-mode control contrast */
+        html[data-theme="light"] .mobile-splash button,
+        html[data-theme="light"] .help-card button,
+        html[data-theme="light"] .play-btn,
+        html[data-theme="light"] .modal-btn.confirm {
+            background: #b91c2a;
+            color: #fff;
+        }
+
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        html[data-theme="light"] input[type="range"]::-webkit-slider-runnable-track {
+            border: 1px solid #858791;
+            background: #b8bac1;
+        }
+
+        html[data-theme="light"] input[type="range"]::-webkit-slider-thumb {
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px rgba(190, 24, 38, 0.28);
+        }
+
+        html[data-theme="light"] input[type="range"]::-moz-range-track {
+            border: 1px solid #858791;
+            background: #b8bac1;
+        }
+
+        html[data-theme="light"] input[type="range"]::-moz-range-progress {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--accent);
+        }
+
+        html[data-theme="light"] input[type="range"]::-moz-range-thumb {
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px rgba(190, 24, 38, 0.28);
+        }
+
+        html[data-theme="light"] .settings-btn,
+        html[data-theme="light"] .flash-btn,
+        html[data-theme="light"] .save-btn,
+        html[data-theme="light"] .time-btn,
+        html[data-theme="light"] .subdiv-opt,
+        html[data-theme="light"] .edit-btn,
+        html[data-theme="light"] .pl-action.move,
+        html[data-theme="light"] .pl-action.rename,
+        html[data-theme="light"] .add-item,
+        html[data-theme="light"] .modal-btn.cancel,
+        html[data-theme="light"] .popup-close {
+            border-color: #8b8c95;
+            background: #ececef;
+            color: var(--text);
+        }
+
+        html[data-theme="light"] .tabs {
+            border: 1px solid #b9bac1;
+        }
+
+        html[data-theme="light"] .tab.active {
+            border: 1px solid #8b8c95;
+            background: #e1e1e5;
+        }
+
+        html[data-theme="light"] .settings-btn:hover,
+        html[data-theme="light"] .settings-btn:focus-visible,
+        html[data-theme="light"] .flash-btn:hover,
+        html[data-theme="light"] .flash-btn:focus-visible,
+        html[data-theme="light"] .save-btn:hover,
+        html[data-theme="light"] .save-btn:focus-visible,
+        html[data-theme="light"] .time-btn:hover,
+        html[data-theme="light"] .time-btn:focus-visible,
+        html[data-theme="light"] .subdiv-opt:hover,
+        html[data-theme="light"] .subdiv-opt:focus-visible,
+        html[data-theme="light"] .edit-btn:hover,
+        html[data-theme="light"] .edit-btn:focus-visible {
+            border-color: var(--accent);
+            background: #e1e1e5;
+        }
+
+        html[data-theme="light"] .flash-btn.active,
+        html[data-theme="light"] .subdiv-opt.active {
+            border-color: var(--accent);
+            background: rgba(190, 24, 38, 0.12);
+            color: #a91725;
+        }
+
+        html[data-theme="light"] .edit-btn.active {
+            border-color: #b91c2a;
+            background: #b91c2a;
+            color: #fff;
+        }
+
+        html[data-theme="light"] button:disabled {
+            border-color: #b9bac1;
+            background: #ededf0;
+            color: #686a75;
+            opacity: 0.72;
+        }
+
+        html[data-theme="light"] .swi-theme-switch i {
+            border-color: #8b8c95;
+            background: #ececef;
+        }
+
         /* Toast */
         .toast {
             position: fixed;

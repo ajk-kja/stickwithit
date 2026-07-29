@@ -20,6 +20,12 @@
       --note-fill: var(--swi-fg);
     }
 
+    html[data-theme="light"] {
+      --chop-control-bg: #ececef;
+      --chop-control-border: #8b8c95;
+      --chop-control-hover: #e1e1e5;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -445,6 +451,12 @@
       transform: none;
     }
 
+    .btn:focus-visible,
+    .sticking-slot:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     .btn-icon {
       font-size: 13px;
     }
@@ -458,6 +470,38 @@
 
     .btn-accent:active {
       background: #c5303d;
+    }
+
+    html[data-theme="light"] .btn:not(.btn-accent) {
+      border-color: var(--chop-control-border);
+      background: var(--chop-control-bg);
+      color: var(--text);
+    }
+
+    html[data-theme="light"] .btn-accent,
+    html[data-theme="light"] .mobile-audio-splash button {
+      border-color: #b91c2a;
+      background: #b91c2a;
+      color: #fff;
+    }
+
+    html[data-theme="light"] .btn:not(.btn-accent):hover,
+    html[data-theme="light"] .btn:not(.btn-accent):focus-visible,
+    html[data-theme="light"] .btn:not(.btn-accent):active {
+      background: var(--chop-control-hover);
+      border-color: var(--accent);
+    }
+
+    html[data-theme="light"] .btn:disabled {
+      border-color: #b9bac1;
+      background: #ededf0;
+      color: #686a75;
+      opacity: 0.72;
+    }
+
+    html[data-theme="light"] .swi-theme-switch i {
+      border-color: var(--chop-control-border);
+      background: var(--chop-control-bg);
     }
 
     .btn-group {

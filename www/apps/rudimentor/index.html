@@ -405,6 +405,32 @@
       cursor: pointer;
     }
 
+    [data-theme="light"] input[type="range"]::-webkit-slider-runnable-track {
+      border: 1px solid #858791;
+      background: #b8bac1;
+    }
+
+    [data-theme="light"] input[type="range"]::-webkit-slider-thumb {
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 3px rgba(190, 24, 38, 0.24);
+    }
+
+    [data-theme="light"] input[type="range"]::-moz-range-track {
+      border: 1px solid #858791;
+      background: #b8bac1;
+    }
+
+    [data-theme="light"] input[type="range"]::-moz-range-progress {
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    [data-theme="light"] input[type="range"]::-moz-range-thumb {
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 3px rgba(190, 24, 38, 0.24);
+    }
+
     .switch-row {
       display: flex;
       gap: 0.75rem;
@@ -427,6 +453,25 @@
     .switch.active {
       border-color: var(--accent);
       color: var(--text);
+      box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    [data-theme="light"] .switch,
+    [data-theme="light"] .grid-btn,
+    [data-theme="light"] .chip,
+    [data-theme="light"] .ghost-btn,
+    [data-theme="light"] .quiz-choice {
+      border-color: #8b8c95;
+      background: #ececef;
+      color: var(--text);
+    }
+
+    [data-theme="light"] .switch.active,
+    [data-theme="light"] .grid-btn.active,
+    [data-theme="light"] .chip.active {
+      border-color: var(--accent);
+      background: rgba(190, 24, 38, 0.13);
+      color: #8f1420;
       box-shadow: inset 0 -2px 0 var(--accent);
     }
 
@@ -469,6 +514,15 @@
     .grid-btn.disabled {
       opacity: 0.35;
       cursor: not-allowed;
+    }
+
+    [data-theme="light"] .grid-btn.disabled,
+    [data-theme="light"] button:disabled,
+    [data-theme="light"] button[aria-disabled="true"] {
+      border-color: #b9bac1;
+      background: #ededf0;
+      color: #686a75;
+      opacity: 0.72;
     }
 
     .quiz-card {
@@ -617,6 +671,18 @@
       outline-offset: 2px;
     }
 
+    [data-theme="light"] .swi-theme-switch i {
+      border-color: #8b8c95;
+      background: #ececef;
+    }
+
+    [data-theme="light"] .play-btn,
+    [data-theme="light"] .help-card button {
+      border-color: #b91c2a;
+      background: #b91c2a;
+      color: #fff;
+    }
+
     .hand-key {
       display: flex;
       flex-wrap: wrap;
@@ -664,6 +730,24 @@
     .quiz-choice.incorrect {
       border-color: #ff7373;
       background: rgba(255, 115, 115, 0.1);
+    }
+
+    [data-theme="light"] .quiz-feedback.active.success {
+      color: #237a3b;
+    }
+
+    [data-theme="light"] .quiz-feedback.active.error {
+      color: #a91725;
+    }
+
+    [data-theme="light"] .quiz-choice.correct {
+      border-color: #2f855a;
+      background: rgba(47, 133, 90, 0.14);
+    }
+
+    [data-theme="light"] .quiz-choice.incorrect {
+      border-color: #b91c2a;
+      background: rgba(185, 28, 42, 0.11);
     }
 
     .help-modal {
@@ -1044,11 +1128,13 @@
         state.tier = e.target.value;
         renderRudimentOptions();
         updateMentorView();
+        restartPlaybackIfNeeded();
       });
 
       els.rudimentSelect.addEventListener('change', (e) => {
         state.rudimentId = e.target.value;
         updateMentorView();
+        restartPlaybackIfNeeded();
       });
 
       els.playBtn.addEventListener('click', togglePlayback);
@@ -1056,11 +1142,13 @@
       els.tempoSlider.addEventListener('input', (e) => {
         state.tempo = Number(e.target.value);
         els.tempoValue.textContent = `${state.tempo} BPM`;
+        restartPlaybackIfNeeded();
       });
 
       els.swingSlider.addEventListener('input', (e) => {
         state.swing = Number(e.target.value);
         els.swingValue.textContent = `${state.swing}%`;
+        restartPlaybackIfNeeded();
       });
 
       els.switches.forEach(btn => {
@@ -1069,10 +1157,12 @@
           if (key === 'metronome') {
             state.metronome = !state.metronome;
             btn.classList.toggle('active', state.metronome);
+            restartPlaybackIfNeeded();
           } else if (key === 'grid') {
             state.gridMode = !state.gridMode;
             btn.classList.toggle('active', state.gridMode);
             updateGridAccentState();
+            restartPlaybackIfNeeded();
           }
         });
       });
@@ -1087,6 +1177,7 @@
           state.gridAccents.add(label);
         }
         renderGridAccentButtons();
+        restartPlaybackIfNeeded();
       });
 
       els.skipBtn.addEventListener('click', () => {
@@ -1440,6 +1531,10 @@
       } else {
         stopPulse();
       }
+    }
+
+    function restartPlaybackIfNeeded() {
+      if (state.playing) startPulse();
     }
 
     function startPulse() {
