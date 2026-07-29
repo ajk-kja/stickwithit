@@ -106,6 +106,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
       border-bottom: 2px solid var(--accent);
       flex-shrink: 0;
       background: var(--surface);
@@ -139,6 +140,18 @@
       display: flex;
       align-items: center;
       gap: 4px;
+    }
+
+    .header-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 36px;
+      object-fit: contain;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 8px rgba(230, 57, 70, 0.2));
+      pointer-events: none;
     }
 
     .tool-action {
@@ -194,7 +207,7 @@
     /* 5-line staff */
     .staff {
       position: relative;
-      height: 136px;
+      height: 170px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 4px solid var(--accent);
@@ -207,7 +220,7 @@
       left: 10px;
       right: 10px;
       top: 62px;
-      bottom: 18px;
+      bottom: 52px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -369,11 +382,14 @@
 
     /* Sticking row */
     .sticking-row {
+      position: absolute;
+      z-index: 3;
+      right: 8px;
+      bottom: 3px;
+      left: 8px;
       display: grid;
       grid-template-columns: repeat(var(--note-columns, 8), minmax(18px, 1fr));
       column-gap: clamp(1px, 0.8vw, 8px);
-      margin-top: 6px;
-      padding: 0 8px;
     }
 
     .sticking-slot {
@@ -394,19 +410,6 @@
 
     .sticking-slot.kick {
       opacity: 0.3;
-    }
-
-    /* Note count display */
-    .note-count {
-      text-align: center;
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .note-count span {
-      color: var(--text);
-      font-weight: 600;
     }
 
     /* Controls */
@@ -570,6 +573,112 @@
       opacity: 1;
     }
 
+    /* Chop sharing */
+    .share-sheet[hidden] {
+      display: none;
+    }
+
+    .share-sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.76);
+    }
+
+    .share-sheet__card {
+      width: min(460px, 100%);
+      max-height: min(620px, calc(100dvh - 32px));
+      overflow: auto;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .share-sheet__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .share-sheet__header h2 {
+      font-size: 1.15rem;
+    }
+
+    .share-sheet__close {
+      flex: 0 0 44px;
+    }
+
+    .share-sheet__label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .share-sheet__url {
+      width: 100%;
+      min-height: 68px;
+      resize: none;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .share-sheet__url:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .share-sheet__copy-link {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .share-sheet__divider {
+      height: 1px;
+      margin: 16px 0;
+      background: var(--border);
+    }
+
+    .share-sheet__actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .share-sheet__save {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .share-sheet__format {
+      min-height: 44px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      user-select: auto;
+    }
+
     /* Footer */
     footer {
       padding: 6px 16px;
@@ -657,7 +766,7 @@
       }
 
       .staff {
-        height: 154px;
+        height: 188px;
       }
 
       .note-head {
@@ -667,7 +776,7 @@
 
       .staff-lines {
         top: 66px;
-        bottom: 20px;
+        bottom: 54px;
       }
 
       .controls {
@@ -728,7 +837,7 @@
       }
 
       .staff {
-        height: 114px;
+        height: 148px;
       }
 
       .note-head {
@@ -738,11 +847,13 @@
 
       .staff-lines {
         top: 56px;
-        bottom: 14px;
+        bottom: 48px;
       }
 
       .sticking-slot {
         font-size: 9px;
+        min-height: 28px;
+        padding-top: 6px;
       }
 
       .btn-play {
@@ -759,6 +870,10 @@
     @media (max-width: 430px) {
       main {
         padding-inline: 8px;
+      }
+
+      .header h1 {
+        display: none;
       }
 
       .header {
@@ -784,6 +899,15 @@
       .control-row:first-child .btn {
         flex: 1;
       }
+
+      .share-sheet {
+        align-items: end;
+        padding: 8px;
+      }
+
+      .share-sheet__card {
+        max-height: calc(100dvh - 16px);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -806,7 +930,7 @@
         <li>Tap a <strong>note</strong> to move it around the kit; tap <strong>R/L</strong> to change the hand.</li>
         <li><strong>Pattern</strong> changes sticking. <strong>Drums</strong> changes orchestration.</li>
         <li>Use the counters for phrase length and tempo, then press <strong>Play</strong>.</li>
-        <li><strong>Share</strong> sends this exact chop and tempo, or copies its link.</li>
+        <li><strong>Share</strong> copies the encoded chop link or exports the staff as a transparent PNG or white JPG.</li>
       </ul>
       <button class="btn btn-accent chop-splash__cta" id="chopSplashDismiss">Got it</button>
     </div>
@@ -828,6 +952,7 @@
       <a class="swi-tool-back" href="/apps/">← Apps</a>
       <h1 class="swi-tool-title">Chopmeister</h1>
     </div>
+    <img class="header-logo" src="/assets/StickWithItBlack.png" alt="Stick With It">
     <div class="header-right">
       <button class="tool-action" id="helpBtn" type="button" title="How to use Chopmeister" aria-label="How to use Chopmeister">?</button>
       <button class="tool-action" id="shareBtn" type="button" title="Share this chop" aria-label="Share this chop">↗</button>
@@ -850,9 +975,8 @@
           <div class="staff-line"></div>
         </div>
         <div class="notes-container" id="notesContainer"></div>
+        <div class="sticking-row" id="stickingRow"></div>
       </div>
-      <div class="sticking-row" id="stickingRow"></div>
-      <div class="note-count"><span id="noteCountDisplay">8</span> notes</div>
     </div>
 
     <div class="controls">
@@ -884,7 +1008,31 @@
     </div>
   </main>
 
-  <div class="toast" id="toast">Link copied!</div>
+  <div class="toast" id="toast" role="status" aria-live="polite">Link copied!</div>
+
+  <div class="share-sheet" id="shareSheet" hidden>
+    <section class="share-sheet__card" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <div class="share-sheet__header">
+        <h2 id="shareTitle">Share this chop</h2>
+        <button class="tool-action share-sheet__close" id="shareClose" type="button" aria-label="Close share dialog">×</button>
+      </div>
+      <label class="share-sheet__label" for="shareUrl">Encoded chop URL</label>
+      <textarea class="share-sheet__url" id="shareUrl" readonly spellcheck="false"></textarea>
+      <button class="btn btn-accent share-sheet__copy-link" id="copyLinkBtn" type="button">Copy Link</button>
+      <div class="share-sheet__divider"></div>
+      <div class="share-sheet__actions">
+        <button class="btn" id="copyJpgBtn" type="button">Copy JPG · White</button>
+        <button class="btn" id="copyPngBtn" type="button">Copy PNG · Transparent</button>
+      </div>
+      <div class="share-sheet__save">
+        <select class="share-sheet__format" id="saveFormat" aria-label="Image format">
+          <option value="png">PNG · Transparent</option>
+          <option value="jpg">JPG · White</option>
+        </select>
+        <button class="btn" id="saveImageBtn" type="button">Save As…</button>
+      </div>
+    </section>
+  </div>
 
   <footer>
     <a href="https://www.stickwithit.xyz">stickwithit.xyz</a>
@@ -964,6 +1112,8 @@
     function updateURL() {
       const state = encodeState();
       history.replaceState(null, '', '#' + state);
+      const shareUrl = document.getElementById('shareUrl');
+      if (shareUrl) shareUrl.value = window.location.href;
     }
 
     function loadFromURL() {
@@ -971,19 +1121,279 @@
       return hash && decodeState(hash);
     }
 
-    async function copyLink() {
+    function selectShareUrl() {
+      const field = document.getElementById('shareUrl');
+      field.focus();
+      field.select();
+      field.setSelectionRange(0, field.value.length);
+    }
+
+    async function copyShareLink() {
       updateURL();
-      const data = { title: document.title, url: window.location.href };
       try {
-        if (navigator.share) {
-          await navigator.share(data);
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(window.location.href);
         } else {
-          await navigator.clipboard.writeText(data.url);
-          showToast('Link copied!');
+          selectShareUrl();
+          if (!document.execCommand('copy')) throw new Error('Copy command unavailable');
+        }
+        showToast('Link copied!');
+      } catch (error) {
+        selectShareUrl();
+        showToast('Select the URL and copy it');
+      }
+    }
+
+    function exportFilename(extension) {
+      return `chopmeister-${bpm}bpm-${noteCount}notes.${extension}`;
+    }
+
+    function canvasToBlob(canvas, mimeType) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob);
+          else reject(new Error('Image export failed'));
+        }, mimeType, 0.94);
+      });
+    }
+
+    function resolveCssColor(variable, fallback) {
+      const probe = document.createElement('span');
+      probe.style.color = `var(${variable})`;
+      probe.style.display = 'none';
+      document.body.appendChild(probe);
+      const color = getComputedStyle(probe).color || fallback;
+      probe.remove();
+      return color;
+    }
+
+    function drawExportFrame(format) {
+      const staff = document.getElementById('staff');
+      const staffRect = staff.getBoundingClientRect();
+      const width = Math.max(1, Math.round(staffRect.width));
+      const height = Math.max(1, Math.round(staffRect.height));
+      const pixelRatio = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(pixelRatio, pixelRatio);
+      ctx.lineCap = 'square';
+
+      const foreground = resolveCssColor('--swi-fg', '#111111');
+      const muted = resolveCssColor('--swi-muted', '#777777');
+      const accentColor = resolveCssColor('--swi-accent', '#e63946');
+      const borderColor = getComputedStyle(staff).borderTopColor || '#777777';
+
+      if (format === 'jpg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      // Keep the complete bordered frame while leaving PNG's interior clear.
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(0.5, 0.5, width - 1, height - 1);
+      ctx.fillStyle = accentColor;
+      ctx.fillRect(0, 0, parseFloat(getComputedStyle(staff).borderLeftWidth) || 4, height);
+
+      document.querySelectorAll('#staffLines .staff-line').forEach(line => {
+        const rect = line.getBoundingClientRect();
+        ctx.fillStyle = format === 'jpg' ? '#555555' : getComputedStyle(line).backgroundColor;
+        ctx.fillRect(
+          rect.left - staffRect.left,
+          rect.top - staffRect.top,
+          rect.width,
+          Math.max(1, rect.height)
+        );
+      });
+
+      // Reuse the live beam geometry so the export matches every responsive size.
+      const beamLayer = document.querySelector('#notesContainer .beam-layer');
+      if (beamLayer) {
+        const beamRect = beamLayer.getBoundingClientRect();
+        ctx.save();
+        ctx.translate(beamRect.left - staffRect.left, beamRect.top - staffRect.top);
+        ctx.strokeStyle = format === 'jpg' ? '#111111' : foreground;
+        beamLayer.querySelectorAll('line').forEach(line => {
+          ctx.beginPath();
+          ctx.lineWidth = line.classList.contains('beam') ? 5 : 2;
+          ctx.moveTo(Number(line.getAttribute('x1')), Number(line.getAttribute('y1')));
+          ctx.lineTo(Number(line.getAttribute('x2')), Number(line.getAttribute('y2')));
+          ctx.stroke();
+        });
+        beamLayer.querySelectorAll('path').forEach(path => {
+          if (typeof Path2D !== 'undefined') {
+            ctx.lineWidth = 5;
+            ctx.stroke(new Path2D(path.getAttribute('d')));
+          }
+        });
+        ctx.restore();
+      }
+
+      const notationColor = format === 'jpg' ? '#111111' : foreground;
+      document.querySelectorAll('#notesContainer .note').forEach((noteElement, index) => {
+        const head = noteElement.querySelector('.note-head');
+        const headRect = head.getBoundingClientRect();
+        const centerX = headRect.left - staffRect.left + (headRect.width / 2);
+        const centerY = headRect.top - staffRect.top + (headRect.height / 2);
+        ctx.fillStyle = notationColor;
+        ctx.strokeStyle = notationColor;
+
+        if (head.classList.contains('x-head')) {
+          ctx.font = 'bold 16px Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('×', centerX, centerY);
+        } else {
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          ctx.rotate(-12 * Math.PI / 180);
+          if (noteElement.classList.contains('ghost')) ctx.globalAlpha = 0.82;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, headRect.width / 2, headRect.height / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        if (noteElement.classList.contains('ghost')) {
+          const noteRect = noteElement.getBoundingClientRect();
+          ctx.font = 'bold 21px Georgia, serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('(', noteRect.left - staffRect.left + 6, centerY);
+          ctx.fillText(')', noteRect.right - staffRect.left - 6, centerY);
+        }
+
+        const accent = noteElement.querySelector('.accent');
+        if (accent) {
+          const accentRect = accent.getBoundingClientRect();
+          ctx.font = '900 18px Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(
+            '>',
+            accentRect.left - staffRect.left + (accentRect.width / 2),
+            accentRect.top - staffRect.top + (accentRect.height / 2)
+          );
+        }
+      });
+
+      document.querySelectorAll('#stickingRow .sticking-slot').forEach(slot => {
+        const rect = slot.getBoundingClientRect();
+        const fontSize = parseFloat(getComputedStyle(slot).fontSize) || 14;
+        ctx.save();
+        ctx.globalAlpha = slot.classList.contains('kick') ? 0.3 : 1;
+        ctx.fillStyle = format === 'jpg' ? '#555555' : muted;
+        ctx.font = `700 ${fontSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+          slot.textContent,
+          rect.left - staffRect.left + (rect.width / 2),
+          rect.top - staffRect.top + (rect.height / 2)
+        );
+        ctx.restore();
+      });
+
+      return canvas;
+    }
+
+    async function createExport(format) {
+      const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
+      const canvas = drawExportFrame(format);
+      return { blob: await canvasToBlob(canvas, mimeType), mimeType };
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function copyFrame(format) {
+      const extension = format === 'jpg' ? 'jpg' : 'png';
+      try {
+        const { blob, mimeType } = await createExport(format);
+        if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') {
+          downloadBlob(blob, exportFilename(extension));
+          showToast(`Clipboard unavailable — ${extension.toUpperCase()} downloaded`);
+          return;
+        }
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ [mimeType]: blob })]);
+          showToast(`${extension.toUpperCase()} copied!`);
+        } catch {
+          downloadBlob(blob, exportFilename(extension));
+          showToast(`Copy unsupported — ${extension.toUpperCase()} downloaded`);
         }
       } catch (error) {
-        if (error.name !== 'AbortError') showToast('Unable to share');
+        console.error('Unable to export staff image', error);
+        showToast('Unable to create image');
       }
+    }
+
+    async function saveFrame() {
+      const format = document.getElementById('saveFormat').value;
+      const extension = format === 'jpg' ? 'jpg' : 'png';
+      const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
+      let handle = null;
+
+      // File pickers require the original click's user activation, so open the
+      // picker before awaiting canvas encoding.
+      if (typeof window.showSaveFilePicker === 'function') {
+        try {
+          handle = await window.showSaveFilePicker({
+            suggestedName: exportFilename(extension),
+            types: [{
+              description: format === 'jpg' ? 'JPEG image' : 'PNG image',
+              accept: { [mimeType]: [`.${extension}`] }
+            }]
+          });
+        } catch (error) {
+          if (error.name === 'AbortError') return;
+          console.warn('System file picker unavailable; using download', error);
+        }
+      }
+
+      try {
+        const { blob } = await createExport(format);
+        if (handle) {
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          showToast(`${extension.toUpperCase()} saved!`);
+          return;
+        }
+        downloadBlob(blob, exportFilename(extension));
+        showToast(`${extension.toUpperCase()} downloaded!`);
+      } catch (error) {
+        console.error('Unable to save staff image', error);
+        showToast('Unable to save image');
+      }
+    }
+
+    let shareReturnFocus = null;
+
+    function openShareSheet() {
+      updateURL();
+      shareReturnFocus = document.activeElement;
+      const sheet = document.getElementById('shareSheet');
+      sheet.hidden = false;
+      document.getElementById('shareUrl').value = window.location.href;
+      document.getElementById('shareClose').focus();
+    }
+
+    function closeShareSheet() {
+      const sheet = document.getElementById('shareSheet');
+      if (sheet.hidden) return;
+      sheet.hidden = true;
+      if (shareReturnFocus && typeof shareReturnFocus.focus === 'function') shareReturnFocus.focus();
     }
 
     function showToast(msg) {
@@ -1450,7 +1860,6 @@
       stickingRow.appendChild(stickingFragment);
       drawBeams(container);
 
-      document.getElementById('noteCountDisplay').textContent = noteCount;
       document.getElementById('notesValue').textContent = noteCount;
       document.getElementById('bpmValue').textContent = bpm;
       document.getElementById('notesMinus').disabled = noteCount <= 4;
@@ -1554,7 +1963,16 @@
       document.getElementById('bpmMinus').onclick = () => changeBpm(-5);
       document.getElementById('bpmPlus').onclick = () => changeBpm(5);
       document.getElementById('playBtn').onclick = () => togglePlayback();
-      document.getElementById('shareBtn').onclick = copyLink;
+      document.getElementById('shareBtn').onclick = openShareSheet;
+      document.getElementById('shareClose').onclick = closeShareSheet;
+      document.getElementById('copyLinkBtn').onclick = copyShareLink;
+      document.getElementById('copyJpgBtn').onclick = () => copyFrame('jpg');
+      document.getElementById('copyPngBtn').onclick = () => copyFrame('png');
+      document.getElementById('saveImageBtn').onclick = saveFrame;
+      document.getElementById('shareUrl').addEventListener('focus', event => event.target.select());
+      document.getElementById('shareSheet').addEventListener('click', event => {
+        if (event.target === event.currentTarget) closeShareSheet();
+      });
       document.getElementById('helpBtn').onclick = () => {
         document.getElementById('chopSplash').classList.remove('hidden');
         document.getElementById('chopSplashDismiss').focus();
@@ -1577,7 +1995,29 @@
       syncThemeSwitch();
 
       document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
+        const shareSheet = document.getElementById('shareSheet');
+        if (e.key === 'Escape' && !shareSheet.hidden) {
+          e.preventDefault();
+          closeShareSheet();
+          e.stopImmediatePropagation();
+          return;
+        }
+        if (e.key === 'Tab' && !shareSheet.hidden) {
+          const focusable = Array.from(shareSheet.querySelectorAll('button, textarea, select'))
+            .filter(element => !element.disabled);
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+          return;
+        }
+        const isEditable = e.target.matches('input, textarea, select, button, [contenteditable="true"]');
+        if (e.code === 'Space' && shareSheet.hidden && !isEditable) {
           e.preventDefault();
           togglePlayback();
         }
@@ -1613,7 +2053,7 @@
         }
       });
       document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') dismiss();
+        if (event.key === 'Escape' && !splash.classList.contains('hidden')) dismiss();
       });
     }
 
