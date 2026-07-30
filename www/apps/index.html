@@ -34,6 +34,22 @@
   .apps-page .tabbar a.live .ic {
     animation: none;
   }
+  .apps-page :where(.brand, .desknav a, .appcard2, .tabbar a, .theme-toggle) {
+    transform-origin: center;
+    transition:
+      transform 100ms ease-out,
+      filter 100ms ease-out,
+      border-color 100ms ease-out,
+      background-color 100ms ease-out;
+  }
+  .apps-page :where(.brand, .desknav a, .appcard2, .tabbar a, .theme-toggle):active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.86);
+  }
+  .apps-page :where(.brand, .desknav a, .appcard2, .tabbar a, .theme-toggle):focus-visible {
+    outline: 2px solid #e63946;
+    outline-offset: 3px;
+  }
   .apps-page.theme-light .tabbar a:not(.live) .ic img {
     filter: invert(1);
   }
@@ -74,8 +90,12 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .apps-page .appcard2 {
+    .apps-page :where(.brand, .desknav a, .appcard2, .tabbar a, .theme-toggle) {
       transition: none;
+    }
+    .apps-page :where(.brand, .desknav a, .appcard2, .tabbar a, .theme-toggle):active {
+      transform: none !important;
+      filter: brightness(0.78);
     }
   }
 </style>

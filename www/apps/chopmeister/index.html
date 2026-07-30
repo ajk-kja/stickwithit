@@ -528,6 +528,36 @@
       background: var(--chop-control-bg);
     }
 
+    :where(button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), .swi-theme-switch) {
+      transform-origin: center;
+      transition:
+        transform 100ms ease-out,
+        filter 100ms ease-out,
+        background-color 100ms ease-out,
+        border-color 100ms ease-out,
+        color 100ms ease-out;
+    }
+
+    :where(button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), .swi-theme-switch):is(:active, .is-key-press) {
+      transform: translateY(1px) scale(0.98);
+      filter: brightness(0.86);
+    }
+
+    .swi-theme-switch:has(input:active) {
+      transform: translateY(1px) scale(0.98);
+      filter: brightness(0.86);
+    }
+
+    :where(a[href], [role="button"], .swi-theme-switch):focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .swi-theme-switch:has(input:focus-visible) {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     .btn-group {
       display: flex;
       background: var(--surface);
@@ -975,6 +1005,16 @@
       *, *::before, *::after {
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+      }
+
+      :where(button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), .swi-theme-switch):is(:active, .is-key-press) {
+        transform: none !important;
+        filter: brightness(0.76);
+      }
+
+      .swi-theme-switch:has(input:active) {
+        transform: none !important;
+        filter: brightness(0.76);
       }
     }
   </style>
@@ -1878,6 +1918,9 @@
         
         const slot = document.createElement('div');
         slot.className = 'note-slot';
+        slot.setAttribute('role', 'button');
+        slot.tabIndex = 0;
+        slot.setAttribute('aria-label', `Note ${index + 1}: ${drum.name}. Change drum`);
         slot.onclick = () => cycleDrum(index);
 
         const noteEl = document.createElement('div');
@@ -1915,6 +1958,9 @@
         const stickingEl = document.createElement('div');
         stickingEl.className = 'sticking-slot';
         stickingEl.dataset.noteIndex = index;
+        stickingEl.setAttribute('role', 'button');
+        stickingEl.tabIndex = 0;
+        stickingEl.setAttribute('aria-label', `Note ${index + 1}: ${note.sticking || 'kick'}. Change sticking`);
         if (!drum.sticking) stickingEl.classList.add('kick');
         if (index === currentNoteIndex) stickingEl.classList.add('playing');
         stickingEl.textContent = note.sticking;
@@ -2091,11 +2137,34 @@
           }
           return;
         }
-        const isEditable = e.target.matches('input, textarea, select, button, [contenteditable="true"]');
+        const isEditable = e.target.matches('input, textarea, select, button, [role="button"], [contenteditable="true"]');
         if (e.code === 'Space' && shareSheet.hidden && !isEditable) {
           e.preventDefault();
           togglePlayback();
         }
+      });
+
+      const customPressSelector = '[role="button"]:not(button):not(a)';
+      document.addEventListener('keydown', event => {
+        const control = event.target.closest(customPressSelector);
+        if (!control || event.repeat || (event.key !== 'Enter' && event.key !== ' ')) return;
+        event.preventDefault();
+        control.classList.add('is-key-press');
+        if (event.key === 'Enter') control.click();
+      });
+      document.addEventListener('keyup', event => {
+        const control = event.target.closest(customPressSelector);
+        if (!control || (event.key !== 'Enter' && event.key !== ' ')) return;
+        event.preventDefault();
+        control.classList.remove('is-key-press');
+        if (event.key === ' ') control.click();
+      });
+      document.addEventListener('focusout', event => {
+        event.target.closest(customPressSelector)?.classList.remove('is-key-press');
+      });
+      window.addEventListener('blur', () => {
+        document.querySelectorAll(`${customPressSelector}.is-key-press`)
+          .forEach(control => control.classList.remove('is-key-press'));
       });
       
       window.addEventListener('resize', () => {

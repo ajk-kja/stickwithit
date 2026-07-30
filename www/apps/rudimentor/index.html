@@ -728,6 +728,44 @@
       transition: border-color 0.15s ease, background 0.15s ease;
     }
 
+    :where(button:not(:disabled):not([aria-disabled="true"]), a[href]:not(.tool-brand), .swi-theme-switch) {
+      transform-origin: center;
+      transition:
+        transform 100ms ease-out,
+        filter 100ms ease-out,
+        background-color 100ms ease-out,
+        border-color 100ms ease-out,
+        color 100ms ease-out;
+    }
+
+    :where(button:not(:disabled):not([aria-disabled="true"]), a[href]:not(.tool-brand), .swi-theme-switch):active {
+      transform: translateY(1px) scale(0.98);
+      filter: brightness(0.86);
+    }
+
+    .tool-brand {
+      transition: filter 100ms ease-out;
+    }
+
+    .tool-brand:active {
+      filter: brightness(0.72) saturate(1.15);
+    }
+
+    .swi-theme-switch:has(input:active) {
+      transform: translateY(1px) scale(0.98);
+      filter: brightness(0.86);
+    }
+
+    :where(a[href], .swi-theme-switch):focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .swi-theme-switch:has(input:focus-visible) {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     button:hover:not(:disabled),
     button:focus-visible,
     select:focus-visible,
@@ -902,6 +940,16 @@
         animation: none !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+      }
+
+      :where(button:not(:disabled):not([aria-disabled="true"]), a[href]:not(.tool-brand), .swi-theme-switch):active {
+        transform: none !important;
+        filter: brightness(0.76);
+      }
+
+      .swi-theme-switch:has(input:active) {
+        transform: none !important;
+        filter: brightness(0.76);
       }
     }
   </style>

@@ -832,6 +832,46 @@
         .modal-btn.cancel { background: var(--surface-2); color: var(--text); }
         .modal-btn.confirm { background: var(--accent); color: var(--bg); }
 
+        :where(button:not(:disabled), a[href]:not(.tool-brand), [role="button"]:not([aria-disabled="true"]), .swi-theme-switch) {
+            transform-origin: center;
+            transition:
+                transform 100ms ease-out,
+                filter 100ms ease-out,
+                background-color 100ms ease-out,
+                border-color 100ms ease-out,
+                color 100ms ease-out;
+        }
+
+        :where(button:not(:disabled), a[href]:not(.tool-brand), [role="button"]:not([aria-disabled="true"]), .swi-theme-switch):is(:active, .is-key-press) {
+            transform: translateY(1px) scale(0.98);
+            filter: brightness(0.86);
+        }
+
+        .tool-brand {
+            transition: filter 100ms ease-out;
+        }
+
+        .tool-brand:active {
+            filter: brightness(0.72) saturate(1.15);
+        }
+
+        .swi-theme-switch:has(input:active) {
+            transform: translateY(1px) scale(0.98);
+            filter: brightness(0.86);
+        }
+
+        a[href]:focus-visible,
+        [role="button"]:focus-visible,
+        .swi-theme-switch:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .swi-theme-switch:has(input:focus-visible) {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
         /* Light-mode control contrast */
         html[data-theme="light"] .mobile-splash button,
         html[data-theme="light"] .help-card button,
@@ -1049,6 +1089,16 @@
                 scroll-behavior: auto !important;
                 transition-duration: 0.01ms !important;
                 animation-duration: 0.01ms !important;
+            }
+
+            :where(button:not(:disabled), a[href]:not(.tool-brand), [role="button"]:not([aria-disabled="true"]), .swi-theme-switch):is(:active, .is-key-press) {
+                transform: none !important;
+                filter: brightness(0.76);
+            }
+
+            .swi-theme-switch:has(input:active) {
+                transform: none !important;
+                filter: brightness(0.76);
             }
         }
     </style>
@@ -1784,6 +1834,11 @@ function renderPlaylist() {
                 <button class="pl-action delete" data-i="${i}" aria-label="Delete ${escapeHtml(p.name)}">Delete</button>
             </div>
         `;
+        if (!editing) {
+            el.setAttribute('role', 'button');
+            el.tabIndex = 0;
+            el.setAttribute('aria-label', `Load ${p.name}, ${p.bpm} beats per minute`);
+        }
         if (!editing) el.addEventListener('click', () => loadItem(i));
         playlistList.appendChild(el);
     });
@@ -1916,10 +1971,33 @@ renameInput.addEventListener('keydown', e => {
 });
 
 document.addEventListener('keydown', e => {
-    if (e.code === 'Space' && !['BUTTON', 'INPUT'].includes(e.target.tagName)) {
+    if (e.code === 'Space' && !e.target.closest('button, input, [role="button"]')) {
         e.preventDefault();
         togglePlayback();
     }
+});
+
+const customPressSelector = '[role="button"]:not(button):not(a)';
+document.addEventListener('keydown', event => {
+    const control = event.target.closest(customPressSelector);
+    if (!control || event.repeat || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    control.classList.add('is-key-press');
+    if (event.key === 'Enter') control.click();
+});
+document.addEventListener('keyup', event => {
+    const control = event.target.closest(customPressSelector);
+    if (!control || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    control.classList.remove('is-key-press');
+    if (event.key === ' ') control.click();
+});
+document.addEventListener('focusout', event => {
+    event.target.closest(customPressSelector)?.classList.remove('is-key-press');
+});
+window.addEventListener('blur', () => {
+    document.querySelectorAll(`${customPressSelector}.is-key-press`)
+        .forEach(control => control.classList.remove('is-key-press'));
 });
 
 document.addEventListener('visibilitychange', () => {
