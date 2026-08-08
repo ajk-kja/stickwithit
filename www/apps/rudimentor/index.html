@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Rudimentor | Stick With It</title>
+  <title>Drum Rudiment Trainer | Rudimentor | Stick With It</title>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="no-referrer">
   <link rel="icon" type="image/png" href="/assets/favicon-256.png" sizes="256x256">
@@ -51,11 +51,11 @@
     .app-shell {
       width: min(1040px, 100%);
       min-width: 0;
-      min-height: 100svh;
-      min-height: 100dvh;
+      min-height: calc(100svh - 56px - env(safe-area-inset-top));
+      min-height: calc(100dvh - 56px - env(safe-area-inset-top));
       margin: 0 auto;
       padding:
-        max(clamp(1rem, 4vw, 2.5rem), env(safe-area-inset-top))
+        clamp(1rem, 4vw, 2.5rem)
         max(clamp(1rem, 4vw, 2.5rem), env(safe-area-inset-right))
         max(clamp(1rem, 4vw, 2.5rem), env(safe-area-inset-bottom))
         max(clamp(1rem, 4vw, 2.5rem), env(safe-area-inset-left));
@@ -67,7 +67,7 @@
     @media (max-width: 768px) {
       .app-shell {
         padding:
-          max(1rem, env(safe-area-inset-top))
+          1rem
           max(1rem, env(safe-area-inset-right))
           max(1rem, env(safe-area-inset-bottom))
           max(1rem, env(safe-area-inset-left));
@@ -75,6 +75,7 @@
     }
 
     .header {
+      width: 100%;
       padding: 1rem 1.25rem 0.5rem;
       display: flex;
       justify-content: space-between;
@@ -107,6 +108,10 @@
     }
 
     .tool-header-left .swi-tool-title {
+      margin: 0;
+      font-size: 0.86rem;
+      font-weight: 850;
+      letter-spacing: 0;
       white-space: nowrap;
       text-align: left;
     }
@@ -894,7 +899,7 @@
     @media (max-width: 430px) {
       .app-shell {
         padding:
-          max(0.75rem, env(safe-area-inset-top))
+          0.75rem
           max(0.75rem, env(safe-area-inset-right))
           max(0.75rem, env(safe-area-inset-bottom))
           max(0.75rem, env(safe-area-inset-left));
@@ -929,7 +934,7 @@
     }
 
     @media (max-width: 370px) {
-      .tool-header-left .swi-tool-title { display: none; }
+      .tool-header-left .swi-tool-title { font-size: 0.74rem; }
       .tool-actions { gap: 0; }
       .stack-card { padding-inline: 0.7rem; }
       .switch { padding-inline: 0.4rem; font-size: 0.76rem; }
@@ -957,25 +962,25 @@
   <script src="/assets/nav.js?v=20260707b" defer></script>
 </head>
 <body>
-  <div class="app-shell">
-    <div class="header swi-tool-backbar">
-      <div class="tool-header-left">
-        <a class="swi-tool-back" href="/apps/" aria-label="Back to apps">←<span class="tool-back-label"> Apps</span></a>
-        <span class="swi-tool-title">Rudimentor</span>
-      </div>
-      <a class="tool-brand" href="/" aria-label="Stick With It home">
-        <img src="/assets/StickWithItBlack.png" alt="">
-      </a>
-      <div class="tool-actions">
-        <button class="tool-action" id="helpBtn" type="button" title="How to use Rudimentor" aria-label="How to use Rudimentor">?</button>
-        <button class="tool-action" id="shareBtn" type="button" title="Share Rudimentor" aria-label="Share Rudimentor"><img src="/apps/rudimentor/assets/share.svg" alt="" aria-hidden="true"></button>
-        <label class="swi-theme-switch">
-          <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
-          <i aria-hidden="true"></i>
-          <span class="swi-theme-label">Theme</span>
-        </label>
-      </div>
+  <div class="header swi-tool-backbar">
+    <div class="tool-header-left">
+      <a class="swi-tool-back" href="/apps/" aria-label="Back to apps">←<span class="tool-back-label"> Apps</span></a>
+      <h1 class="swi-tool-title">Rudimentor</h1>
     </div>
+    <a class="tool-brand" href="/" aria-label="Stick With It home">
+      <img src="/assets/StickWithItBlack.png" alt="">
+    </a>
+    <div class="tool-actions">
+      <button class="tool-action" id="helpBtn" type="button" title="How to use Rudimentor" aria-label="How to use Rudimentor">?</button>
+      <button class="tool-action" id="shareBtn" type="button" title="Share Rudimentor" aria-label="Share Rudimentor"><img src="/apps/rudimentor/assets/share.svg" alt="" aria-hidden="true"></button>
+      <label class="swi-theme-switch">
+        <input id="toolThemeSwitch" type="checkbox" role="switch" aria-label="Switch to light mode">
+        <i aria-hidden="true"></i>
+        <span class="swi-theme-label">Theme</span>
+      </label>
+    </div>
+  </div>
+  <div class="app-shell">
     <div class="tabs">
       <button class="tab-btn active" data-view="mentor">Mentor</button>
       <button class="tab-btn" data-view="quiz">Quiz</button>

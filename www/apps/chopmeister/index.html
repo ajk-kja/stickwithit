@@ -5,7 +5,7 @@
   <link rel="shortcut icon" href="/assets/favicon-256.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Chopmeister | Stick With It</title>
+  <title>Drum Lick Generator | Chopmeister | Stick With It</title>
   <meta name="theme-color" content="#000000">
   <style>
     :root {
@@ -122,10 +122,26 @@
       background: var(--surface);
     }
 
-    .header-left {
+    .tool-header-left {
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
+    }
+
+    .tool-header-left .swi-tool-back {
+      min-width: 44px;
+      min-height: 44px;
+      justify-content: center;
+    }
+
+    .tool-header-left .swi-tool-title {
+      margin: 0;
+      font-size: 0.86rem;
+      font-weight: 850;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-align: left;
     }
 
     .header a {
@@ -146,22 +162,31 @@
       letter-spacing: 1.4px;
     }
 
-    .header-right {
+    .tool-actions {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
     }
 
-    .header-logo {
+    .tool-brand {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 18px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
+      padding: 0 !important;
+      display: grid !important;
+      place-items: center;
       object-fit: contain;
       transform: translate(-50%, -50%);
+      border-radius: 8px;
+    }
+
+    .tool-brand img {
+      width: 17px;
+      height: 34px;
+      object-fit: contain;
       filter: drop-shadow(0 0 8px rgba(230, 57, 70, 0.2));
-      pointer-events: none;
     }
 
     .tool-action {
@@ -939,21 +964,29 @@
       }
 
       .header h1 {
-        display: none;
+        display: block;
+        font-size: 0.78rem;
       }
 
       .header {
         padding-inline: 10px;
       }
 
-      .header-left {
-        gap: 8px;
+      .tool-header-left {
+        gap: 2px;
       }
 
-      .header-left .swi-tool-back {
+      .tool-header-left .swi-tool-back {
         display: inline-flex;
+        min-width: 44px;
         min-height: 44px;
         align-items: center;
+        justify-content: center;
+        padding-inline: 6px;
+      }
+
+      .tool-back-label {
+        display: none;
       }
 
       .staff {
@@ -1049,12 +1082,14 @@
     </div>
   </div>
   <header class="header swi-tool-backbar">
-    <div class="header-left">
-      <a class="swi-tool-back" href="/apps/">← Apps</a>
+    <div class="tool-header-left">
+      <a class="swi-tool-back" href="/apps/" aria-label="Back to apps">←<span class="tool-back-label"> Apps</span></a>
       <h1 class="swi-tool-title">Chopmeister</h1>
     </div>
-    <img class="header-logo" src="/assets/StickWithItBlack.png" alt="Stick With It">
-    <div class="header-right">
+    <a class="tool-brand" href="/" aria-label="Stick With It home">
+      <img src="/assets/StickWithItBlack.png" alt="">
+    </a>
+    <div class="tool-actions">
       <button class="tool-action" id="helpBtn" type="button" title="How to use Chopmeister" aria-label="How to use Chopmeister">?</button>
       <button class="tool-action" id="shareBtn" type="button" title="Share this chop" aria-label="Share this chop"><img class="tool-icon" src="./icons/share.svg" alt="" aria-hidden="true"></button>
       <label class="swi-theme-switch header-theme">

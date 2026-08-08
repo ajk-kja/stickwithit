@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="/assets/favicon-256.png">
     <link rel="apple-touch-icon" href="/assets/favicon-256.png">
     <link rel="manifest" href="/apps/metrognome/manifest.webmanifest">
-    <title>MetroGnome | Stick With It</title>
+    <title>Online Metronome | MetroGnome | Stick With It</title>
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -151,16 +151,26 @@
         }
 
         .tool-header-left .swi-tool-title {
+            margin: 0;
+            font-size: 0.86rem;
+            font-weight: 850;
+            letter-spacing: 0;
             white-space: nowrap;
             text-align: left;
+        }
+
+        .tool-header-left .swi-tool-back {
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
         }
 
         .tool-brand {
             position: absolute;
             left: 50%;
             top: calc(6px + env(safe-area-inset-top));
-            width: 34px;
-            height: 34px;
+            width: 44px;
+            height: 44px;
             padding: 0 !important;
             display: grid !important;
             place-items: center;
